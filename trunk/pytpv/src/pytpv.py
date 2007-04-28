@@ -33,13 +33,9 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gobject
-import pango
 # librerias para generar los pdfs
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.units import mm
 
-import Image
+
 
 # librerias para el acceso a base de datos
 import MySQLdb
@@ -48,10 +44,7 @@ import MySQLdb
 import os, os.path, sys
 
 # constantes
-NOMBRE_FICHERO = os.path.join(os.environ['HOME'], 'acreditaciones.pdf')
-MARGEN = 4*mm # margen de la pￃﾃￂﾡgina
-ANCHO = 65*mm # ancho de la acreditaciￃﾃￂﾳn
-ALTO = 68*mm  # alto de la acreditacion
+
 
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
 
