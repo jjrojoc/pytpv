@@ -3,6 +3,8 @@
 from encodings import utf_8
 
 from codificacion import *
+from compiler.ast import Dict
+
 
 #from insertaarticulos import *
 
@@ -47,6 +49,8 @@ import os, os.path, sys
 
 
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
+
+
 
 # para las columnas del listView
 ID, NOMBRE, DIRECCION, IMPORTE, HORA = range(5)
@@ -123,12 +127,36 @@ class Acredita:
         
         
         
-    def buscar(self, boton, datos=None):
-        base = CONSULTA_BASE
-        base += self.widgets.get_widget('entBusqueda').get_text()
+    def buscar(self, datos=None):
+        
+        
         self.listStore.clear()
-        self.cargaDatos(base)
+        c = self.cursor
+        #c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre = %s', self.widgets.get_widget('entBusqueda').get_text())
+        c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre like %s', self.widgets.get_widget('entBusqueda').get_text()+'%')
+        #SELECT APELLIDO FROM  WHERE POSICION = (SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'GIL'); 
+        datos = c.fetchall()
+        
+        for dato in datos:
+            id = dato[0]
+            dato = [unicode(d, 'latin-1') for d in dato[1:]]
+            
+            self.listStore.append([id]+dato)    
+        #self.cargabusqueda(busqueda, base)
 
+        
+    def cargabusqueda(self, busqueda):
+        c = self.cursor
+        c.execute(busqueda)
+        datos = c.fetchall()
+        
+        for dato in datos:
+            id = dato[0]
+            dato = [unicode(d, 'latin-1') for d in dato[1:]]
+            
+            self.listStore.append([id]+dato)    
+        
+            
     def cargaDatos(self, consulta):
         c = self.cursor
         c.execute(consulta)
