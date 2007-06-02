@@ -49,8 +49,6 @@ import os, os.path, sys
 
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
 
-
-
 # para las columnas del listView
 ID, NOMBRE, DIRECCION, IMPORTE, HORA = range(5)
 ID, UNI, DESCRIPCION, IMP = range(4)
@@ -280,9 +278,10 @@ class Acredita:
             self.listStore.prepend(datos)
 
 
-    def ticketrow(self, boton, datos=None):
+    def ticketrow(self, linea):
         #print 'on_ticketrow_clicked'
         datos = ['1', 'CALAMARES CON TOMATE Y PIMIENTO', '1.50']
+        
         
         self.ticketstore.append(datos)
         
