@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS articulo (
 ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ------------------------------------------------------------
--- El nombre de una caja viene determinado por su nombre de host
+-- El nombre de una caja
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS caja (
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ------------------------------------------------------------
--- Almacena información de las distintas secciones de la tienda.
+-- Almacena información de la tienda.
 -- ------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS ticket (
