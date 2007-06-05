@@ -51,7 +51,7 @@ CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones
 
 # para las columnas del listView
 ID, NOMBRE, DIRECCION, IMPORTE, HORA = range(5)
-ID, UNI, DESCRIPCION, IMP = range(4)
+ID_TICKET, CANTIDAD, ID_ARTICULO, IMPORTE = range(4)
 
 class Acredita:
     def __init__(self):
@@ -94,8 +94,9 @@ class Acredita:
             
         
         
-        self.ticketstore = gtk.ListStore(gobject.TYPE_STRING,
-                                         gobject.TYPE_STRING, # Descripcion
+        self.ticketstore = gtk.ListStore(gobject.TYPE_INT, #ID_TICKET
+                                         gobject.TYPE_STRING, # CATIDAD
+                                         gobject.TYPE_STRING,  #DESCRIPCION
                                          gobject.TYPE_STRING)    # Importe    
         
         
@@ -278,23 +279,44 @@ class Acredita:
             self.listStore.prepend(datos)
 
 
-    def ticketrow(self, linea):
-        #print 'on_ticketrow_clicked'
-        datos = ['1', 'CALAMARES CON TOMATE Y PIMIENTO', '1.50']
+#    def ticketrow(self, linea):
+#        #print 'on_ticketrow_clicked'
+#        datos = ['1', 'CALAMARES CON TOMATE Y PIMIENTO', '1.50']
+#        
+#        
+#        self.ticketstore.append(datos)
         
+    def ticketrow (self, data=None):
+        data = 'select id, unidades, descripcion, precio from articulosa where id=1' 
+        c = self.cursor
+        c.execute(data)
+        data = c.fetchall()
+        #data = ["1.00", "2", "9.00"]
+        #self.ticketstore.append(datos)
+        tmp=[]
+        for dato in data:
+            ID_TICKET = dato[0]
+            tmp.append(dato)
+            
         
-        self.ticketstore.append(datos)
+        data = self.insertalinea(tmp)
         
-    def on_buclefor_clicked(self, datos):
+        data = [ID_TICKET] + data
+        self.ticketstore.append(data)
+        
+            
+    def insertalinea (self, data):
         print 'on_buclefor_clicked'
         tmp = []
-        for d in datos:
-            tmp.append(d.encode('latin-1'))
-            self.cursor.execute('insert into acreditaciones.ventas (cantidad, descripcion, precio) values (%s, %s, %s)',
-                            tmp)
-            self.cursor.execute('select id from acreditaciones.ventas where cantidad=%s and descripcion=%s and precio=%s',
-                            tmp)
+        for d in data:
+            tmp.append(d)
+        self.cursor.execute('insert into acreditaciones.ventas (cantidad, id_articulo, importe) values (%s, %s, %s)', tmp)
+            
+        self.cursor.execute('SELECT id_ticket from ventas where ventas.cantidad =%s AND ventas.id_articulo = %s AND ventas.importe=%s', tmp)
         return int(self.cursor.fetchone()[0])
+                
+            
+        
         
     
     def quitaAsistente(self, boton, datos=None):
@@ -314,8 +336,8 @@ class Acredita:
         self.actualizaBD(iter)
     
     def editedcells(self, render, path, newTex, columna):
-        ite = self.ticketstore.get_iter(path)
-        self.ticketstore.set_value(ite, columna, newTex)
+        iter = self.ticketstore.get_iter(path)
+        self.ticketstore.set_value(iter, columna, newTex)
     
     def insertaBD(self, datos):
         tmp = []
