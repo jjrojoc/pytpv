@@ -3,6 +3,7 @@
 from encodings import utf_8
 
 from codificacion import *
+from compiler.pyassem import LineAddrTable
 
 
 #from insertaarticulos import *
@@ -50,8 +51,8 @@ import os, os.path, sys
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
 
 # para las columnas del listView
-ID, NOMBRE, DIRECCION, IMPORTE, HORA = range(5)
-ID_TICKET, CANTIDAD, ID_ARTICULO, IMPORTE = range(4)
+(ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
+(ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
 
 class Acredita:
     def __init__(self):
@@ -94,7 +95,7 @@ class Acredita:
             
         
         
-        self.ticketstore = gtk.ListStore(gobject.TYPE_INT, #ID_TICKET
+        self.ticketstore = gtk.ListStore(gobject.TYPE_STRING, #ID_TICKET
                                          gobject.TYPE_STRING, # CATIDAD
                                          gobject.TYPE_STRING,  #DESCRIPCION
                                          gobject.TYPE_STRING)    # Importe    
@@ -105,13 +106,13 @@ class Acredita:
         self.treeview3.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         
-        columnsticketview = ['UNI.', 'DESCRIPCION', 'IMP']
+        columnsticketview = ['UNI', 'DESCRIPCION', 'IMP']
         
         for j in range(len(columnsticketview)):
             render = gtk.CellRendererText()
             render.set_property('editable', True)
             render.connect('edited', self.editedcells, j)
-            columna = gtk.TreeViewColumn(columnsticketview[j], render, text=(j))
+            columna = gtk.TreeViewColumn(columnsticketview[j], render, text=(j+1))
             columna.set_resizable(True)
             self.treeview3.append_column(columna)
             columna.set_sort_column_id(j)
@@ -279,40 +280,47 @@ class Acredita:
             self.listStore.prepend(datos)
 
 
-#    def ticketrow(self, linea):
-#        #print 'on_ticketrow_clicked'
-#        datos = ['1', 'CALAMARES CON TOMATE Y PIMIENTO', '1.50']
-#        
-#        
-#        self.ticketstore.append(datos)
         
-    def ticketrow (self, data=None):
-        data = 'select id, unidades, descripcion, precio from articulosa where id=1' 
-        c = self.cursor
-        c.execute(data)
-        data = c.fetchall()
-        #data = ["1.00", "2", "9.00"]
-        #self.ticketstore.append(datos)
-        tmp=[]
-        for dato in data:
-            ID_TICKET = dato[0]
-            tmp.append(dato)
+    def ticketrow (self, linea=None):
+        
+        
+        
+        
+        self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
+        
+        for linea in self.cursor.fetchall():
+#            print linea
+                #id = dato[0]
+                #dato = [unicode(d, 'latin-1') for d in dato[1:]]
+                
+                
             
-        
-        data = self.insertalinea(tmp)
-        
-        data = [ID_TICKET] + data
-        self.ticketstore.append(data)
-        
             
-    def insertalinea (self, data):
-        print 'on_buclefor_clicked'
-        tmp = []
-        for d in data:
-            tmp.append(d)
-        self.cursor.execute('insert into acreditaciones.ventas (cantidad, id_articulo, importe) values (%s, %s, %s)', tmp)
             
-        self.cursor.execute('SELECT id_ticket from ventas where ventas.cantidad =%s AND ventas.id_articulo = %s AND ventas.importe=%s', tmp)
+            ud, nombre, precio = linea
+            #print "Id: %s, Ud: %s, Nombre: %s, Precio: %s" % (id, ud, nombre, precio)
+        #data = []
+        #data.append(ud, nombre, precio)
+        #for a in enumerate(['a','b','c']): print a
+#        for dato in d:
+#            data.append(dato)
+        
+           
+            ID_TICKET = self.insertalinea(linea)
+#            print ID_TICKET
+            datos = [ID_TICKET] + [ud] + [nombre] + [precio]
+#            print datos
+        #print id
+        
+            a = self.ticketstore.append(datos)
+            print a
+            
+    def insertalinea (self, linea):
+        
+        self.cursor.execute('insert into acreditaciones.ventas (cantidad, id_articulo, importe) values (%s, %s, %s)', linea)
+            
+        self.cursor.execute('SELECT max(id_ticket) from ventas where ventas.cantidad =%s AND ventas.id_articulo = %s AND ventas.importe=%s', linea)
+        
         return int(self.cursor.fetchone()[0])
                 
             
