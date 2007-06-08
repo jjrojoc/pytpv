@@ -3,7 +3,7 @@
 from encodings import utf_8
 
 from codificacion import *
-from compiler.pyassem import LineAddrTable
+
 
 
 #from insertaarticulos import *
@@ -49,7 +49,7 @@ import os, os.path, sys
 
 
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
-
+LINEAS_TICKET = 'select id_ticket, cantidad, id_articulo, importe from ventas'
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
 (ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
@@ -68,8 +68,9 @@ class Acredita:
                                        gobject.TYPE_STRING,  # Apellidos
                                        gobject.TYPE_STRING,  # Correo
                                        gobject.TYPE_STRING)  # Rol
-    
+        
         self.cargaDatos(CONSULTA_BASE)
+        
         
         self.listView = self.widgets.get_widget('listView')
         self.listView.set_model(self.listStore)
@@ -99,6 +100,7 @@ class Acredita:
                                          gobject.TYPE_STRING, # CATIDAD
                                          gobject.TYPE_STRING,  #DESCRIPCION
                                          gobject.TYPE_STRING)    # Importe    
+        
         
         
         self.treeview3 = self.widgets.get_widget('treeview3')
@@ -148,8 +150,24 @@ class Acredita:
             dato = [unicode(d, 'latin-1') for d in dato[1:]]
             
             self.listStore.append([id]+dato)
-
             
+            
+    def cargalineasticket(self, cargalineas):
+        c = self.cursor
+        c.execute(cargalineas)
+        
+        for linea in c.fetchall():
+            id_tk, ud, nombre, precio = linea
+            
+            linea = [id_tk] + [ud] + [nombre] + [precio]
+            self.ticketstore.append(linea)
+            
+            
+    def on_listView_cursor_changed(self, datos=None):
+        self.cargalineasticket(LINEAS_TICKET)
+                
+        
+                    
     def nuevoAsistente(self, boton, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()

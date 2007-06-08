@@ -228,6 +228,7 @@
 			  <property name="fixed_height_mode">False</property>
 			  <property name="hover_selection">False</property>
 			  <property name="hover_expand">False</property>
+			  <signal name="cursor_changed" handler="on_listView_cursor_changed" last_modification_time="Fri, 08 Jun 2007 09:39:42 GMT"/>
 			</widget>
 		      </child>
 		    </widget>
