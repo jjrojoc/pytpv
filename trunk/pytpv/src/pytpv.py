@@ -35,9 +35,10 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gobject
+#import pango
 # librerias para generar los pdfs
 
-
+from gazpacho.loader.loader import ObjectBuilder
 
 # librerias para el acceso a base de datos
 import MySQLdb
@@ -60,9 +61,10 @@ class Acredita:
                                   user='root')
         self.cursor = self.db.cursor()
         
-        self.widgets = gtk.glade.XML('pytpv.glade')
+        self.widgets = ObjectBuilder('pytpv.glade')
+        #self.widgets = gtk.glade.XML('pytpv.glade')
         self.widgets.signal_autoconnect(self)
-
+        
         self.listStore = gtk.ListStore(gobject.TYPE_INT,     # id
                                        gobject.TYPE_STRING,  # Nombre
                                        gobject.TYPE_STRING,  # Apellidos
@@ -86,7 +88,7 @@ class Acredita:
             #column.set_resizable(True)
             column.set_spacing(10)
             column.set_alignment(0.5)
-            #font = pango.FontDescription('courier bold 12')
+            #font = pango.FontDescription('helvetica 8')
             #renderer.set_property('font-desc', font)
             self.listView.append_column(column)
             column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
@@ -166,13 +168,12 @@ class Acredita:
     def on_listView_cursor_changed(self, datos=None):
         self.cargalineasticket(LINEAS_TICKET)
                 
-        
                     
     def nuevoAsistente(self, boton, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
-        if resultado == gtk.RESPONSE_OK:
+        if resultado == 1:
             datos = []
             for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
                 datos.append(self.widgets.get_widget(entry).get_text())
@@ -275,7 +276,11 @@ class Acredita:
             ))
 
     def salir(self, boton, datos=None):
-        gtk.main_quit()
+        dialog = self.widgets.get_widget('dlgSalida')
+        resultado = dialog.run()
+        dialog.hide()
+        if resultado == 1:
+            gtk.main_quit()
 
     def preferencias(self, boton, datos=None):
         dialog = self.widgets.get_widget('dlgPreferencias')
