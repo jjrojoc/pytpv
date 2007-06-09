@@ -4988,72 +4988,90 @@ Personales:&lt;/span&gt;</property>
                                     <widget class="GtkHBox" id="hbox10">
                                         <property name="visible">True</property>
                                         <child>
-                                            <widget class="GtkTreeView" id="treeview2">
-                                                <property name="model">model4</property>
-                                                <property name="search_column">0</property>
+                                            <widget class="GtkHBox" id="hbox20">
+                                                <property name="homogeneous">True</property>
                                                 <property name="visible">True</property>
+                                                <child>
+                                                    <widget class="GtkButton" id="button372">
+                                                        <property name="label">gtk-new</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="NuevoCliente" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button373">
+                                                        <property name="label">gtk-edit</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="EditaCliente" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">1</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button374">
+                                                        <property name="is_focus">True</property>
+                                                        <property name="label">gtk-delete</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="BorraCliente" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">2</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button375">
+                                                        <property name="label">gtk-find</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="FiltraCliente" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">3</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button376">
+                                                        <property name="label">gtk-print</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="ImprimeClientes" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">4</property>
+                                                    </packing>
+                                                </child>
                                             </widget>
                                         </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
-                                        </child>
                                     </widget>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                    </packing>
                                 </child>
                                 <child>
                                     <widget class="GtkHBox" id="hbox11">
                                         <property name="visible">True</property>
                                         <child>
-                                            <placeholder/>
-                                            <packing/>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
+                                            <widget class="GtkTreeView" id="listClients">
+                                                <property name="is_focus">True</property>
+                                                <property name="model">model4</property>
+                                                <property name="search_column">0</property>
+                                                <property name="visible">True</property>
+                                            </widget>
                                         </child>
                                     </widget>
                                     <packing>
                                         <property name="position">1</property>
-                                    </packing>
-                                </child>
-                                <child>
-                                    <widget class="GtkHBox" id="hbox12">
-                                        <property name="visible">True</property>
-                                        <child>
-                                            <placeholder/>
-                                            <packing/>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
-                                        </child>
-                                    </widget>
-                                    <packing>
-                                        <property name="position">2</property>
                                     </packing>
                                 </child>
                             </widget>
@@ -5067,74 +5085,94 @@ Personales:&lt;/span&gt;</property>
                                 <property name="visible">True</property>
                                 <child>
                                     <widget class="GtkHBox" id="hbox13">
+                                        <property name="homogeneous">True</property>
                                         <property name="visible">True</property>
                                         <child>
-                                            <widget class="GtkTreeView" id="treeview4">
-                                                <property name="model">model5</property>
-                                                <property name="search_column">0</property>
+                                            <widget class="GtkHBox" id="hbox12">
+                                                <property name="homogeneous">True</property>
                                                 <property name="visible">True</property>
+                                                <child>
+                                                    <widget class="GtkButton" id="button377">
+                                                        <property name="label">gtk-new</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="NuevoArticulo" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button378">
+                                                        <property name="label">gtk-edit</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="EditaArticulo" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">1</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button379">
+                                                        <property name="is_focus">True</property>
+                                                        <property name="label">gtk-delete</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="BorraArticulo" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">2</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button380">
+                                                        <property name="label">gtk-find</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="FiltraArticulo" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">3</property>
+                                                    </packing>
+                                                </child>
+                                                <child>
+                                                    <widget class="GtkButton" id="button381">
+                                                        <property name="label">gtk-print</property>
+                                                        <property name="use_stock">True</property>
+                                                        <property name="visible">True</property>
+                                                        <signal handler="ImprimeArticulos" name="clicked"/>
+                                                    </widget>
+                                                    <packing>
+                                                        <property name="padding">4</property>
+                                                        <property name="position">4</property>
+                                                    </packing>
+                                                </child>
                                             </widget>
                                         </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
-                                        </child>
                                     </widget>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">False</property>
+                                    </packing>
                                 </child>
                                 <child>
                                     <widget class="GtkHBox" id="hbox14">
                                         <property name="visible">True</property>
                                         <child>
-                                            <placeholder/>
-                                            <packing/>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
+                                            <widget class="GtkTreeView" id="listArticles">
+                                                <property name="is_focus">True</property>
+                                                <property name="model">model5</property>
+                                                <property name="search_column">0</property>
+                                                <property name="visible">True</property>
+                                            </widget>
                                         </child>
                                     </widget>
                                     <packing>
                                         <property name="position">1</property>
-                                    </packing>
-                                </child>
-                                <child>
-                                    <widget class="GtkHBox" id="hbox15">
-                                        <property name="visible">True</property>
-                                        <child>
-                                            <placeholder/>
-                                            <packing/>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">1</property>
-                                            </packing>
-                                        </child>
-                                        <child>
-                                            <placeholder/>
-                                            <packing>
-                                                <property name="position">2</property>
-                                            </packing>
-                                        </child>
-                                    </widget>
-                                    <packing>
-                                        <property name="position">2</property>
                                     </packing>
                                 </child>
                             </widget>
