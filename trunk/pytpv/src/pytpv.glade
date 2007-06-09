@@ -267,7 +267,7 @@ Personales:&lt;/span&gt;</property>
                             <widget class="GtkButton" id="button50">
                                 <property name="height_request">60</property>
                                 <property name="is_focus">True</property>
-                                <property name="label">gtk-add</property>
+                                <property name="label">gtk-new</property>
                                 <property name="use_stock">True</property>
                                 <property name="visible">True</property>
                                 <signal handler="nuevoAsistente" name="clicked"/>
@@ -275,7 +275,7 @@ Personales:&lt;/span&gt;</property>
                         </child>
                         <child>
                             <widget class="GtkButton" id="button51">
-                                <property name="label">gtk-remove</property>
+                                <property name="label">gtk-delete</property>
                                 <property name="use_stock">True</property>
                                 <property name="visible">True</property>
                                 <signal handler="quitaAsistente" name="clicked"/>

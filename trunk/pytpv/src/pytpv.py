@@ -8,25 +8,24 @@ from codificacion import *
 
 #from insertaarticulos import *
 
-# acredita.py  Generador de acreditaciones para congresos
-# Copyright (C) 2003 Lorenzo Gil Sanchez <lgs@sicem.biz>
+# PyTPV.py  Punto de venta para restaurants, bar, pizzeria, etc.
+# Copyright (C) 2007 Juan José Rojo <jjrojoc@gmail.com>
 # Este programa es software libre. Puede redistribuirlo y/o modificarlo bajo
 # los terminos de la Licencia Publica General de GNU segun es publicada por la
 # Free Software Foundation, bien de la version 2 de dicha Licencia o bien
 # (segun su eleccion) de cualquier version posterior.
 #
 # Este programa se distribuye con la esperanza de que sea util, pero SIN
-# NINGUNA GARANTIA, incluso sin la garantia MERCANTIL impliￂﾭcita o sin
+# NINGUNA GARANTIA, incluso sin la garantia MERCANTIL implicita o sin
 # garantizar la CONVENIENCIA PARA UN PROPOSITO PARTICULAR. Veaase la Licencia
 # Publica General de GNU para mas detalles.
 #
 # Deberia haber recibido una copia de la Licencia Publica General junto con
-# este programa. Si no ha sido asiￂﾭ, escriba a la Free Software Foundation,
+# este programa. Si no ha sido asi escriba a la Free Software Foundation,
 # Inc., en 675 Mass Ave, Cambridge, MA 02139, EEUU. 
 #
 # Puede contactar con el autor mediante la direccion de correo electronico
-# lgs@sicem.biz o a la siguiente direccion de correo postal:
-# Lorenzo Gil Sanchez. Torre de las Cabezas 8. 18008 Granada. Espaￃﾱa
+# jjrojoc@gmail.com
 
 
 # librerias para la interfaz grafica
@@ -55,7 +54,7 @@ LINEAS_TICKET = 'select id_ticket, cantidad, id_articulo, importe from ventas'
 (ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
 (ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
 
-class Acredita:
+class PyTPV:
     def __init__(self):
         self.db = MySQLdb.connect(db='acreditaciones',
                                   user='root')
@@ -65,11 +64,7 @@ class Acredita:
         #self.widgets = gtk.glade.XML('pytpv.glade')
         self.widgets.signal_autoconnect(self)
         
-        self.listStore = gtk.ListStore(gobject.TYPE_INT,     # id
-                                       gobject.TYPE_STRING,  # Nombre
-                                       gobject.TYPE_STRING,  # Apellidos
-                                       gobject.TYPE_STRING,  # Correo
-                                       gobject.TYPE_STRING)  # Rol
+        self.listStore = gtk.ListStore(int, str, str, str, str)  # Id, Nombre, Direccion, Importe, Hora
         
         self.cargaDatos(CONSULTA_BASE)
         
@@ -98,10 +93,7 @@ class Acredita:
             
         
         
-        self.ticketstore = gtk.ListStore(gobject.TYPE_INT, #ID_TICKET
-                                         gobject.TYPE_STRING, # CATIDAD
-                                         gobject.TYPE_STRING,  #DESCRIPCION
-                                         gobject.TYPE_STRING)    # Importe    
+        self.ticketstore = gtk.ListStore(int, str, str, str)    # Id, Cantidad, Descripcion, importe   
         
         
         
@@ -290,5 +282,5 @@ class Acredita:
             self.upp = self.widgets.get_widget('sbtnUPP').get_value_as_int()
                 
 if __name__ == '__main__':
-    a = Acredita()
+    a = PyTPV()
     a.run()
