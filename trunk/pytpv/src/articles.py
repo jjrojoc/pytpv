@@ -254,9 +254,4 @@ class Articulos:
             self.ticketstore.get_value(iter, IMP).encode('latin-1'),
             self.ticketstore.get_value(iter, ID_TICKET),
             ))
-
-    
-                
-if __name__ == '__main__':
-    a = Articulos()
-    
+        
