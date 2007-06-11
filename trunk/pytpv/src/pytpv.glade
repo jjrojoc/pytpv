@@ -256,7 +256,7 @@ Personales:&lt;/span&gt;</property>
         <property name="icon_name" context="yes" translatable="yes"></property>
         <property name="title" context="yes" translatable="yes">PyTPV</property>
         <property name="visible">True</property>
-        <signal handler="gtk.main_quit" name="destroy"/>
+        <signal handler="salir_sin_dialogo" name="destroy"/>
         <child>
             <widget class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>

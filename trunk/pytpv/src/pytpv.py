@@ -282,7 +282,11 @@ class PyTPV:
         dialog.hide()
         if resultado == gtk.RESPONSE_OK:
             self.upp = self.widgets.get_widget('sbtnUPP').get_value_as_int()
-                
+            
+    def salir_sin_dialogo(self, datos=None):
+        gtk.main_quit()
+        
+                        
 if __name__ == '__main__':
     a = PyTPV()
     a.run()
