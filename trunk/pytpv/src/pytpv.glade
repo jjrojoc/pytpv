@@ -253,7 +253,7 @@ Personales:&lt;/span&gt;</property>
         <property name="border_width">3</property>
         <property name="default_height">250</property>
         <property name="default_width">440</property>
-        <property name="icon_name" context="yes" translatable="yes"></property>
+        <property name="icon" context="yes" translatable="yes">pytpv2.ico</property>
         <property name="title" context="yes" translatable="yes">PyTPV</property>
         <property name="visible">True</property>
         <signal handler="salir_sin_dialogo" name="destroy"/>
@@ -446,6 +446,7 @@ Personales:&lt;/span&gt;</property>
                 <child>
                     <widget class="GtkNotebook" id="notebook1">
                         <property name="homogeneous">True</property>
+                        <property name="is_focus">True</property>
                         <property name="tab_hborder">15</property>
                         <property name="tab_vborder">15</property>
                         <property name="visible">True</property>
@@ -15668,6 +15669,90 @@ Personales:&lt;/span&gt;</property>
                             <packing>
                                 <property name="position">4</property>
                                 <property name="tab_label" context="yes" translatable="yes">CREDITO</property>
+                            </packing>
+                        </child>
+                        <child>
+                            <widget class="GtkVBox" id="vbox6">
+                                <property name="visible">True</property>
+                                <child>
+                                    <widget class="GtkHBox" id="hbox15">
+                                        <property name="homogeneous">True</property>
+                                        <property name="visible">True</property>
+                                        <child>
+                                            <widget class="GtkButton" id="button382">
+                                                <property name="label">gtk-new</property>
+                                                <property name="use_stock">True</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                            <packing>
+                                                <property name="padding">4</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <widget class="GtkButton" id="button383">
+                                                <property name="label">gtk-edit</property>
+                                                <property name="use_stock">True</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                            <packing>
+                                                <property name="padding">4</property>
+                                                <property name="position">1</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <widget class="GtkButton" id="button384">
+                                                <property name="is_focus">True</property>
+                                                <property name="label">gtk-delete</property>
+                                                <property name="use_stock">True</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                            <packing>
+                                                <property name="padding">4</property>
+                                                <property name="position">2</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <widget class="GtkButton" id="button385">
+                                                <property name="label">gtk-find</property>
+                                                <property name="use_stock">True</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                            <packing>
+                                                <property name="padding">4</property>
+                                                <property name="position">3</property>
+                                            </packing>
+                                        </child>
+                                        <child>
+                                            <widget class="GtkButton" id="button386">
+                                                <property name="label">gtk-print</property>
+                                                <property name="use_stock">True</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                            <packing>
+                                                <property name="padding">4</property>
+                                                <property name="position">4</property>
+                                            </packing>
+                                        </child>
+                                    </widget>
+                                    <packing>
+                                        <property name="expand">False</property>
+                                    </packing>
+                                </child>
+                                <child>
+                                    <widget class="GtkTreeView" id="treeview2">
+                                        <property name="is_focus">True</property>
+                                        <property name="model">model5</property>
+                                        <property name="search_column">0</property>
+                                        <property name="visible">True</property>
+                                    </widget>
+                                    <packing>
+                                        <property name="position">1</property>
+                                    </packing>
+                                </child>
+                            </widget>
+                            <packing>
+                                <property name="position">5</property>
+                                <property name="tab_label" context="yes" translatable="yes">HISTORICO</property>
                             </packing>
                         </child>
                     </widget>

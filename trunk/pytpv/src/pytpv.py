@@ -62,6 +62,7 @@ class PyTPV:
         
         self.widgets = ObjectBuilder('pytpv.glade')
         #self.widgets = gtk.glade.XML('pytpv.glade')
+                
         self.widgets.signal_autoconnect(self)
         
         self.listStore = gtk.ListStore(int, str, str, str, str)  # Id, Nombre, Direccion, Importe, Hora
