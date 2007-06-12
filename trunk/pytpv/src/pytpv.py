@@ -34,10 +34,13 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gobject
-#import pango
+from gazpacho.loader.loader import ObjectBuilder
+
+# libreria para el manejo de fuentes
+import pango
 # librerias para generar los pdfs
 
-from gazpacho.loader.loader import ObjectBuilder
+
 
 # librerias para el acceso a base de datos
 import MySQLdb
@@ -50,9 +53,14 @@ import os, os.path, sys
 
 CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
 LINEAS_TICKET = 'select id_ticket, cantidad, id_articulo, importe from ventas'
+CLIENTES_BASE = 'select id, nombre, direccion from acreditaciones'
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
+# para las columnas del ticketstore
 (ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
+# para las columnas del listaclientes
+(ID, NOMBRE, DIRECCION) = range(3)
+
 
 class PyTPV:
     def __init__(self):
@@ -85,8 +93,8 @@ class PyTPV:
             #column.set_resizable(True)
             column.set_spacing(10)
             column.set_alignment(0.5)
-            #font = pango.FontDescription('helvetica 8')
-            #renderer.set_property('font-desc', font)
+            font = pango.FontDescription('helvetica 8')
+            renderer.set_property('font-desc', font)
             self.listView.append_column(column)
             column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
             column.set_fixed_width(100)
@@ -159,15 +167,55 @@ class PyTPV:
             linea = [id_tk] + [ud] + [nombre] + [precio]
             self.ticketstore.append(linea)
             
+    def cargaclientes(self, clientes):        
+        c = self.cursor
+        c.execute(clientes)
+        
+        for linea in c.fetchall():
+            idcliente, nombrecliente, direccioncliente = linea
+            
+            linea = [idcliente] + [nombrecliente] + [direccioncliente]
+            self.listacliente.append(linea)
+            
             
     def on_listView_cursor_changed(self, datos=None):
         self.cargalineasticket(LINEAS_TICKET)
                 
                     
-    def nuevoAsistente(self, boton, datos=None):
+    def nuevoAsistente(self, button, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
+        #dialog.show()
+        self.listacliente = gtk.ListStore(int, str, str)  # Id, Nombre, Direccion
+        
+        self.cargaclientes(CLIENTES_BASE)
+        
+        
+        self.listaclienteview = self.widgets.get_widget('listaclientes')
+        self.listaclienteview.set_model(self.listacliente)
+        self.listaclienteview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+    
+        cols = ['NOMBRE', 'DIRECCION']
+        for i in range(len(cols)):
+            rend = gtk.CellRendererText()
+            #renderer.set_property('editable', True)
+            #renderer.connect('edited', self.editedCallback, i+1)
+            rend.set_fixed_size(-1, 25)
+            col = gtk.TreeViewColumn(cols[i], rend, text=(i+1))
+            #column.set_resizable(True)
+            col.set_spacing(10)
+            col.set_alignment(0.5)
+            font = pango.FontDescription('helvetica 8')
+            rend.set_property('font-desc', font)
+            self.listaclienteview.append_column(col)
+            col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+            col.set_fixed_width(100)
+            col.set_sort_column_id(i+1)
+            #rend.connect('edited', self.editedCallback, i+1)
+        #dialog.hide()
+        
         if resultado == 1:
             datos = []
             for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
@@ -179,7 +227,7 @@ class PyTPV:
             datos = [id] + datos
             # lo meto en la interfaz
             self.listStore.prepend(datos)
-
+            
         
     def ticketrow (self, linea=None):
         self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
