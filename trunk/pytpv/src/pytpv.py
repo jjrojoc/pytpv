@@ -109,7 +109,7 @@ class PyTPV:
         
         self.treeview3 = self.widgets.get_widget('treeview3')
         self.treeview3.set_model(self.ticketstore)
-        self.treeview3.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        #self.treeview3.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
         
         columnsticketview = ['UNI', 'DESCRIPCION', 'IMP']
@@ -126,8 +126,32 @@ class PyTPV:
             render.connect('edited', self.editedcells, j+1)  
         
         # retoque de la GUI que Glade no permite
+        #treeview listaclientes del dialog Nueva persona
+        self.listacliente = gtk.ListStore(int, str, str)  # Id, Nombre, Direccion
         
-
+        self.listaclienteview = self.widgets.get_widget('listaclientes')
+        self.listaclienteview.set_model(self.listacliente)
+        #self.listaclienteview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+        self.cargaclientes(CLIENTES_BASE)
+        cols = ['NOMBRE', 'DIRECCION']
+        for i in range(len(cols)):
+            rend = gtk.CellRendererText()
+            #renderer.set_property('editable', True)
+            #renderer.connect('edited', self.editedCallback, i+1)
+            rend.set_fixed_size(-1, 25)
+            col = gtk.TreeViewColumn(cols[i], rend, text=(i+1))
+            #column.set_resizable(True)
+            col.set_spacing(10)
+            col.set_alignment(0.5)
+            font = pango.FontDescription('helvetica 8')
+            rend.set_property('font-desc', font)
+            self.listaclienteview.append_column(col)
+            col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+            col.set_fixed_width(100)
+            col.set_sort_column_id(i+1)
+            #rend.connect('edited', self.editedCallback, i+1)
+        
         # unidades por pagina para la impresion
         self.upp = 1
         
@@ -180,54 +204,40 @@ class PyTPV:
             
     def on_listView_cursor_changed(self, datos=None):
         self.cargalineasticket(LINEAS_TICKET)
+        
+    def on_listaclientes_cursor_changed(self, datos=None):
                 
+        selection = self.listaclienteview.get_selection()
+        treemodel, iter = selection.get_selected()    
+        id = treemodel.get_value(iter, 0)
+        nombre = treemodel.get_value(iter, 1)
+        direccion = treemodel.get_value(iter, 2)
+        
+                  
+        self.widgets.get_widget('entNombre').set_text(nombre)
+        self.widgets.get_widget('entApellidos').set_text(direccion)
+        
+        
+                    
                     
     def nuevoAsistente(self, button, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
-        #dialog.show()
-        self.listacliente = gtk.ListStore(int, str, str)  # Id, Nombre, Direccion
         
-        self.cargaclientes(CLIENTES_BASE)
-        
-        
-        self.listaclienteview = self.widgets.get_widget('listaclientes')
-        self.listaclienteview.set_model(self.listacliente)
-        self.listaclienteview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        
-    
-        cols = ['NOMBRE', 'DIRECCION']
-        for i in range(len(cols)):
-            rend = gtk.CellRendererText()
-            #renderer.set_property('editable', True)
-            #renderer.connect('edited', self.editedCallback, i+1)
-            rend.set_fixed_size(-1, 25)
-            col = gtk.TreeViewColumn(cols[i], rend, text=(i+1))
-            #column.set_resizable(True)
-            col.set_spacing(10)
-            col.set_alignment(0.5)
-            font = pango.FontDescription('helvetica 8')
-            rend.set_property('font-desc', font)
-            self.listaclienteview.append_column(col)
-            col.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-            col.set_fixed_width(100)
-            col.set_sort_column_id(i+1)
-            #rend.connect('edited', self.editedCallback, i+1)
-        #dialog.hide()
         
         if resultado == 1:
             datos = []
             for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
                 datos.append(self.widgets.get_widget(entry).get_text())
             
-
             # lo meto en la base de datos
             id = self.insertaBD(datos)
             datos = [id] + datos
             # lo meto en la interfaz
             self.listStore.prepend(datos)
-            
+            self.listacliente.prepend(datos[0:-2])
+                
         
     def ticketrow (self, linea=None):
         self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
@@ -236,6 +246,7 @@ class PyTPV:
             id_ticket = self.insertalinea(linea)
             linea = [id_ticket] + [ud] + [nombre] + [precio]
             self.ticketstore.append(linea)
+            
             
                         
     def insertalinea (self, linea):

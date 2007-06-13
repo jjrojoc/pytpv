@@ -135,11 +135,13 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                                 <property name="visible">True</property>
                                 <child>
                                     <widget class="GtkTreeView" id="listaclientes">
+                                        <property name="border_width">3</property>
                                         <property name="height_request">235</property>
                                         <property name="model">model7</property>
                                         <property name="rules_hint">True</property>
                                         <property name="search_column">0</property>
                                         <property name="visible">True</property>
+                                        <signal handler="on_listaclientes_cursor_changed" name="cursor-changed"/>
                                     </widget>
                                 </child>
                             </widget>
