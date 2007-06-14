@@ -35,11 +35,11 @@ import gtk
 import gtk.glade
 import gobject
 from gazpacho.loader.loader import ObjectBuilder
-
+import datetime
 # libreria para el manejo de fuentes
 import pango
 # librerias para generar los pdfs
-
+import locale
 # librerias para el acceso a base de datos
 import MySQLdb
 
@@ -71,11 +71,12 @@ class PyTPV:
         w = self.widgets.get_widget('window1')
         c = self.cursor
         c.execute('select (DATE_FORMAT(curdate(), "%d/%m/%Y"))')
-        hoy = c.fetchone()[0]
-        w.set_title("PyTPV - %s" % hoy)
+        today = c.fetchone()[0]
+        #today = datetime.date.today()
+        w.set_title("PyTPV - %s" % today)
         w.maximize()
         
-        pixbuf = gtk.gdk.pixbuf_new_from_file("pytpv2.ico")
+        pixbuf = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.ico")
         w.set_icon(pixbuf)
         self.widgets.signal_autoconnect(self)
         
@@ -226,7 +227,7 @@ class PyTPV:
         
                     
                     
-    def nuevoAsistente(self, path, datos=None):
+    def nuevoAsistente(self, button, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
@@ -252,10 +253,12 @@ class PyTPV:
         self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
         for linea in self.cursor.fetchall():
             ud, nombre, precio = linea
+            a=7.25*2.6
+            b= locale.format("%.2f", a)
+            print b
             id_ticket = self.insertalinea(linea)
-            linea = [id_ticket] + [ud] + [nombre] + [precio]
+            linea = [id_ticket] + [locale.format("%.2f", ud)] + [nombre] + [locale.format("%.2f", precio)]
             self.ticketstore.append(linea)
-            
             
                         
     def insertalinea (self, linea):
@@ -338,12 +341,18 @@ class PyTPV:
             self.ticketstore.get_value(iter, ID_TICKET),
             ))
 
-    def salir(self, boton, datos=None):
+    def salir(self, *event):
         dialog = self.widgets.get_widget('dlgSalida')
         resultado = dialog.run()
-        dialog.hide()
+        
         if resultado == 1:
             gtk.main_quit()
+            return False
+
+        if resultado == 2:
+            dialog.hide()
+            return True
+        
 
     def preferencias(self, boton, datos=None):
         dialog = self.widgets.get_widget('dlgPreferencias')
@@ -352,9 +361,6 @@ class PyTPV:
         if resultado == gtk.RESPONSE_OK:
             self.upp = self.widgets.get_widget('sbtnUPP').get_value_as_int()
             
-    def salir_sin_dialogo(self, datos=None):
-        gtk.main_quit()
-        
                         
 if __name__ == '__main__':
     a = PyTPV()
