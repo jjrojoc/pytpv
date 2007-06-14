@@ -40,8 +40,6 @@ from gazpacho.loader.loader import ObjectBuilder
 import pango
 # librerias para generar los pdfs
 
-
-
 # librerias para el acceso a base de datos
 import MySQLdb
 
@@ -59,7 +57,7 @@ CLIENTES_BASE = 'select id, nombre, direccion from acreditaciones'
 # para las columnas del ticketstore
 (ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
 # para las columnas del listaclientes
-(ID, NOMBRE, DIRECCION) = range(3)
+(IDCLIENTE, NOMBRECLIENTE, DIRECCIONCLIENTE) = range(3)
 
 
 class PyTPV:
@@ -70,7 +68,15 @@ class PyTPV:
         
         self.widgets = ObjectBuilder('pytpv.glade')
         #self.widgets = gtk.glade.XML('pytpv.glade')
-                
+        w = self.widgets.get_widget('window1')
+        c = self.cursor
+        c.execute('select (DATE_FORMAT(curdate(), "%d/%m/%Y"))')
+        hoy = c.fetchone()[0]
+        w.set_title("PyTPV - %s" % hoy)
+        w.maximize()
+        
+        pixbuf = gtk.gdk.pixbuf_new_from_file("pytpv2.ico")
+        w.set_icon(pixbuf)
         self.widgets.signal_autoconnect(self)
         
         self.listStore = gtk.ListStore(int, str, str, str, str)  # Id, Nombre, Direccion, Importe, Hora
@@ -220,7 +226,7 @@ class PyTPV:
         
                     
                     
-    def nuevoAsistente(self, button, datos=None):
+    def nuevoAsistente(self, path, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
@@ -237,6 +243,9 @@ class PyTPV:
             # lo meto en la interfaz
             self.listStore.prepend(datos)
             self.listacliente.prepend(datos[0:-2])
+            #self.listView.get_selection().select_path((0,))
+            #scroll = self.widgets.get_widget('scrolledwindow3')
+            
                 
         
     def ticketrow (self, linea=None):

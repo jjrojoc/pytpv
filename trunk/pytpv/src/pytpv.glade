@@ -267,7 +267,7 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
         <property name="border_width">3</property>
         <property name="default_height">250</property>
         <property name="default_width">440</property>
-        <property name="title" context="yes" translatable="yes">PyTPV</property>
+        <property name="title" context="yes" translatable="yes"></property>
         <property name="visible">True</property>
         <signal handler="salir_sin_dialogo" name="destroy"/>
         <child>
