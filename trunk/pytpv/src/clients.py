@@ -34,223 +34,111 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gobject
-#import pango
-# librerias para generar los pdfs
-
-from gazpacho.loader.loader import ObjectBuilder
-
-# librerias para el acceso a base de datos
+import pytpv
 import MySQLdb
 
-# librerias para ejecutar xpdf y para ver la linea de comandos
-import os, os.path, sys
-
-# constantes
 
 
-CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
-LINEAS_TICKET = 'select id_ticket, cantidad, id_articulo, importe from ventas'
+CLIENTES_CONSULTA = 'select * from clientes'
+
 # para las columnas del listView
-(ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
-(ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
+(ID, NOMBRE, DIRECCION, FECHA_ALTA) = range(4)
 
-class Clientes:
-    def __init__(self):
+db = MySQLdb.connect(db='pytpvdb', 
+                                  user='root')
+cursor = db.cursor()
+
+def buscaClientes(datos=None):
+    listclientstore.clear()
+    c = cursor
+    #c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre = %s', widgets.get_widget('entBusqueda').get_text())
+    c.execute('select id, nombre, direccion, fecha_alta from clientes where nombre like %s', widgets.get_widget('entBusqueda').get_text()+'%')
+    datos = c.fetchall()
+        
+    for dato in datos:
+        id = dato[0]
+        dato = [unicode(d, 'latin-1') for d in dato[1:]]
+            
+        listclientstore.append([id]+dato)    
         
         
-        self.listStore = gtk.ListStore(int, str, str, str, str)  # Id, Nombre, Direccion, Importe, Hora
+def cargaClientes(clientes, ):
+    c = cursor
+    c.execute(clientes)
         
-        self.cargaDatos(CONSULTA_BASE)
-        
-        
-        self.listView = self.widgets.get_widget('listView')
-        self.listView.set_model(self.listStore)
-        self.listView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        
+    for linea in c.fetchall():
+        id, nombre, direccion, fecha_alta = linea
+        linea = [id] + [nombre] + [direccion] + [fecha_alta] 
+        listclientstore.append(linea)
+        print linea
+            
     
-        columns = ['NOMBRE', 'DIRECCION', 'IMP', 'HORA']
-        for i in range(len(columns)):
-            renderer = gtk.CellRendererText()
-            renderer.set_property('editable', True)
-            renderer.connect('edited', self.editedCallback, i+1)
-            column = gtk.TreeViewColumn(columns[i], renderer, text=(i+1))
-            #column.set_resizable(True)
-            column.set_spacing(10)
-            column.set_alignment(0.5)
-            #font = pango.FontDescription('helvetica 8')
-            #renderer.set_property('font-desc', font)
-            self.listView.append_column(column)
-            column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-            column.set_fixed_width(100)
-            column.set_sort_column_id(i+1)
-            renderer.connect('edited', self.editedCallback, i+1)
-            
-        
-        
-        self.ticketstore = gtk.ListStore(int, str, str, str)    # Id, Cantidad, Descripcion, importe   
-        
-        
-        
-        self.treeview3 = self.widgets.get_widget('treeview3')
-        self.treeview3.set_model(self.ticketstore)
-        self.treeview3.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
-        
-        
-        columnsticketview = ['UNI', 'DESCRIPCION', 'IMP']
-        
-        for j in range(len(columnsticketview)):
-            render = gtk.CellRendererText()
-            render.set_property('editable', True)
-            render.connect('edited', self.editedcells, j+1)
-            columna = gtk.TreeViewColumn(columnsticketview[j], render, text=(j+1))
-            columna.set_resizable(True)
-            self.treeview3.append_column(columna)
-            columna.set_sort_column_id(j+1)
-            render.connect('edited', self.editedcells, j+1)  
-        
-        # retoque de la GUI que Glade no permite
-        
-
-               
-    def buscar(self, datos=None):
-        self.listStore.clear()
-        c = self.cursor
-        #c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre = %s', self.widgets.get_widget('entBusqueda').get_text())
-        c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre like %s', self.widgets.get_widget('entBusqueda').get_text()+'%')
-        datos = c.fetchall()
-        
-        for dato in datos:
-            id = dato[0]
-            dato = [unicode(d, 'latin-1') for d in dato[1:]]
-            
-            self.listStore.append([id]+dato)    
-        
-        
-    def cargaDatos(self, consulta):
-        c = self.cursor
-        c.execute(consulta)
-        datos = c.fetchall()
-        
-        for dato in datos:
-            id = dato[0]
-            dato = [unicode(d, 'latin-1') for d in dato[1:]]
-            
-            self.listStore.append([id]+dato)
-            
-            
-    def cargalineasticket(self, cargalineas):
-        c = self.cursor
-        c.execute(cargalineas)
-        
-        for linea in c.fetchall():
-            id_tk, ud, nombre, precio = linea
-            
-            linea = [id_tk] + [ud] + [nombre] + [precio]
-            self.ticketstore.append(linea)
-            
             
                    
                     
-    def nuevoAsistente(self, boton, datos=None):
-        dialog = self.widgets.get_widget('dlgNuevoAsistente')
-        resultado = dialog.run()
-        dialog.hide()
-        if resultado == 1:
-            datos = []
-            for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
-                datos.append(self.widgets.get_widget(entry).get_text())
+def nuevoCliente(boton, datos=None):
+    dialog = widgets.get_widget('dlgNuevoAsistente')
+    resultado = dialog.run()
+    dialog.hide()
+    if resultado == 1:
+        datos = []
+        for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
+            datos.append(widgets.get_widget(entry).get_text())
             
-
             # lo meto en la base de datos
-            id = self.insertaBD(datos)
-            datos = [id] + datos
-            # lo meto en la interfaz
-            self.listStore.prepend(datos)
+        id = insertaBD(datos)
+        datos = [id] + datos
+        # lo meto en la interfaz
+        listStore.prepend(datos)
 
         
-    def ticketrow (self, linea=None):
-        self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
-        for linea in self.cursor.fetchall():
-            ud, nombre, precio = linea
-            id_ticket = self.insertalinea(linea)
-            linea = [id_ticket] + [ud] + [nombre] + [precio]
-            self.ticketstore.append(linea)
-            
+    
                         
-    def insertalinea (self, linea):
-        self.cursor.execute('insert into acreditaciones.ventas (cantidad, id_articulo, importe) values (%s, %s, %s)', linea)
-        self.cursor.execute('SELECT max(id_ticket) from ventas where ventas.cantidad =%s AND ventas.id_articulo = %s AND ventas.importe=%s', linea)
-        return int(self.cursor.fetchone()[0])
-                
     
-    def quitaAsistente(self, boton, datos=None):
-        seleccion = []
-        self.listView.get_selection().selected_foreach(
-            lambda model, path, iter, sel = seleccion: sel.append(iter))
-        for iter in seleccion:
-            self.borraBD(iter)
-            self.listStore.remove(iter)
+    
+def quitaCliente(self, boton, datos=None):
+    seleccion = []
+    listView.get_selection().selected_foreach(
+        lambda model, path, iter, sel = seleccion: sel.append(iter))
+    for iter in seleccion:
+        borraBD(iter)
+        listStore.remove(iter)
             
-    def quitalineaticket(self, boton, linea=None):
-        seleccion = []
-        self.treeview3.get_selection().selected_foreach(
-            lambda model, path, iter, sel = seleccion: sel.append(iter))
-        for iter in seleccion:
-            print iter
-            self.borralineaticket(iter)
-            self.ticketstore.remove(iter)
+    
                 
     
-    def editedCallback(self, renderer, path, newText, column):
-        iter = self.listStore.get_iter(path)
-        self.listStore.set_value(iter, column, newText)
-        self.actualizaBD(iter)
+def editaCliente(self, renderer, path, newText, column):
+    iter = listStore.get_iter(path)
+    listStore.set_value(iter, column, newText)
+    actualizaBD(iter)
     
-    def editedcells(self, render, path, newTex, columna):
-        iter = self.ticketstore.get_iter(path)
-        self.ticketstore.set_value(iter, columna, newTex)
-        self.actualizaticketstore(iter)
+    
         
-    def insertaBD(self, datos):
-        tmp = []
-        for d in datos:
-            tmp.append(d.encode('latin-1'))
-        self.cursor.execute('insert into acreditaciones (nombre, direccion, importe, hora) values (%s, %s, %s, %s)',
+def insertaCliente(self, datos):
+    tmp = []
+    for d in datos:
+        tmp.append(d.encode('latin-1'))
+        cursor.execute('insert into acreditaciones (nombre, direccion, importe, hora) values (%s, %s, %s, %s)', 
                             tmp)
-        self.cursor.execute('select id from acreditaciones where nombre=%s and direccion=%s and importe=%s and hora=%s',
+        cursor.execute('select id from acreditaciones where nombre=%s and direccion=%s and importe=%s and hora=%s', 
                             tmp)
-        return int(self.cursor.fetchone()[0])
+        return int(cursor.fetchone()[0])
 
-    def borraBD(self, iter):
-        c = self.cursor
-        c.execute('delete from acreditaciones where id = %s',
-                  (self.listStore.get_value(iter, ID),))
-        
-    
-    def borralineaticket(self, iter):
-        c = self.cursor
-        c.execute('delete from ventas where id_ticket = %s',
-                  (self.ticketstore.get_value(iter, ID_TICKET),))
+def borraCliente(self, iter):
+    c = cursor
+    c.execute('delete from acreditaciones where id = %s', 
+              (listStore.get_value(iter, ID),))
         
                 
-    def actualizaBD(self, iter):
-        c = self.cursor
-        c.execute("""update acreditaciones set nombre = %s, direccion = %s,
-        importe = %s, hora = %s 
-        where id = %s""", (
-            self.listStore.get_value(iter, NOMBRE).encode('latin-1'),
-            self.listStore.get_value(iter, DIRECCION).encode('latin-1'),
-            self.listStore.get_value(iter, IMPORTE).encode('latin-1'),
-            self.listStore.get_value(iter, HORA).encode('latin-1'),
-            self.listStore.get_value(iter, ID)
-            ))
-        
-    def actualizaticketstore(self, iter):
-        c = self.cursor
-        c.execute("""update ventas set cantidad = %s, id_articulo = %s, importe = %s
-        where id_ticket = %s""", (
-            self.ticketstore.get_value(iter, UNI).encode('latin-1'),
-            self.ticketstore.get_value(iter, DESCRIPCION).encode('latin-1'),
-            self.ticketstore.get_value(iter, IMP).encode('latin-1'),
-            self.ticketstore.get_value(iter, ID_TICKET),
-            ))
+def actualizaCliente(self, iter):
+    c = cursor
+    c.execute("""update acreditaciones set nombre = %s, direccion = %s,
+    importe = %s, hora = %s 
+    where id = %s""", (
+        listStore.get_value(iter, NOMBRE).encode('latin-1'), 
+        listStore.get_value(iter, DIRECCION).encode('latin-1'), 
+        listStore.get_value(iter, IMPORTE).encode('latin-1'), 
+        listStore.get_value(iter, HORA).encode('latin-1'), 
+        listStore.get_value(iter, ID)
+        ))
+

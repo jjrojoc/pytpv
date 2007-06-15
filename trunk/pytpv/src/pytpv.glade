@@ -68,7 +68,7 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                                     </widget>
                                 </child>
                                 <child>
-                                    <widget class="GtkEntry" id="entApellidos">
+                                    <widget class="GtkEntry" id="entDireccion">
                                         <property name="visible">True</property>
                                     </widget>
                                     <packing>
@@ -84,17 +84,11 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                             <widget class="GtkHBox" id="hbox4">
                                 <property name="visible">True</property>
                                 <child>
-                                    <widget class="GtkLabel" id="lblImporte">
-                                        <property name="label" context="yes" translatable="yes">Importe:</property>
-                                        <property name="visible">True</property>
-                                        <property name="width_request">7</property>
-                                        <property name="xalign">0.0</property>
-                                    </widget>
+                                    <placeholder/>
+                                    <packing/>
                                 </child>
                                 <child>
-                                    <widget class="GtkEntry" id="entEmail">
-                                        <property name="visible">True</property>
-                                    </widget>
+                                    <placeholder/>
                                     <packing>
                                         <property name="position">1</property>
                                     </packing>
@@ -108,18 +102,11 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                             <widget class="GtkHBox" id="hbox5">
                                 <property name="visible">True</property>
                                 <child>
-                                    <widget class="GtkLabel" id="lblHora">
-                                        <property name="label" context="yes" translatable="yes">Hora:</property>
-                                        <property name="visible">True</property>
-                                        <property name="width_request">5</property>
-                                        <property name="xalign">0.0</property>
-                                    </widget>
+                                    <placeholder/>
+                                    <packing/>
                                 </child>
                                 <child>
-                                    <widget class="GtkEntry" id="entCiudad">
-                                        <property name="is_focus">True</property>
-                                        <property name="visible">True</property>
-                                    </widget>
+                                    <placeholder/>
                                     <packing>
                                         <property name="position">1</property>
                                     </packing>
@@ -214,7 +201,9 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                         </child>
                         <child>
                             <widget class="GtkLabel" id="label3">
-                                <property name="label" context="yes" translatable="yes">Se dispone a salir de PyTPV. ¿Desea continuar?</property>
+                                <property name="label" context="yes" translatable="yes">&lt;span
+weight="bold"&gt;¿Desea cerrar PyTPV?&lt;/span&gt;</property>
+                                <property name="use_markup">True</property>
                                 <property name="visible">True</property>
                                 <property name="xalign">0.0</property>
                             </widget>
@@ -15505,6 +15494,7 @@ weight="bold"&gt;Datos Personales:&lt;/span&gt;</property>
                                             <widget class="GtkTreeView" id="listClients">
                                                 <property name="is_focus">True</property>
                                                 <property name="model">model4</property>
+                                                <property name="rules_hint">True</property>
                                                 <property name="search_column">0</property>
                                                 <property name="visible">True</property>
                                             </widget>

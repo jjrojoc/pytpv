@@ -35,7 +35,7 @@ import gtk
 import gtk.glade
 import gobject
 from gazpacho.loader.loader import ObjectBuilder
-import datetime
+
 # libreria para el manejo de fuentes
 import pango
 # librerias para generar los pdfs
@@ -45,24 +45,30 @@ import MySQLdb
 
 # librerias para ejecutar xpdf y para ver la linea de comandos
 import os, os.path, sys
-
+import clients
 # constantes
 
 
-CONSULTA_BASE = 'select id, nombre, direccion, importe, hora from acreditaciones'
-LINEAS_TICKET = 'select id_ticket, cantidad, id_articulo, importe from ventas'
-CLIENTES_BASE = 'select id, nombre, direccion from acreditaciones'
+CONSULTA_BASE = 'select id, nombre, direccion from clientes'
+LINEAS_TICKET = 'select id, descripcion, precio_venta from articulos'
+CLIENTES_BASE = 'select id, nombre, direccion from clientes'
+CLIENTES_CONSULTA = 'select * from clientes'
+ARTICULOS_CONSULTA = 'select * from articulos'
+
 # para las columnas del listView
-(ID, NOMBRE, DIRECCION, IMPORTE, HORA) = range(5)
+(ID, NOMBRE, DIRECCION) = range(3)
 # para las columnas del ticketstore
 (ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
 # para las columnas del listaclientes
 (IDCLIENTE, NOMBRECLIENTE, DIRECCIONCLIENTE) = range(3)
-
+# para las columnas del listView
+(ID, NOMBRE, DIRECCION, FECHA_ALTA) = range(4)
+# para las columnas del listView
+(ID, FAMILIA, DESCRIPCION, STOCK, STOCK_MINIMO, PRECIO_VENTA, IMAGEN) = range(7)
 
 class PyTPV:
     def __init__(self):
-        self.db = MySQLdb.connect(db='acreditaciones',
+        self.db = MySQLdb.connect(db='pytpvdb',
                                   user='root')
         self.cursor = self.db.cursor()
         
@@ -76,11 +82,12 @@ class PyTPV:
         w.set_title("PyTPV - %s" % today)
         w.maximize()
         
-        pixbuf = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.ico")
-        w.set_icon(pixbuf)
+        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.ico")
+        w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
+       
         
-        self.listStore = gtk.ListStore(int, str, str, str, str)  # Id, Nombre, Direccion, Importe, Hora
+        self.listStore = gtk.ListStore(int, str, str)  # Id, Nombre, Direccion, Importe, Hora
         
         self.cargaDatos(CONSULTA_BASE)
         
@@ -90,7 +97,7 @@ class PyTPV:
         self.listView.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
     
-        columns = ['NOMBRE', 'DIRECCION', 'IMP', 'HORA']
+        columns = ['NOMBRE', 'DIRECCION']
         for i in range(len(columns)):
             renderer = gtk.CellRendererText()
             renderer.set_property('editable', True)
@@ -158,6 +165,63 @@ class PyTPV:
             col.set_fixed_width(100)
             col.set_sort_column_id(i+1)
             #rend.connect('edited', self.editedCallback, i+1)
+         
+         
+            
+        self.listclientstore = gtk.ListStore(int, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
+        
+        self.cargaClientes(CLIENTES_CONSULTA)
+        
+        
+        self.listclientsview = self.widgets.get_widget('listClients')
+        self.listclientsview.set_model(self.listclientstore)
+        self.listclientsview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+    
+        columns1 = ['ID', 'NOMBRE', 'DIRECCION', 'FECHA_ALTA']
+        for i in range(len(columns1)):
+            renderer1 = gtk.CellRendererText()
+            renderer1.set_property('editable', True)
+            renderer1.connect('edited', self.editedCallback, i+1)
+            column1 = gtk.TreeViewColumn(columns1[i], renderer1, text=(i))
+            #column1.set_resizable(True)
+            column1.set_spacing(10)
+            column1.set_alignment(0.5)
+            #font = pango.FontDescription('helvetica 8')
+            #renderer.set_property('font-desc', font)
+            self.listclientsview.append_column(column1)
+#            column1.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+#            column1.set_fixed_width(100)
+            column1.set_sort_column_id(i+1)
+            renderer1.connect('edited', self.editedCallback, i+1)
+            
+        
+        self.listarticlestore = gtk.ListStore(int, str, str, str, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
+        
+        self.cargaarticulos(ARTICULOS_CONSULTA)
+        
+        
+        self.listarticleview = self.widgets.get_widget('listArticles')
+        self.listarticleview.set_model(self.listarticlestore)
+        self.listarticleview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+    
+        columns2 = ['ID', 'FAMILIA', 'DESCRIPCION', 'STOCK', 'STOCK_MINIMO', 'PRECIO_VENTA', 'IMAGEN']
+        for i in range(len(columns2)):
+            renderer2 = gtk.CellRendererText()
+            renderer2.set_property('editable', True)
+            renderer2.connect('edited', self.editedCallback, i+1)
+            column2 = gtk.TreeViewColumn(columns2[i], renderer2, text=(i))
+            #column2.set_resizable(True)
+            column2.set_spacing(10)
+            column2.set_alignment(0.5)
+            #font = pango.FontDescription('helvetica 8')
+            #renderer2.set_property('font-desc', font)
+            self.listarticleview.append_column(column2)
+#            column2.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+#            column2.set_fixed_width(100)
+            column2.set_sort_column_id(i+1)
+            renderer2.connect('edited', self.editedCallback, i+1)        
         
         # unidades por pagina para la impresion
         self.upp = 1
@@ -193,9 +257,9 @@ class PyTPV:
         c.execute(cargalineas)
         
         for linea in c.fetchall():
-            id_tk, ud, nombre, precio = linea
+            id_tk, nombre, precio = linea
             
-            linea = [id_tk] + [ud] + [nombre] + [precio]
+            linea = [id_tk] + [1] + [nombre] + [precio]
             self.ticketstore.append(linea)
             
     def cargaclientes(self, clientes):        
@@ -208,8 +272,21 @@ class PyTPV:
             linea = [idcliente] + [nombrecliente] + [direccioncliente]
             self.listacliente.append(linea)
             
+
+    def cargaarticulos(self, articulos):        
+        c = self.cursor
+        c.execute(articulos)
+        
+        for linea in c.fetchall():
+            idarticulo, familia, descripcion, stock, stock_minimo, precio_venta, imagen = linea
+            
+            linea = [idarticulo] + [familia] + [descripcion] + [stock] + [stock_minimo] + \
+                    [precio_venta] + [imagen]
+            self.listarticlestore.append(linea)
+            
             
     def on_listView_cursor_changed(self, datos=None):
+        self.ticketstore.clear()
         self.cargalineasticket(LINEAS_TICKET)
         
     def on_listaclientes_cursor_changed(self, datos=None):
@@ -222,20 +299,19 @@ class PyTPV:
         
                   
         self.widgets.get_widget('entNombre').set_text(nombre)
-        self.widgets.get_widget('entApellidos').set_text(direccion)
+        self.widgets.get_widget('entDireccion').set_text(direccion)
         
         
                     
                     
-    def nuevoAsistente(self, button, datos=None):
+    def nuevoAsistente(self, icon, datos=None):
         dialog = self.widgets.get_widget('dlgNuevoAsistente')
         resultado = dialog.run()
         dialog.hide()
         
-        
         if resultado == 1:
             datos = []
-            for entry in ['entNombre', 'entApellidos', 'entEmail', 'entCiudad']:
+            for entry in ['entNombre', 'entDireccion']:
                 datos.append(self.widgets.get_widget(entry).get_text())
             
             # lo meto en la base de datos
@@ -243,27 +319,29 @@ class PyTPV:
             datos = [id] + datos
             # lo meto en la interfaz
             self.listStore.prepend(datos)
-            self.listacliente.prepend(datos[0:-2])
+            self.listacliente.prepend(datos)
+            #self.listacliente.prepend(datos[0:-2])
             #self.listView.get_selection().select_path((0,))
             #scroll = self.widgets.get_widget('scrolledwindow3')
             
                 
         
     def ticketrow (self, linea=None):
-        self.cursor.execute('select unidades, descripcion, precio from articulosa where id = 1')
+        self.cursor.execute('select descripcion, precio_venta from articulos where id = 1')
         for linea in self.cursor.fetchall():
-            ud, nombre, precio = linea
+            nombre, precio = linea
             a=7.25*2.6
             b= locale.format("%.2f", a)
             print b
             id_ticket = self.insertalinea(linea)
-            linea = [id_ticket] + [locale.format("%.2f", ud)] + [nombre] + [locale.format("%.2f", precio)]
+            linea = [id_ticket] + [1] + [nombre] + [locale.format("%.2f", precio)]
+            print linea
             self.ticketstore.append(linea)
             
                         
     def insertalinea (self, linea):
-        self.cursor.execute('insert into acreditaciones.ventas (cantidad, id_articulo, importe) values (%s, %s, %s)', linea)
-        self.cursor.execute('SELECT max(id_ticket) from ventas where ventas.cantidad =%s AND ventas.id_articulo = %s AND ventas.importe=%s', linea)
+        self.cursor.execute('insert into ticket_linea (articulo_FK_id, precio_venta) values (%s, %s, %s)', linea)
+        self.cursor.execute('SELECT max(id_ticket) from ticket_linea where cantidad =%s AND articulo_FK_id = %s AND precio_venta=%s', linea)
         return int(self.cursor.fetchone()[0])
                 
     
@@ -301,39 +379,36 @@ class PyTPV:
         tmp = []
         for d in datos:
             tmp.append(d.encode('latin-1'))
-        self.cursor.execute('insert into acreditaciones (nombre, direccion, importe, hora) values (%s, %s, %s, %s)',
+        self.cursor.execute('insert into clientes (nombre, direccion) values (%s, %s)',
                             tmp)
-        self.cursor.execute('select id from acreditaciones where nombre=%s and direccion=%s and importe=%s and hora=%s',
+        self.cursor.execute('select id from clientes where nombre=%s and direccion=%s',
                             tmp)
         return int(self.cursor.fetchone()[0])
 
     def borraBD(self, iter):
         c = self.cursor
-        c.execute('delete from acreditaciones where id = %s',
+        c.execute('delete from clientes where id = %s',
                   (self.listStore.get_value(iter, ID),))
         
     
     def borralineaticket(self, iter):
         c = self.cursor
-        c.execute('delete from ventas where id_ticket = %s',
+        c.execute('delete from ticket_linea where id = %s',
                   (self.ticketstore.get_value(iter, ID_TICKET),))
         
                 
     def actualizaBD(self, iter):
         c = self.cursor
-        c.execute("""update acreditaciones set nombre = %s, direccion = %s,
-        importe = %s, hora = %s 
+        c.execute("""update clientes set nombre = %s, direccion = %s 
         where id = %s""", (
             self.listStore.get_value(iter, NOMBRE).encode('latin-1'),
             self.listStore.get_value(iter, DIRECCION).encode('latin-1'),
-            self.listStore.get_value(iter, IMPORTE).encode('latin-1'),
-            self.listStore.get_value(iter, HORA).encode('latin-1'),
             self.listStore.get_value(iter, ID)
             ))
         
     def actualizaticketstore(self, iter):
         c = self.cursor
-        c.execute("""update ventas set cantidad = %s, id_articulo = %s, importe = %s
+        c.execute("""update ticket_linea set cantidad = %s, id_articulo = %s, importe = %s
         where id_ticket = %s""", (
             self.ticketstore.get_value(iter, UNI).encode('latin-1'),
             self.ticketstore.get_value(iter, DESCRIPCION).encode('latin-1'),
@@ -341,10 +416,10 @@ class PyTPV:
             self.ticketstore.get_value(iter, ID_TICKET),
             ))
 
-    def salir(self, *event):
+    def salir(self, button, datos=None):
         dialog = self.widgets.get_widget('dlgSalida')
         resultado = dialog.run()
-        
+                
         if resultado == 1:
             gtk.main_quit()
             return False
@@ -360,6 +435,17 @@ class PyTPV:
         dialog.hide()
         if resultado == gtk.RESPONSE_OK:
             self.upp = self.widgets.get_widget('sbtnUPP').get_value_as_int()
+            
+    def cargaClientes(self, clientes):
+        c = self.cursor
+        c.execute(clientes)
+        
+        for linea in c.fetchall():
+            id, nombre, direccion, fecha_alta = linea
+            linea = [id] + [nombre] + [direccion] + [fecha_alta] 
+            self.listclientstore.append(linea)
+               
+                        
             
                         
 if __name__ == '__main__':
