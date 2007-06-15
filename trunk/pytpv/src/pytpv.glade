@@ -706,7 +706,7 @@ weight="bold"&gt;¿Desea cerrar PyTPV?&lt;/span&gt;</property>
                                                     <widget class="GtkButton" id="button16">
                                                         <property name="can_focus">False</property>
                                                         <property name="visible">True</property>
-                                                        <signal handler="ticketrow" name="clicked"/>
+                                                        <signal handler="pollo_asado" name="clicked"/>
                                                         <child>
                                                             <widget class="GtkAlignment" id="alignment34">
                                                                 <property name="visible">True</property>

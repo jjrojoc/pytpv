@@ -46,6 +46,7 @@ import MySQLdb
 # librerias para ejecutar xpdf y para ver la linea de comandos
 import os, os.path, sys
 import clients
+from buttonbox import botonera
 # constantes
 
 
@@ -69,12 +70,12 @@ ARTICULOS_CONSULTA = 'select articulos.id, familia.nombre, articulos.descripcion
 # para las columnas del listView
 (ID, FAMILIA, DESCRIPCION, STOCK, STOCKMINIMO, PRECIOVENTA, IMAGEN) = range(7)
 
-class PyTPV:
+class Pytpv:
     def __init__(self):
         self.db = MySQLdb.connect(db='pytpvdb',
                                   user='root')
         self.cursor = self.db.cursor()
-        
+        self.botonera = botonera(self)
         self.widgets = ObjectBuilder('pytpv.glade')
         #self.widgets = gtk.glade.XML('pytpv.glade')
         w = self.widgets.get_widget('window1')
@@ -330,9 +331,17 @@ class PyTPV:
             
                 
         
-    def ticketrow(self, linea=None):
-        clients.ticketrow(self)
+    def pollo_asado(self, linea=None):
         
+        self.botonera.pollo_asado(linea=None)
+        
+        
+    def medio_pollo(self, linea=None):
+        self.botonera.medio_pollo(linea=None)
+        
+    def insertalinea(self, linea):
+        
+        self.botonera.insertalinea(self, linea)
     
     def quitaAsistente(self, boton, datos=None):
         seleccion = []
@@ -439,33 +448,8 @@ class PyTPV:
             self.listclientstore.append(linea)
     
     
-    def medio_pollo(self, linea= None):
     
-        self.cursor.execute('select id, descripcion, precio_venta from articulos where id = 2')
-        for linea in self.cursor.fetchall():
-            id, descripcion, precio = linea
-#            a=7.25+2.67
-#            b= locale.format("%.2f", a)
-#            print b
-            linea = [id] + [precio]
-            id_ticket = self.insertalinea(linea)
-#            print id_ticket
-            linea = [id_ticket] + [1] + [descripcion] + [precio]
-            print linea
-            self.ticketstore.append(linea)
-            
-                        
-    def insertalinea (self, linea):
-        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', linea)
-        self.cursor.execute('select last_insert_id(), cantidad, (select descripcion from articulos where id = 2), precio_venta from ticket_linea where articulo_FK_id = %s and precio_venta = %s', linea)
-        
-        return int(self.cursor.fetchone()[0])
-        
-        
-                   
-                        
-            
                         
 if __name__ == '__main__':
-    a = PyTPV()
+    a = Pytpv()
     a.run()
