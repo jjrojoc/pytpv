@@ -36,7 +36,7 @@ import gtk.glade
 import gobject
 import pytpv
 import MySQLdb
-
+import locale
 
 
 CLIENTES_CONSULTA = 'select * from clientes'
@@ -47,6 +47,35 @@ CLIENTES_CONSULTA = 'select * from clientes'
 db = MySQLdb.connect(db='pytpvdb', 
                                   user='root')
 cursor = db.cursor()
+
+
+def ticketrow (self, linea=None):
+    self.cursor.execute('select id, descripcion, precio_venta from articulos where id = 1')
+    for linea in self.cursor.fetchall():
+        id, descripcion, precio = linea
+#            a=7.25+2.67
+#            b= locale.format("%.2f", a)
+#            print b
+        linea = [id] + [precio]
+        id_ticket = self.insertalinea(linea)
+#            print id_ticket
+        linea = [id_ticket] + [1] + [descripcion] + [locale.format("%.2f", 1*precio)]
+        print linea
+        self.ticketstore.append(linea)
+            
+        
+        
+            
+                        
+def insertalinea (self, linea):
+    self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 2, %s, %s)', linea)
+    self.cursor.execute('SELECT last_insert_id(), cantidad, (select descripcion from articulos where id = 1),\
+                         (cantidad*precio_venta) from ticket_linea where articulo_FK_id = %s and precio_venta = %s', linea)
+    
+    return int(self.cursor.fetchone()[0])
+
+
+
 
 def buscaClientes(datos=None):
     listclientstore.clear()

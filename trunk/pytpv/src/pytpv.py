@@ -50,21 +50,24 @@ import clients
 
 
 CONSULTA_BASE = 'select id, nombre, direccion from clientes'
-LINEAS_TICKET = 'select id, descripcion, precio_venta from articulos'
+LINEAS_TICKET = 'select ticket_linea.id, ticket_linea.cantidad, articulos.descripcion,\
+                 ticket_linea.precio_venta from ticket_linea inner join articulos on articulos.id = articulo_FK_id'
 CLIENTES_BASE = 'select id, nombre, direccion from clientes'
 CLIENTES_CONSULTA = 'select * from clientes'
-ARTICULOS_CONSULTA = 'select * from articulos'
+ARTICULOS_CONSULTA = 'select articulos.id, familia.nombre, articulos.descripcion,\
+                     articulos.stock, articulos.stock_minimo, articulos.precio_venta, articulos.imagen from articulos\
+                     inner join familia on familia.id = familia_FK_id'
 
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION) = range(3)
 # para las columnas del ticketstore
-(ID_TICKET, UNI, DESCRIPCION, IMP) = range(4)
+(IDTICKET, UNI, ARTICULO_FK_ID, IMP) = range(4)
 # para las columnas del listaclientes
 (IDCLIENTE, NOMBRECLIENTE, DIRECCIONCLIENTE) = range(3)
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION, FECHA_ALTA) = range(4)
 # para las columnas del listView
-(ID, FAMILIA, DESCRIPCION, STOCK, STOCK_MINIMO, PRECIO_VENTA, IMAGEN) = range(7)
+(ID, FAMILIA, DESCRIPCION, STOCK, STOCKMINIMO, PRECIOVENTA, IMAGEN) = range(7)
 
 class PyTPV:
     def __init__(self):
@@ -230,7 +233,7 @@ class PyTPV:
         self.listStore.clear()
         c = self.cursor
         #c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre = %s', self.widgets.get_widget('entBusqueda').get_text())
-        c.execute('select id, nombre, direccion, importe, hora from acreditaciones where nombre like %s', self.widgets.get_widget('entBusqueda').get_text()+'%')
+        c.execute('select id, nombre, direccion from clientes where nombre like %s', self.widgets.get_widget('entBusqueda').get_text()+'%')
         datos = c.fetchall()
         
         for dato in datos:
@@ -257,9 +260,10 @@ class PyTPV:
         c.execute(cargalineas)
         
         for linea in c.fetchall():
-            id_tk, nombre, precio = linea
+            id, cantidad, nombre, precio = linea
             
-            linea = [id_tk] + [1] + [nombre] + [precio]
+            linea = [id] + [cantidad] + [nombre] + [precio]
+            
             self.ticketstore.append(linea)
             
     def cargaclientes(self, clientes):        
@@ -286,7 +290,7 @@ class PyTPV:
             
             
     def on_listView_cursor_changed(self, datos=None):
-        self.ticketstore.clear()
+        #self.ticketstore.clear()
         self.cargalineasticket(LINEAS_TICKET)
         
     def on_listaclientes_cursor_changed(self, datos=None):
@@ -326,24 +330,9 @@ class PyTPV:
             
                 
         
-    def ticketrow (self, linea=None):
-        self.cursor.execute('select descripcion, precio_venta from articulos where id = 1')
-        for linea in self.cursor.fetchall():
-            nombre, precio = linea
-            a=7.25*2.6
-            b= locale.format("%.2f", a)
-            print b
-            id_ticket = self.insertalinea(linea)
-            linea = [id_ticket] + [1] + [nombre] + [locale.format("%.2f", precio)]
-            print linea
-            self.ticketstore.append(linea)
-            
-                        
-    def insertalinea (self, linea):
-        self.cursor.execute('insert into ticket_linea (articulo_FK_id, precio_venta) values (%s, %s, %s)', linea)
-        self.cursor.execute('SELECT max(id_ticket) from ticket_linea where cantidad =%s AND articulo_FK_id = %s AND precio_venta=%s', linea)
-        return int(self.cursor.fetchone()[0])
-                
+    def ticketrow(self, linea=None):
+        clients.ticketrow(self)
+        
     
     def quitaAsistente(self, boton, datos=None):
         seleccion = []
@@ -408,14 +397,18 @@ class PyTPV:
         
     def actualizaticketstore(self, iter):
         c = self.cursor
-        c.execute("""update ticket_linea set cantidad = %s, id_articulo = %s, importe = %s
-        where id_ticket = %s""", (
-            self.ticketstore.get_value(iter, UNI).encode('latin-1'),
-            self.ticketstore.get_value(iter, DESCRIPCION).encode('latin-1'),
-            self.ticketstore.get_value(iter, IMP).encode('latin-1'),
-            self.ticketstore.get_value(iter, ID_TICKET),
+        r = self.ticketstore.get_value(iter, UNI).encode('latin-1')
+        s = self.ticketstore.get_value(iter, IMP).encode('latin-1')
+        t = self.ticketstore.get_value(iter, IDTICKET)
+        print r, s, t
+        c.execute("""update ticket_linea set cantidad = %s, precio_venta = %s where id = %s""", (
+            
+#            self.ticketstore.get_value(iter, ARTICULO_FK_ID).encode('latin-1'),
+          r, s, t  
+            
             ))
-
+        
+        
     def salir(self, button, datos=None):
         dialog = self.widgets.get_widget('dlgSalida')
         resultado = dialog.run()
@@ -444,7 +437,32 @@ class PyTPV:
             id, nombre, direccion, fecha_alta = linea
             linea = [id] + [nombre] + [direccion] + [fecha_alta] 
             self.listclientstore.append(linea)
-               
+    
+    
+    def medio_pollo(self, linea= None):
+    
+        self.cursor.execute('select id, descripcion, precio_venta from articulos where id = 2')
+        for linea in self.cursor.fetchall():
+            id, descripcion, precio = linea
+#            a=7.25+2.67
+#            b= locale.format("%.2f", a)
+#            print b
+            linea = [id] + [precio]
+            id_ticket = self.insertalinea(linea)
+#            print id_ticket
+            linea = [id_ticket] + [1] + [descripcion] + [precio]
+            print linea
+            self.ticketstore.append(linea)
+            
+                        
+    def insertalinea (self, linea):
+        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', linea)
+        self.cursor.execute('select last_insert_id(), cantidad, (select descripcion from articulos where id = 2), precio_venta from ticket_linea where articulo_FK_id = %s and precio_venta = %s', linea)
+        
+        return int(self.cursor.fetchone()[0])
+        
+        
+                   
                         
             
                         
