@@ -59,8 +59,9 @@ CLIENTES_CONSULTA = 'select * from clientes'
 ARTICULOS_CONSULTA = 'select articulos.id, familia.nombre, articulos.descripcion,\
                      articulos.stock, articulos.stock_minimo, articulos.precio_venta, articulos.imagen from articulos\
                      inner join familia on familia.id = familia_FK_id'
-HISTORICO_CONSULTA = 'select ticket.id, ticket.cliente_FK_id, ticket.caja_FK_id,\
-                     ticket.fecha, ticket.hora, ticket.estado, ticket.metalico from ticket'
+HISTORICO_CONSULTA = 'select ticket.id, clientes.nombre, clientes.direccion,\
+                     ticket.caja_FK_id, ticket.fecha, ticket.hora, ticket.estado,\
+                      ticket.metalico from ticket inner join clientes on clientes.id = cliente_FK_id'
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION) = range(3)
 # para las columnas del ticketstore
@@ -233,7 +234,7 @@ class PyTPV:
             renderer2.connect('edited', self.editedCallback, i+1)
             
             
-        self.historicostore = gtk.ListStore(int, str, str, str, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
+        self.historicostore = gtk.ListStore(int, str, str, str, str, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
         
         self.cargahistorico(HISTORICO_CONSULTA)
         
@@ -243,7 +244,7 @@ class PyTPV:
         self.historicoview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
         
     
-        columns3 = ['ID', 'CLIENTE_FK_ID', 'CAJA_FK_ID', 'FECHA', 'HORA', 'ESTADO', 'METALICO']
+        columns3 = ['ID', 'CLIENTE', 'DIRECCION', 'CAJA', 'FECHA', 'HORA', 'ESTADO', 'METALICO']
         for i in range(len(columns3)):
             renderer3 = gtk.CellRendererText()
             renderer3.set_property('editable', True)
@@ -328,9 +329,9 @@ class PyTPV:
         c.execute(historico)
         
         for linea in c.fetchall():
-            idhistorico, cliente_FK_id, caja_FK_id, fecha, hora, estado, metalico= linea
+            idhistorico, cliente_FK_id, direccion_FK_id, caja_FK_id, fecha, hora, estado, metalico= linea
             
-            linea = [idhistorico] + [cliente_FK_id] + [caja_FK_id] + [fecha] + [hora] + \
+            linea = [idhistorico] + [cliente_FK_id] + [direccion_FK_id] + [caja_FK_id] + [fecha] + [hora] + \
                     [estado] + [metalico]
             self.historicostore.append(linea)
             
@@ -338,6 +339,7 @@ class PyTPV:
     def on_listView_cursor_changed(self, datos=None):
         self.ticketstore.clear()
         self.cargalineasticket(LINEAS_TICKET)
+        gtk_widget_set_scroll_adjustments()
         
     def on_listaclientes_cursor_changed(self, datos=None):
                 

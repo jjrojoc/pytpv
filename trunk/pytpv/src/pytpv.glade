@@ -15492,12 +15492,18 @@ weight="bold"&gt;¿Desea cerrar PyTPV?&lt;/span&gt;</property>
                                     <widget class="GtkHBox" id="hbox11">
                                         <property name="visible">True</property>
                                         <child>
-                                            <widget class="GtkTreeView" id="listClients">
-                                                <property name="is_focus">True</property>
-                                                <property name="model">model4</property>
-                                                <property name="rules_hint">True</property>
-                                                <property name="search_column">0</property>
+                                            <widget class="GtkScrolledWindow" id="scrolledwindow5">
+                                                <property name="hscrollbar_policy">automatic</property>
                                                 <property name="visible">True</property>
+                                                <child>
+                                                    <widget class="GtkTreeView" id="listClients">
+                                                        <property name="is_focus">True</property>
+                                                        <property name="model">model4</property>
+                                                        <property name="rules_hint">True</property>
+                                                        <property name="search_column">0</property>
+                                                        <property name="visible">True</property>
+                                                    </widget>
+                                                </child>
                                             </widget>
                                         </child>
                                     </widget>
@@ -15594,11 +15600,18 @@ weight="bold"&gt;¿Desea cerrar PyTPV?&lt;/span&gt;</property>
                                     <widget class="GtkHBox" id="hbox14">
                                         <property name="visible">True</property>
                                         <child>
-                                            <widget class="GtkTreeView" id="listArticles">
-                                                <property name="is_focus">True</property>
-                                                <property name="model">model5</property>
-                                                <property name="search_column">0</property>
+                                            <widget class="GtkScrolledWindow" id="scrolledwindow4">
+                                                <property name="hscrollbar_policy">automatic</property>
                                                 <property name="visible">True</property>
+                                                <child>
+                                                    <widget class="GtkTreeView" id="listArticles">
+                                                        <property name="is_focus">True</property>
+                                                        <property name="model">model5</property>
+                                                        <property name="rules_hint">True</property>
+                                                        <property name="search_column">0</property>
+                                                        <property name="visible">True</property>
+                                                    </widget>
+                                                </child>
                                             </widget>
                                         </child>
                                     </widget>
@@ -15743,11 +15756,18 @@ weight="bold"&gt;¿Desea cerrar PyTPV?&lt;/span&gt;</property>
                                     </packing>
                                 </child>
                                 <child>
-                                    <widget class="GtkTreeView" id="treeviewhistory">
-                                        <property name="is_focus">True</property>
-                                        <property name="model">model5</property>
-                                        <property name="search_column">0</property>
+                                    <widget class="GtkScrolledWindow" id="scrolledwindow6">
+                                        <property name="hscrollbar_policy">automatic</property>
                                         <property name="visible">True</property>
+                                        <child>
+                                            <widget class="GtkTreeView" id="treeviewhistory">
+                                                <property name="is_focus">True</property>
+                                                <property name="model">model5</property>
+                                                <property name="rules_hint">True</property>
+                                                <property name="search_column">0</property>
+                                                <property name="visible">True</property>
+                                            </widget>
+                                        </child>
                                     </widget>
                                     <packing>
                                         <property name="position">1</property>
