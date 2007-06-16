@@ -34,6 +34,8 @@ pygtk.require('2.0')
 import gtk
 import gtk.glade
 import gobject
+
+
 from gazpacho.loader.loader import ObjectBuilder
 
 # libreria para el manejo de fuentes
@@ -45,10 +47,9 @@ import MySQLdb
 
 # librerias para ejecutar xpdf y para ver la linea de comandos
 import os, os.path, sys
-import clients
-from buttonbox import botonera
-# constantes
+#import clients
 
+# constantes
 
 CONSULTA_BASE = 'select id, nombre, direccion from clientes'
 LINEAS_TICKET = 'select ticket_linea.id, ticket_linea.cantidad, articulos.descripcion,\
@@ -58,7 +59,8 @@ CLIENTES_CONSULTA = 'select * from clientes'
 ARTICULOS_CONSULTA = 'select articulos.id, familia.nombre, articulos.descripcion,\
                      articulos.stock, articulos.stock_minimo, articulos.precio_venta, articulos.imagen from articulos\
                      inner join familia on familia.id = familia_FK_id'
-
+HISTORICO_CONSULTA = 'select ticket.id, ticket.cliente_FK_id, ticket.caja_FK_id,\
+                     ticket.fecha, ticket.hora, ticket.estado, ticket.metalico from ticket'
 # para las columnas del listView
 (ID, NOMBRE, DIRECCION) = range(3)
 # para las columnas del ticketstore
@@ -69,13 +71,16 @@ ARTICULOS_CONSULTA = 'select articulos.id, familia.nombre, articulos.descripcion
 (ID, NOMBRE, DIRECCION, FECHA_ALTA) = range(4)
 # para las columnas del listView
 (ID, FAMILIA, DESCRIPCION, STOCK, STOCKMINIMO, PRECIOVENTA, IMAGEN) = range(7)
+# para las columnas del listView
+(ID, CLIENTE_FK_ID, CAJA_FK_ID, FECHA, HORA, ESTADO, METALICO) = range(7)
 
-class Pytpv:
+class PyTPV:
     def __init__(self):
         self.db = MySQLdb.connect(db='pytpvdb',
                                   user='root')
         self.cursor = self.db.cursor()
-        self.botonera = botonera(self)
+        
+#        self.botonera = botonera()
         self.widgets = ObjectBuilder('pytpv.glade')
         #self.widgets = gtk.glade.XML('pytpv.glade')
         w = self.widgets.get_widget('window1')
@@ -225,7 +230,35 @@ class Pytpv:
 #            column2.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
 #            column2.set_fixed_width(100)
             column2.set_sort_column_id(i+1)
-            renderer2.connect('edited', self.editedCallback, i+1)        
+            renderer2.connect('edited', self.editedCallback, i+1)
+            
+            
+        self.historicostore = gtk.ListStore(int, str, str, str, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
+        
+        self.cargahistorico(HISTORICO_CONSULTA)
+        
+        
+        self.historicoview = self.widgets.get_widget('treeviewhistory')
+        self.historicoview.set_model(self.historicostore)
+        self.historicoview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        
+    
+        columns3 = ['ID', 'CLIENTE_FK_ID', 'CAJA_FK_ID', 'FECHA', 'HORA', 'ESTADO', 'METALICO']
+        for i in range(len(columns3)):
+            renderer3 = gtk.CellRendererText()
+            renderer3.set_property('editable', True)
+            renderer3.connect('edited', self.editedCallback, i+1)
+            column3 = gtk.TreeViewColumn(columns3[i], renderer3, text=(i))
+            #column2.set_resizable(True)
+            column3.set_spacing(10)
+            column3.set_alignment(0.5)
+            #font = pango.FontDescription('helvetica 8')
+            #renderer2.set_property('font-desc', font)
+            self.historicoview.append_column(column3)
+#            column2.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+#            column2.set_fixed_width(100)
+            column3.set_sort_column_id(i+1)
+            renderer3.connect('edited', self.editedCallback, i+1)           
         
         # unidades por pagina para la impresion
         self.upp = 1
@@ -290,17 +323,29 @@ class Pytpv:
             self.listarticlestore.append(linea)
             
             
+    def cargahistorico(self, historico):        
+        c = self.cursor
+        c.execute(historico)
+        
+        for linea in c.fetchall():
+            idhistorico, cliente_FK_id, caja_FK_id, fecha, hora, estado, metalico= linea
+            
+            linea = [idhistorico] + [cliente_FK_id] + [caja_FK_id] + [fecha] + [hora] + \
+                    [estado] + [metalico]
+            self.historicostore.append(linea)
+            
+            
     def on_listView_cursor_changed(self, datos=None):
-        #self.ticketstore.clear()
+        self.ticketstore.clear()
         self.cargalineasticket(LINEAS_TICKET)
         
     def on_listaclientes_cursor_changed(self, datos=None):
                 
         selection = self.listaclienteview.get_selection()
-        treemodel, iter = selection.get_selected()    
-        id = treemodel.get_value(iter, 0)
-        nombre = treemodel.get_value(iter, 1)
-        direccion = treemodel.get_value(iter, 2)
+        treemodel, index = selection.get_selected()    
+        id = treemodel.get_value(index, 0)
+        nombre = treemodel.get_value(index, 1)
+        direccion = treemodel.get_value(index, 2)
         
                   
         self.widgets.get_widget('entNombre').set_text(nombre)
@@ -331,47 +376,81 @@ class Pytpv:
             
                 
         
-    def pollo_asado(self, linea=None):
+    def pollo_asado (self, linea=None):
+        self.cursor.execute('select id, descripcion, precio_venta from articulos where id = 1')
+        for linea in self.cursor.fetchall():
+            id, descripcion, precio = linea
+    #            a=7.25+2.67
+    #            b= locale.format("%.2f", a)
+    #            print b
+            linea = [id] + [precio]
+            id_ticket = self.insertalinea(linea)
+            print id_ticket
+            linea = [id_ticket] + [1] + [descripcion] + [precio]
+            print linea
+            
+            self.ticketstore.append(linea)
+                
+            
+    def insertalinea (self, linea):
+        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', linea)
+        self.cursor.execute('SELECT last_insert_id(), cantidad, (select descripcion from articulos where id = 1),\
+                             (cantidad*precio_venta) from ticket_linea where articulo_FK_id = %s and precio_venta = %s', linea)
         
-        self.botonera.pollo_asado(linea=None)
-        
-        
+        return int(self.cursor.fetchone()[0])
+    
+    
     def medio_pollo(self, linea=None):
-        self.botonera.medio_pollo(linea=None)
         
-    def insertalinea(self, linea):
+            self.cursor.execute('select id, descripcion, precio_venta from articulos where id = 2')
+            for linea in self.cursor.fetchall():
+                id, descripcion, precio = linea
+    #            a=7.25+2.67
+    #            b= locale.format("%.2f", a)
+    #            print b
+                linea = [id] + [precio]
+                id_ticket = self.insertalinea1(linea)
+    #            print id_ticket
+                linea = [id_ticket] + [1] + [descripcion] + [precio]
+                print linea
+                self.ticketstore.append(linea)
+                
+                            
+    def insertalinea1 (self, linea):
+        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', linea)
+        self.cursor.execute('select last_insert_id(), cantidad, (select descripcion from articulos where id = 2), precio_venta from ticket_linea where articulo_FK_id = %s and precio_venta = %s', linea)
         
-        self.botonera.insertalinea(self, linea)
+        return int(self.cursor.fetchone()[0])
     
     def quitaAsistente(self, boton, datos=None):
         seleccion = []
         self.listView.get_selection().selected_foreach(
-            lambda model, path, iter, sel = seleccion: sel.append(iter))
-        for iter in seleccion:
-            self.borraBD(iter)
-            self.listStore.remove(iter)
+            lambda model, path, index, sel = seleccion: sel.append(index))
+        for index in seleccion:
+            self.borraBD(index)
+            self.listStore.remove(index)
             
     def quitalineaticket(self, boton, linea=None):
         seleccion = []
         self.treeview3.get_selection().selected_foreach(
-            lambda model, path, iter, sel = seleccion: sel.append(iter))
-        for iter in seleccion:
-            print iter
-            self.borralineaticket(iter)
-            self.ticketstore.remove(iter)
+            lambda model, path, index, sel = seleccion: sel.append(index))
+        for index in seleccion:
+            print index
+            self.borralineaticket(index)
+            self.ticketstore.remove(index)
                 
     def run(self):
         gtk.main()
 
     def editedCallback(self, renderer, path, newText, column):
-        iter = self.listStore.get_iter(path)
-        self.listStore.set_value(iter, column, newText)
-        self.actualizaBD(iter)
+        index = self.listStore.get_index(path)
+        self.listStore.set_value(index, column, newText)
+        self.actualizaBD(index)
     
     def editedcells(self, render, path, newTex, columna):
-        iter = self.ticketstore.get_iter(path)
-        self.ticketstore.set_value(iter, columna, newTex)
-        self.actualizaticketstore(iter)
+        index = self.ticketstore.get_index(path)
+        self.ticketstore.set_value(index, columna, newTex)
+        self.actualizaticketstore(index)
         
     def insertaBD(self, datos):
         tmp = []
@@ -383,36 +462,36 @@ class Pytpv:
                             tmp)
         return int(self.cursor.fetchone()[0])
 
-    def borraBD(self, iter):
+    def borraBD(self, index):
         c = self.cursor
         c.execute('delete from clientes where id = %s',
-                  (self.listStore.get_value(iter, ID),))
+                  (self.listStore.get_value(index, ID),))
         
     
-    def borralineaticket(self, iter):
+    def borralineaticket(self, index):
         c = self.cursor
         c.execute('delete from ticket_linea where id = %s',
-                  (self.ticketstore.get_value(iter, ID_TICKET),))
+                  (self.ticketstore.get_value(index, IDTICKET),))
         
                 
-    def actualizaBD(self, iter):
+    def actualizaBD(self, index):
         c = self.cursor
         c.execute("""update clientes set nombre = %s, direccion = %s 
         where id = %s""", (
-            self.listStore.get_value(iter, NOMBRE).encode('latin-1'),
-            self.listStore.get_value(iter, DIRECCION).encode('latin-1'),
-            self.listStore.get_value(iter, ID)
+            self.listStore.get_value(index, NOMBRE).encode('latin-1'),
+            self.listStore.get_value(index, DIRECCION).encode('latin-1'),
+            self.listStore.get_value(index, ID)
             ))
         
-    def actualizaticketstore(self, iter):
+    def actualizaticketstore(self, index):
         c = self.cursor
-        r = self.ticketstore.get_value(iter, UNI).encode('latin-1')
-        s = self.ticketstore.get_value(iter, IMP).encode('latin-1')
-        t = self.ticketstore.get_value(iter, IDTICKET)
+        r = self.ticketstore.get_value(index, UNI).encode('latin-1')
+        s = self.ticketstore.get_value(index, IMP).encode('latin-1')
+        t = self.ticketstore.get_value(index, IDTICKET)
         print r, s, t
         c.execute("""update ticket_linea set cantidad = %s, precio_venta = %s where id = %s""", (
             
-#            self.ticketstore.get_value(iter, ARTICULO_FK_ID).encode('latin-1'),
+#            self.ticketstore.get_value(index, ARTICULO_FK_ID).encode('latin-1'),
           r, s, t  
             
             ))
@@ -451,5 +530,5 @@ class Pytpv:
     
                         
 if __name__ == '__main__':
-    a = Pytpv()
+    a = PyTPV()
     a.run()

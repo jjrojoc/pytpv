@@ -4,13 +4,13 @@ from encodings import utf_8
 
 from codificacion import *
 
-from pytpv import *
+
 #print dir(pytpv)
 import locale
 import MySQLdb
 
-class botonera():
-    def __init__(self, pytpv):
+class botonera:
+    def __init__(self):
     
         self.db = MySQLdb.connect(db='pytpvdb',
                                       user='root')
@@ -30,7 +30,7 @@ class botonera():
             linea = [id_ticket] + [1] + [descripcion] + [precio]
             print linea
             
-            self.ticketstore.append(linea)
+#            self.ticketstore.append(linea)
                 
             
     def insertalinea (self, linea):
