@@ -51,7 +51,8 @@ import os, os.path, sys
 
 # constantes
 
-CONSULTA_BASE = 'select id, nombre, direccion from clientes'
+CONSULTA_BASE = 'select ticket.id, clientes.nombre, clientes.direccion\
+                 from ticket inner join clientes on clientes.id = cliente_FK_id'
 LINEAS_TICKET = 'select ticket_linea.id, ticket_linea.cantidad, articulos.descripcion,\
                  ticket_linea.precio_venta from ticket_linea inner join articulos on articulos.id = articulo_FK_id'
 CLIENTES_BASE = 'select id, nombre, direccion from clientes'
