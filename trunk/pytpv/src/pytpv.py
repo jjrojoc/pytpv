@@ -340,15 +340,15 @@ class PyTPV:
     def on_listView_cursor_changed(self, datos=None):
         self.ticketstore.clear()
         self.cargalineasticket(LINEAS_TICKET)
-        gtk_widget_set_scroll_adjustments()
+        
         
     def on_listaclientes_cursor_changed(self, datos=None):
                 
         selection = self.listaclienteview.get_selection()
-        treemodel, index = selection.get_selected()    
-        id = treemodel.get_value(index, 0)
-        nombre = treemodel.get_value(index, 1)
-        direccion = treemodel.get_value(index, 2)
+        treemodel, iter = selection.get_selected()    
+        id = treemodel.get_value(iter, 0)
+        nombre = treemodel.get_value(iter, 1)
+        direccion = treemodel.get_value(iter, 2)
         
                   
         self.widgets.get_widget('entNombre').set_text(nombre)
@@ -428,32 +428,32 @@ class PyTPV:
     def quitaAsistente(self, boton, datos=None):
         seleccion = []
         self.listView.get_selection().selected_foreach(
-            lambda model, path, index, sel = seleccion: sel.append(index))
-        for index in seleccion:
-            self.borraBD(index)
-            self.listStore.remove(index)
+            lambda model, path, iter, sel = seleccion: sel.append(iter))
+        for iter in seleccion:
+            self.borraBD(iter)
+            self.listStore.remove(iter)
             
     def quitalineaticket(self, boton, linea=None):
         seleccion = []
         self.treeview3.get_selection().selected_foreach(
-            lambda model, path, index, sel = seleccion: sel.append(index))
-        for index in seleccion:
-            print index
-            self.borralineaticket(index)
-            self.ticketstore.remove(index)
+            lambda model, path, iter, sel = seleccion: sel.append(iter))
+        for iter in seleccion:
+            print iter
+            self.borralineaticket(iter)
+            self.ticketstore.remove(iter)
                 
     def run(self):
         gtk.main()
 
     def editedCallback(self, renderer, path, newText, column):
-        index = self.listStore.get_index(path)
-        self.listStore.set_value(index, column, newText)
-        self.actualizaBD(index)
+        iter = self.listStore.get_iter(path)
+        self.listStore.set_value(iter, column, newText)
+        self.actualizaBD(iter)
     
     def editedcells(self, render, path, newTex, columna):
-        index = self.ticketstore.get_index(path)
-        self.ticketstore.set_value(index, columna, newTex)
-        self.actualizaticketstore(index)
+        iter = self.ticketstore.get_iter(path)
+        self.ticketstore.set_value(iter, columna, newTex)
+        self.actualizaticketstore(iter)
         
     def insertaBD(self, datos):
         tmp = []
@@ -465,36 +465,36 @@ class PyTPV:
                             tmp)
         return int(self.cursor.fetchone()[0])
 
-    def borraBD(self, index):
+    def borraBD(self, iter):
         c = self.cursor
         c.execute('delete from clientes where id = %s',
-                  (self.listStore.get_value(index, ID),))
+                  (self.listStore.get_value(iter, ID),))
         
     
-    def borralineaticket(self, index):
+    def borralineaticket(self, iter):
         c = self.cursor
         c.execute('delete from ticket_linea where id = %s',
-                  (self.ticketstore.get_value(index, IDTICKET),))
+                  (self.ticketstore.get_value(iter, IDTICKET),))
         
                 
-    def actualizaBD(self, index):
+    def actualizaBD(self, iter):
         c = self.cursor
         c.execute("""update clientes set nombre = %s, direccion = %s 
         where id = %s""", (
-            self.listStore.get_value(index, NOMBRE).encode('latin-1'),
-            self.listStore.get_value(index, DIRECCION).encode('latin-1'),
-            self.listStore.get_value(index, ID)
+            self.listStore.get_value(iter, NOMBRE).encode('latin-1'),
+            self.listStore.get_value(iter, DIRECCION).encode('latin-1'),
+            self.listStore.get_value(iter, ID)
             ))
         
-    def actualizaticketstore(self, index):
+    def actualizaticketstore(self, iter):
         c = self.cursor
-        r = self.ticketstore.get_value(index, UNI).encode('latin-1')
-        s = self.ticketstore.get_value(index, IMP).encode('latin-1')
-        t = self.ticketstore.get_value(index, IDTICKET)
+        r = self.ticketstore.get_value(iter, UNI).encode('latin-1')
+        s = self.ticketstore.get_value(iter, IMP).encode('latin-1')
+        t = self.ticketstore.get_value(iter, IDTICKET)
         print r, s, t
         c.execute("""update ticket_linea set cantidad = %s, precio_venta = %s where id = %s""", (
             
-#            self.ticketstore.get_value(index, ARTICULO_FK_ID).encode('latin-1'),
+#            self.ticketstore.get_value(iter, ARTICULO_FK_ID).encode('latin-1'),
           r, s, t  
             
             ))
