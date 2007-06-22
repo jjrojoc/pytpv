@@ -94,8 +94,12 @@ class PyTPV:
         #today = datetime.date.today()
         w.set_title("PyTPV - %s" % today)
         w.maximize()
-        
-        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.png")
+        print 'sys.argv[0] =', sys.argv[0]
+        pathname = os.path.dirname(sys.argv[0])
+        print 'path =', pathname
+        print 'full path =', os.path.abspath(pathname)
+
+        icon = gtk.gdk.pixbuf_new_from_file((pathname)+/pixmaps/pytpv2.png")
         w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
        
