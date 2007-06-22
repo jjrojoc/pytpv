@@ -77,6 +77,8 @@ HISTORICO_CONSULTA = 'select ticket.id, clientes.nombre, clientes.direccion,\
 (ID, CLIENTE_FK_ID, CAJA_FK_ID, FECHA, HORA, ESTADO, METALICO) = range(7)
 
 class PyTPV:
+    """Clase principalde pytpv desde donde se cargan todos los modulos
+    """
     def __init__(self):
         self.db = MySQLdb.connect(db='pytpvdb',
                                   user='root')
@@ -93,7 +95,7 @@ class PyTPV:
         w.set_title("PyTPV - %s" % today)
         w.maximize()
         
-        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.ico")
+        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.png")
         w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
        
@@ -334,8 +336,8 @@ class PyTPV:
             
             linea = [idhistorico] + [cliente_FK_id] + [direccion_FK_id] + [caja_FK_id] + [fecha] + [hora] + \
                     [estado] + [metalico]
-            self.historicostore.append(linea)
-            
+            self.historicostore.append(linea)        
+    
             
     def on_listView_cursor_changed(self, datos=None):
         self.ticketstore.clear()
@@ -529,7 +531,12 @@ class PyTPV:
             linea = [id] + [nombre] + [direccion] + [fecha_alta] 
             self.listclientstore.append(linea)
     
-    
+    def acercade(self, button):
+        dialog = self.widgets.get_widget('dlgacercade')
+        resultado = dialog.run()
+        
+        if resultado == 1:
+            dialog.hide()
     
                         
 if __name__ == '__main__':
