@@ -99,7 +99,7 @@ class PyTPV:
         print 'path =', pathname
         print 'full path =', os.path.abspath(pathname)
 
-        icon = gtk.gdk.pixbuf_new_from_file((pathname)+/pixmaps/pytpv2.png")
+        icon = gtk.gdk.pixbuf_new_from_file((pathname)+"/pixmaps/pytpv2.png")
         w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
        

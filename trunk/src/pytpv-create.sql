@@ -109,7 +109,7 @@ CREATE TABLE `clientes` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `cliente_unique` (`id`),
   KEY `nombre` (`nombre`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `clientes`
@@ -300,7 +300,10 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `ticket`;
 CREATE TABLE `ticket` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `cliente_FK_id` tinyint(3) unsigned NOT NULL,
+  `credito` tinyint(1) default NULL,
+  `recogido` tinyint(1) default NULL,
+  `servicioadomicilio` tinyint(1) default NULL,
+  `cliente_FK_id` int(10) unsigned NOT NULL,
   `caja_FK_id` tinyint(3) unsigned NOT NULL,
   `fecha` date NOT NULL,
   `hora` time NOT NULL,
@@ -334,7 +337,7 @@ CREATE TABLE `ticket_linea` (
   PRIMARY KEY  (`id`,`ticket_FK_id`),
   KEY `ticket_linea_FK_Index1` (`ticket_FK_id`),
   KEY `ticket_linea_FK_Index2` (`articulo_FK_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `ticket_linea`
@@ -386,4 +389,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2007-06-16 16:35:09
+-- Dump completed on 2007-06-22 17:46:24
