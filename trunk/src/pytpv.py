@@ -77,7 +77,7 @@ HISTORICO_CONSULTA = 'select ticket.id, clientes.nombre, clientes.direccion,\
 (ID, CLIENTE_FK_ID, CAJA_FK_ID, FECHA, HORA, ESTADO, METALICO) = range(7)
 
 class PyTPV:
-    """Clase principalde pytpv desde donde se cargan todos los modulos
+    """Clase principal de pytpv desde donde se cargan todos los modulos
     """
     def __init__(self):
         self.db = MySQLdb.connect(db='pytpvdb',
@@ -94,12 +94,9 @@ class PyTPV:
         #today = datetime.date.today()
         w.set_title("PyTPV - %s" % today)
         w.maximize()
-        print 'sys.argv[0] =', sys.argv[0]
-        pathname = os.path.dirname(sys.argv[0])
-        print 'path =', pathname
-        print 'full path =', os.path.abspath(pathname)
+        
 
-        icon = gtk.gdk.pixbuf_new_from_file((pathname)+"/pixmaps/pytpv2.png")
+        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.png")
         w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
        
