@@ -44,7 +44,7 @@ import pango
 import locale
 # librerias para el acceso a base de datos
 import MySQLdb
-
+import lib.dialogs as dialogs
 # librerias para ejecutar xpdf y para ver la linea de comandos
 import os, os.path, sys
 #import clients
@@ -86,7 +86,7 @@ class PyTPV:
         
 #        self.botonera = botonera()
         self.widgets = ObjectBuilder('pytpv.glade')
-        #self.widgets = gtk.glade.XML('pytpv.glade')
+#        self.widgets = gtk.glade.XML('pytpv.glade')
         w = self.widgets.get_widget('window1')
         c = self.cursor
         c.execute('select (DATE_FORMAT(curdate(), "%d/%m/%Y"))')
@@ -96,7 +96,7 @@ class PyTPV:
         w.maximize()
         
 
-        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/pytpv2.png")
+        icon = gtk.gdk.pixbuf_new_from_file("images/pytpv2.png")
         w.set_icon(icon)
         self.widgets.signal_autoconnect(self)
        
@@ -532,12 +532,15 @@ class PyTPV:
             linea = [id] + [nombre] + [direccion] + [fecha_alta] 
             self.listclientstore.append(linea)
     
+
     def acercade(self, button):
-        dialog = self.widgets.get_widget('dlgacercade')
-        resultado = dialog.run()
-        
-        if resultado == 1:
-            dialog.hide()
+        dialogs.about_dialog(parent=self.widgets)
+#    def acercade(self, button):
+#        dialog = self.widgets.get_widget('dlgacercade')
+#        resultado = dialog.run()
+#        
+#        if resultado == 1:
+#            dialog.hide()
     
                         
 if __name__ == '__main__':
