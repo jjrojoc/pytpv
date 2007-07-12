@@ -11,6 +11,7 @@ class Toolbar(gtk.Toolbar):
 
         self.set_tooltips(True)
         self.set_border_width(1)
+        
 
     def add_space(self):
         self.insert(gtk.SeparatorToolItem(), -1)

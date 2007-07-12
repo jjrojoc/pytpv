@@ -18,9 +18,7 @@ class botonera(gtk.Notebook):
             
             self.set_homogeneous_tabs(True)
             self.append_page(self.tbl, label)        
-            self.tbl.show()
-            label.show()
-        
+                    
         
         aopt = gtk.FILL|gtk.SHRINK
         c = 0
@@ -36,8 +34,7 @@ class botonera(gtk.Notebook):
             button.add(box1)
             button.set_size_request(100, 100)
             self.get_nth_page(0).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
-            button.show()
-            
+                        
             #button.connect("clicked", self.callback, self.linea)
                       
              #self.linea = [self.idarticulo] + [self.precio_venta]

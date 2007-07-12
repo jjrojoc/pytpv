@@ -3,8 +3,8 @@
 
 import gtk
 from toolbar import Toolbar
-from tree import TreeView
-from derivedclass import BillListView
+from tree import TicketStore, TicketView
+from tree import TicketLineaStore, TicketLineaView
 from botonera import botonera
 class notebook(gtk.Notebook):
     def __init__(self):
@@ -23,32 +23,31 @@ class notebook(gtk.Notebook):
             
             self.set_homogeneous_tabs(True)
             self.append_page(vbox, label)
-            label.show()
+            
         
         self.vbox = gtk.VBox()    
         self.hbox = gtk.HBox() 
-        self.menubar = Toolbar()
-        self._populate_menubar()   
+        self.toolbar = Toolbar()
         
-        self.treeview = TreeView()
+        self._populate_toolbar()   
+        self.ticketstore = TicketStore()
+        self.ticketview = TicketView(self.ticketstore)
+        self.ticketlineastore = TicketLineaStore()
+        self.ticketlineaview = TicketLineaView(self.ticketlineastore)
         
-        self.treeview2 = BillListView()
         
         
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
              
-        self.get_nth_page(0).pack_start(self.menubar, expand=False, fill=True, padding=0)
-        self.menubar.show()
+        self.get_nth_page(0).pack_start(self.toolbar, expand=False, fill=True, padding=0)
         
         self.get_nth_page(0).pack_start(self.hbox)
         
         self.hbox.pack_start(self.scrolledwindow, expand=True, fill=True, padding=0)
-        self.scrolledwindow.show()
-        
-        self.scrolledwindow.add_with_viewport(self.treeview)
+                
+        self.scrolledwindow.add_with_viewport(self.ticketview)
         self.scrolledwindow.set_size_request(360, 300)
-        self.menubar.show()
         
         self.hbox.pack_start(self.vbox)
         
@@ -56,15 +55,12 @@ class notebook(gtk.Notebook):
         self.scrolledwindow2.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         
         self.vbox.pack_start(self.scrolledwindow2, expand=True, fill=True, padding=0)
-        self.scrolledwindow2.show()
-        
-        self.scrolledwindow2.add_with_viewport(self.treeview2)
-        self.treeview2.show()
+               
+        self.scrolledwindow2.add_with_viewport(self.ticketlineaview)
         
         self.table = gtk.Table(3, 3)
         self.table.set_homogeneous(True)
         self.vbox.pack_start(self.table, expand=False, fill=True, padding=2)
-        self.table.show()
         
         self.botonera = botonera()
         self.hbox.pack_start(self.botonera, expand=True, fill=True, padding=2)
@@ -75,64 +71,52 @@ class notebook(gtk.Notebook):
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c, c+1, r, r+1, aopt, aopt, 0, 0)
-        button.show()
-        
+       
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c+1, c+2, r, r+1, aopt, aopt, 0, 0)
-        button.show()
                
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         button.show()
         self.table.attach(button, c+2, c+3, r, r+1, aopt, aopt, 0, 0)
-        button.show()
-               
+        
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c, c+1, r+1, r+2, aopt, aopt, 0, 0)        
-        button.show()
         
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c+1, c+2, r+1, r+2, aopt, aopt, 0, 0)
-        button.show()
         
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c+2, c+3, r+1, r+2, aopt, aopt, 0, 0)
-        button.show()
         
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c, c+1, r+2, r+3, aopt, aopt, 0, 0)
-        button.show()
         
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c+1, c+2, r+2, r+3, aopt, aopt, 0, 0)
-        button.show()
         
         button = gtk.Button('pp')
         button.set_size_request(100, 80)
         self.table.attach(button, c+2, c+3, r+2, r+3, aopt, aopt, 0, 0)
-        button.show()
-        
-        self.show()
-           
         
                  
-    def _populate_menubar(self):
-#        self.menubar.add_stock(gtk.STOCK_NEW, "Add a new record", self.on_mnuNew_clicked)
-#        self.menubar.add_stock(gtk.STOCK_EDIT, "Edit a record", self.on_mnuEdit_clicked)
-#        self.menubar.add_stock(gtk.STOCK_DELETE, "Delete selected record", self.on_mnuDelete_clicked)
-#        self.menubar.add_space()
-#        self.menubar.add_button(gtk.STOCK_APPLY, "Paid", "Mark as paid", self.on_mnuPaid_clicked)
-#        self.menubar.add_button(gtk.STOCK_UNDO, "Not Paid", "Mark as not paid", self.on_mnuNotPaid_clicked)
-#        self.menubar.add_space()
-        self.menubar.add_stock(gtk.STOCK_ABOUT, "About the application", self.on_mnuAbout_clicked)
-#        self.menubar.add_space()
-        self.menubar.add_stock(gtk.STOCK_CLOSE, "Quit the application", self.delete)
+    def _populate_toolbar(self):
+#        self.toolbar.add_stock(gtk.STOCK_NEW, "Add a new record", self.on_mnuNew_clicked)
+#        self.toolbar.add_stock(gtk.STOCK_EDIT, "Edit a record", self.on_mnuEdit_clicked)
+#        self.toolbar.add_stock(gtk.STOCK_DELETE, "Delete selected record", self.on_mnuDelete_clicked)
+#        self.toolbar.add_space()
+#        self.toolbar.add_button(gtk.STOCK_APPLY, "Paid", "Mark as paid", self.on_mnuPaid_clicked)
+#        self.toolbar.add_button(gtk.STOCK_UNDO, "Not Paid", "Mark as not paid", self.on_mnuNotPaid_clicked)
+#        self.toolbar.add_space()
+        self.toolbar.add_stock(gtk.STOCK_ABOUT, "About the application", self.on_mnuAbout_clicked)
+#        self.toolbar.add_space()
+        self.toolbar.add_stock(gtk.STOCK_CLOSE, "Quit the application", self.delete)
 
     def on_mnuAbout_clicked(self, button):
         pass

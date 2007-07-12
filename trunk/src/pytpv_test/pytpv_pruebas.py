@@ -50,7 +50,7 @@ class PyTPV(gtk.Window):
         
         vbox.pack_start(self.notebook)
         
-        self.show()
+       
         
     def delete(self, widget, event=None):
         # Show the dialog for close application
@@ -71,4 +71,5 @@ def main():
 
 if __name__ == "__main__":
     pp = PyTPV()
+    pp.show_all()
     main()

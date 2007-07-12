@@ -3,105 +3,89 @@
 # -*- coding: utf-8 -*-
 
 import gtk
+import gobject
 import pango
-from genericlistview import GenericListView
 
-class TreeView(GenericListView):
-    """
-    This class represents a ListView for bills.
-    """
-    
-    def id_cell_data_function(self, column, cell, model, iter):
-            id = model.get_value (iter, 0)
-            cell.set_property('text', id)
-            column.set_visible(False)
-            
-    def recogido_cell_data_function(self, column, cell, model, iter):
-        recogido = model.get_value (iter, 1)
-#        cell.set_property('pixbuf', recogido)
-        cell.set_property('activatable', True)
-        #cell.set_property( "active", 0 )
-        #cell.set_property('markup', '<b>%s</b>' % pagado)
-        #cell.set_property('xalign', 0.0)
-#        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-#        column.set_fixed_width(100)        
-    
-    def credito_cell_data_function(self, column, cell, model, iter):
-        credito = model.get_value (iter, 2)
-        cell.set_property('pixbuf', credito)
-        #cell.set_property('markup', '<b>%s</b>' % pagado)
-        cell.set_property('xalign', 0.0)
-#        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-#        column.set_fixed_width(100)                
-    
-
-    def servicioadomicilio_cell_data_function(self, column, cell, model, iter):
-        servicioadomicilio = model.get_value (iter, 3)
-        cell.set_property('pixbuf', servicioadomicilio)
-        #cell.set_property('markup', '<b>%s</b>' % pagado)
-        cell.set_property('xalign', 0.0)
-             
-#        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-#        column.set_fixed_width(100)        
-
-    def nombre_cell_data_function(self, column, cell, model, iter):
-        nombre = model.get_value (iter, 4)
-        # Format the dueDate field
-        cell.set_property('text', nombre)
-        cell.set_property('editable', True)
-        cell.connect( 'edited', self.callback, model) 
-        cell.set_fixed_size(-1, 25)
-        font = pango.FontDescription('helvetica 8')
-        cell.set_property('font-desc', font)
-        column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
-        column.set_fixed_width(300)                   
-    def direccion_cell_data_function(self, column, cell, model, iter):
-        direccion = model.get_value(iter, 5)
-        cell.set_property('text', direccion)
-        cell.set_property('xalign', 0.0)
-        cell.set_fixed_size(-1, 25)
-        font = pango.FontDescription('helvetica 8')
-        cell.set_property('font-desc', font)
-                   
-    def callback(self, cell, path, new_text, model):
-        """Called when a text cell is edited.  It puts the new text
-           in the model so that it is displayed properly."""
-        #print "Change '%s' to '%s'" % (model[path][4], new_text)
-        model[path][4] = new_text
-        return        
-    
-
-    # This dictionary represents the columns displayed by the listview.
-    # It is indexed by the order you want them to be displayed, followed
-    # by the column title and cellrenderer type.
-    columns = {
-        0: ['ID', gtk.CellRendererText()],
-        1: ['RC', gtk.CellRendererToggle()],
-        2: ['CR', gtk.CellRendererPixbuf()],
-        3: ['S.D.', gtk.CellRendererPixbuf()],
-        4: ['NOMBRE', gtk.CellRendererText()],
-        5: ['DIRECCION', gtk.CellRendererText()]
-        
-        }
-        
+class TicketStore(gtk.TreeStore):
     def __init__(self):
-        GenericListView.__init__(self, self.columns)
-        # Set the following columns to invisible        
-        id = self.get_column(0)
-        id.set_cell_data_func(id.get_cell_renderers()[0], self.id_cell_data_function)
+        # Store for sales
+        gtk.TreeStore.__init__(self, str, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, str, str) 
+    """
+    This class represents a ListStore for Sales.
+    """
         
-        recogido = self.get_column(1)
-        recogido.set_cell_data_func(recogido.get_cell_renderers()[0], self.recogido_cell_data_function)        
+        #self(str, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, str, str)  # Id, Recogido, Credito, Servicio a Domicilio, Nombre, Direccion, Importe, Hora
+#        print self    
         
-        credito = self.get_column(2)
-        credito.set_cell_data_func(credito.get_cell_renderers()[0], self.credito_cell_data_function)
-
-        servicioadomicilio = self.get_column(3)
-        servicioadomicilio.set_cell_data_func(servicioadomicilio.get_cell_renderers()[0], self.servicioadomicilio_cell_data_function)        
-        
-        nombre = self.get_column(4)
-        nombre.set_cell_data_func(nombre.get_cell_renderers()[0], self.nombre_cell_data_function)
-
-        direccion = self.get_column(5)
-        direccion.set_cell_data_func(direccion.get_cell_renderers()[0], self.direccion_cell_data_function)
+class TicketView(gtk.TreeView):
+    def __init__(self, TicketStore):
+        # This class represent ticketview of ticketstore
+        gtk.TreeView.__init__(self)    
     
+        self.set_model(TicketStore)
+        #self.cargaDatos(CONSULTA_BASE)
+        self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.set_rules_hint(True)
+
+        columns = ['Recogido', 'Credito', 'S.D.', 'NOMBRE', 'DIRECCION']
+        for i in range(len(columns)):
+            renderer = gtk.CellRendererText()
+            renderer.set_property('editable', True)
+            renderer.connect('edited', self.editedCallback, i+1)
+            renderer.set_fixed_size(-1, 25)
+            column = gtk.TreeViewColumn(columns[i], renderer, text=(i+1))
+            #column.set_resizable(True)
+            column.set_spacing(10)
+            column.set_alignment(0.5)
+            font = pango.FontDescription('helvetica 8')
+            renderer.set_property('font-desc', font)
+            self.append_column(column)
+#            column.set_sizing(gtk.TREE_VIEW_COLUMN_FIXED)
+#            column.set_fixed_width(100)
+            column.set_sort_column_id(i+1)
+            renderer.connect('edited', self.editedCallback, i+1)
+            
+    def editedCallback(self, renderer, path, newText, column):
+        iter = self.listStore.get_iter(path)
+        self.listStore.set_value(iter, column, newText)
+        self.actualizaBD(iter)
+        
+
+class TicketLineaStore(gtk.TreeStore):
+    def __init__(self):
+        # Store for sales
+        gtk.TreeStore.__init__(self, int, str, str) 
+    """
+    This class represents a ListStore for Sales.
+    """
+        
+        #self(str, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, str, str)  # Id, Recogido, Credito, Servicio a Domicilio, Nombre, Direccion, Importe, Hora
+#        print self    
+        
+class TicketLineaView(gtk.TreeView):
+    def __init__(self, TicketLineaStore):
+        # This class represent ticketview of ticketstore
+        gtk.TreeView.__init__(self)    
+    
+        self.set_model(TicketLineaStore)
+        #self.cargaDatos(CONSULTA_BASE)
+        self.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.set_rules_hint(True)
+
+        columnsticketview = ['UNI', 'DESCRIPCION', 'IMP']
+                
+        for j in range(len(columnsticketview)):
+            render = gtk.CellRendererText()
+            render.set_property('editable', True)
+            render.connect('edited', self.editedcells, j+1)
+            render.set_fixed_size(-1, 25)
+            columna = gtk.TreeViewColumn(columnsticketview[j], render, text=(j+1))
+            columna.set_resizable(True)
+            self.append_column(columna)
+            columna.set_sort_column_id(j+1)
+            render.connect('edited', self.editedcells, j+1)
+        
+    def editedcells(self, render, path, newTex, columna):
+        iter = self.ticketstore.get_iter(path)
+        self.ticketstore.set_value(iter, columna, newTex)
+        self.actualizaticketstore(iter)        
