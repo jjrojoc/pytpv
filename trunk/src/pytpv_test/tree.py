@@ -6,10 +6,10 @@ import gtk
 import gobject
 import pango
 
-class TicketStore(gtk.TreeStore):
+class TicketStore(gtk.ListStore):
     def __init__(self):
         # Store for sales
-        gtk.TreeStore.__init__(self, str, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, str, str) 
+        gtk.ListStore.__init__(self, str, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, gtk.gdk.Pixbuf, str, str) 
     """
     This class represents a ListStore for Sales.
     """
@@ -51,10 +51,10 @@ class TicketView(gtk.TreeView):
         self.actualizaBD(iter)
         
 
-class TicketLineaStore(gtk.TreeStore):
+class TicketLineaStore(gtk.ListStore):
     def __init__(self):
         # Store for sales
-        gtk.TreeStore.__init__(self, int, str, str) 
+        gtk.ListStore.__init__(self, int, str, str) 
     """
     This class represents a ListStore for Sales.
     """
