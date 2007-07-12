@@ -18,7 +18,7 @@ AUTHORS = [
     ''
 ]
 
-ARTISTS = [
+ARTISTS = ['Juan José Rojo <jjrojoc@gmail.com>'
     
 ]
 

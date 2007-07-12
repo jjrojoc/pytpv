@@ -293,6 +293,81 @@ class PyTPV:
         # unidades por pagina para la impresion
         self.upp = 1
         
+        
+        
+        x = self.widgets.get_widget('hbox1')
+        
+        
+        
+        
+        # Create a new notebook, place the position of the tabs
+        notebook = gtk.Notebook()
+        notebook.set_tab_pos(gtk.POS_TOP)
+        notebook.show()
+        
+        self.show_tabs = True
+        self.show_border = True
+        
+        # Let's append a number of pages to the notebook
+        self.cursor.execute('select * from botonera')
+                     
+        for linea in self.cursor.fetchall():
+            self.idbotonera, self.numerotabla, self.etiquetatabla = linea
+            self.linea = [self.idbotonera]+[self.numerotabla]+[self.etiquetatabla]
+            
+            bufferl = self.etiquetatabla
+
+            tbl = gtk.Table(7, 6)
+            tbl.set_homogeneous(True)
+            tbl.show()
+            
+            label = gtk.Label(bufferl)
+            label.set_padding(15, 15)
+            notebook.set_homogeneous_tabs(True)
+            notebook.append_page(tbl, label)
+        
+        # Add buttons to specific table inside notebook
+        aopt = gtk.FILL|gtk.SHRINK
+        c = 0
+        r = 0        
+    
+        self.cursor.execute('select * from articulos')
+        
+        for linea in self.cursor.fetchall():
+            self.idarticulo, self.familia, self.descripcion, self.stock, self.stock_minimo, self.precio_venta, self.imagen, self.botonera_FK_id = linea
+            self.linea = [self.idarticulo]+[self.familia]+[self.descripcion]+[self.stock]+[self.stock_minimo]+[self.precio_venta]+[self.imagen]+[self.botonera_FK_id]
+            
+            button = gtk.Button()
+            box1 = self.xpm_label_box(self.imagen, self.descripcion)
+            button.add(box1)
+            button.set_size_request(100, 70)
+            button                
+            if self.botonera_FK_id == 1:
+                notebook.get_nth_page(0).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
+            elif self.botonera_FK_id == 2:
+                c=0
+                r=0
+                notebook.get_nth_page(1).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
+            elif self.botonera_FK_id:
+                c=0
+                r=0
+                notebook.get_nth_page(2).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
+            button.connect("clicked", self.callback, self.linea)                 
+            button.show()
+                    
+            c += 1
+            if c == 6:
+                c = 0
+                r += 1        
+             
+        x.pack_start(notebook)
+        
+        
+        
+      # Set what page to start at (page 4)
+        notebook.set_current_page(0)
+        
+        
     def buscar(self, datos=None):
         self.listStore.clear()
         c = self.cursor
@@ -568,6 +643,41 @@ class PyTPV:
 #        if resultado == 1:
 #            dialog.hide()
     
+    
+    def callback(self, widget, data=None):
+        print "Hello again - %s was pressed" % data
+        self.idarticulo, self.familia, self.descripcion, self.stock, self.stock_minimo, self.precio_venta, self.imagen, self.botonera_FK_id = data 
+        data = [self.idarticulo]+[self.precio_venta]
+##        self.cursor.execute('select * from articulos')
+##                         
+##        for linea in self.cursor.fetchall():
+##            idarticulo, familia, descripcion, stock, stock_minimo, precio_venta, imagen = linea
+##        linea = [self.idarticulo] + [self.precio_venta]
+        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', data)    
+    
+    def xpm_label_box(parent, xpm_filename, label_text):
+        # Create box for xpm and label
+#        box1 = gtk.HBox(False, 0)#Boton con texto al lado de la imagen
+        box1 = gtk.VBox(False, 0)#Boton con texto debajo de la magen
+        box1.set_border_width(2)
+        
+        # Now on to the image stuff
+        image = gtk.Image()
+        image.set_from_file(xpm_filename)
+    
+        # Create a label for the button
+        label = gtk.Label(label_text)
+            
+        # Pack the pixmap and label into the box
+        box1.pack_start(image, False, False, 3)
+        box1.pack_start(label, False, False, 3)
+    
+        image.show()
+        label.show()
+        box1.show()
+        return box1        
+
+        
                         
 if __name__ == '__main__':
     a = PyTPV()
