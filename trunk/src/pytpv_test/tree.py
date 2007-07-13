@@ -149,16 +149,7 @@ class TicketLineaView(gtk.TreeView):
     
     
     def addList(self, values):
-        """
-        Add multiple itens to the internal liststore
-
-        @type values: list
-        @param values: List of lists containing the data to add to the internal liststore.
-        @type parent: gtk.TreeIter
-        @param parent: Parent node or None.
-        @rtype: None
-        @return: None.
-        """
+        
         # Removes the model so the addition is quicker
         self.set_model(None)
         # Freezes list so to cancel refresh event
