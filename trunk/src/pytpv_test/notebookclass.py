@@ -3,8 +3,8 @@
 
 import gtk
 from toolbar import Toolbar
-from tree import TicketStore, TicketView
-from tree import TicketLineaStore, TicketLineaView
+from tree import TicketView
+from tree import TicketLineaView
 from botonera import botonera
 class notebook(gtk.Notebook):
     def __init__(self):
@@ -30,10 +30,10 @@ class notebook(gtk.Notebook):
         self.toolbar = Toolbar()
         
         self._populate_toolbar()   
-        self.ticketstore = TicketStore()
-        self.ticketview = TicketView(self.ticketstore)
-        self.ticketlineastore = TicketLineaStore()
-        self.ticketlineaview = TicketLineaView(self.ticketlineastore)
+        #self.ticketstore = TicketStore()
+        self.ticketview = TicketView(self)
+        #self.ticketlineastore = TicketLineaStore()
+        self.ticketlineaview = TicketLineaView(self)
         
         
         
@@ -47,6 +47,10 @@ class notebook(gtk.Notebook):
         self.hbox.pack_start(self.scrolledwindow, expand=True, fill=True, padding=0)
                 
         self.scrolledwindow.add_with_viewport(self.ticketview)
+        linea= ([None, gtk.STOCK_APPLY, gtk.STOCK_NO, gtk.STOCK_ABOUT, 'JUAN JOSE ROJO', 'DE LA NADA, 45 BAJO-B', '45.50', '13.45'])
+        self.ticketview.add(linea)
+        linea= ([None, gtk.STOCK_CANCEL, gtk.STOCK_OK, gtk.STOCK_HOME, 'LEANDRO TERRES', 'A DONDE SEA, 21', '15.20', '14.30'])
+        self.ticketview.add(linea)
         self.scrolledwindow.set_size_request(360, 300)
         
         self.hbox.pack_start(self.vbox)
@@ -57,7 +61,8 @@ class notebook(gtk.Notebook):
         self.vbox.pack_start(self.scrolledwindow2, expand=True, fill=True, padding=0)
                
         self.scrolledwindow2.add_with_viewport(self.ticketlineaview)
-        
+        linea = ([1, 1, 3, 'POLLO ASADO', 19.30], [1, 1, 2, '1/2 POLLO', 4.50])
+        self.ticketlineaview.addList(linea)
         self.table = gtk.Table(3, 3)
         self.table.set_homogeneous(True)
         self.vbox.pack_start(self.table, expand=False, fill=True, padding=2)
@@ -114,7 +119,7 @@ class notebook(gtk.Notebook):
 #        self.toolbar.add_button(gtk.STOCK_APPLY, "Paid", "Mark as paid", self.on_mnuPaid_clicked)
 #        self.toolbar.add_button(gtk.STOCK_UNDO, "Not Paid", "Mark as not paid", self.on_mnuNotPaid_clicked)
 #        self.toolbar.add_space()
-        self.toolbar.add_stock(gtk.STOCK_ABOUT, "About the application", self.on_mnuAbout_clicked)
+        self.toolbar.add_stock(gtk.STOCK_ABOUT, "About the application", self.borralinea)
 #        self.toolbar.add_space()
         self.toolbar.add_stock(gtk.STOCK_CLOSE, "Quit the application", self.delete)
 
@@ -132,3 +137,6 @@ class notebook(gtk.Notebook):
             return False
         if resp == RESPONSE_NO:
             return True
+        
+    def borralinea(self, iter):
+        self.ticketview.remove()

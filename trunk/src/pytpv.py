@@ -106,7 +106,8 @@ class PyTPV:
     """
     def __init__(self):
         self.db = MySQLdb.connect(db='pytpvdb',
-                                  user='root')
+                                  user='root',
+                                  )
         self.cursor = self.db.cursor()
         
 #        self.botonera = botonera()
@@ -352,7 +353,7 @@ class PyTPV:
                 c=0
                 r=0
                 notebook.get_nth_page(2).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
-            button.connect("clicked", self.callback, self.linea)                 
+            button.connect("clicked", self.pollo_asado)                 
             button.show()
                     
             c += 1
