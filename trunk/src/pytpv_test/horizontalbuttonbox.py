@@ -25,50 +25,27 @@
 # under certain conditions; type `show c' for details.
 
 import gtk
-import pygtk
-pygtk.require('2.0')
-from notebookclass import notebook
 
-
-class PyTPV(gtk.Window):
+class HorizontalButtonBox(gtk.HButtonBox):
     def __init__(self):
-        """
-        Main window of PyTPV application
-        """
-        gtk.Window.__init__(self)
-        self.maximize()
-        self.set_border_width(3)
-        self.set_title('PyTPV')
-        icon = gtk.gdk.pixbuf_new_from_file("yinyang.png")
-        self.set_icon(icon)
-        self.connect("delete_event", self.delete)
+        # This class represent horizontal box buttons
+        gtk.HButtonBox.__init__(self)
         
-        vbox = gtk.VBox()   
-        self.add(vbox)
+        self.set_layout(gtk.BUTTONBOX_SPREAD)
+        self.set_spacing(5)
         
-        self.notebook = notebook()
-        
-        vbox.pack_start(self.notebook)
-        
-       
-    def delete(self, widget, event=None):
-        # Show the dialog for close application
-        from kiwi.ui.dialogs import yesno
-        from gtk import RESPONSE_YES
-        from gtk import RESPONSE_NO
-        
-        resp = yesno('Desea cerrar PyTPV?')
-        if resp == RESPONSE_YES:
-            gtk.main_quit()
-            return False
-        if resp == RESPONSE_NO:
-            return True
-       
-           
-def main():
-    gtk.main()
+        button = gtk.Button(stock=gtk.STOCK_NEW)
+        button.set_size_request(150,60)
+        self.add(button)
 
-if __name__ == "__main__":
-    pp = PyTPV()
-    pp.show_all()
-    main()
+        button = gtk.Button(stock=gtk.STOCK_EDIT)
+        self.add(button)
+
+        button = gtk.Button(stock=gtk.STOCK_DELETE)
+        self.add(button)
+            
+        button = gtk.Button(stock=gtk.STOCK_FIND)
+        self.add(button)
+        
+        button = gtk.Button(stock=gtk.STOCK_PRINT)
+        self.add(button)        

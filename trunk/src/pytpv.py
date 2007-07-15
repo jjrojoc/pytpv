@@ -139,6 +139,7 @@ class PyTPV:
     
         columns = ['NOMBRE', 'DIRECCION']
         for i in range(len(columns)):
+            print i
             renderer = gtk.CellRendererText()
             renderer.set_property('editable', True)
             renderer.connect('edited', self.editedCallback, i+1)
@@ -411,11 +412,13 @@ class PyTPV:
         c.execute(clientes)
         
         for linea in c.fetchall():
+            
             idcliente, nombrecliente, direccioncliente = linea
             
             linea = [idcliente] + [nombrecliente] + [direccioncliente]
             self.listacliente.append(linea)
-            
+         
+           
 
     def cargaarticulos(self, articulos):        
         c = self.cursor
