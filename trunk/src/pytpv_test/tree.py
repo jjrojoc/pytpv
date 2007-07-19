@@ -185,7 +185,6 @@ class TicketLineaView(TreeView):
                     col[0],col[1],col[2],col[3],col[4],col[5],col[6],col[7]))        
                     
 
-
 class ClientesView(TreeView):
     def __init__(self, liststore):
         """
@@ -193,7 +192,7 @@ class ClientesView(TreeView):
         """
         TreeView.__init__(self)    
     
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(str, str, str, str)
         # Associates the listStore to the ListView object
         
         self.set_model(self.liststore)
@@ -211,8 +210,7 @@ class ClientesView(TreeView):
                 self._new_column(
                     col[0],col[1],col[2],col[3],col[4],col[5],col[6],col[7]))        
 
-    
-    
+
 class ArticulosView(TreeView):
     def __init__(self, liststore):
         """
@@ -220,7 +218,7 @@ class ArticulosView(TreeView):
         """
         TreeView.__init__(self)    
     
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(str, str, str, str, str, str, str, str)
         # Associates the listStore to the ListView object
         
         self.set_model(self.liststore)
