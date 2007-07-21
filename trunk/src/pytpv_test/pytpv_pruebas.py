@@ -28,17 +28,20 @@ import gtk
 import pygtk
 pygtk.require('2.0')
 from notebookclass import notebook
-import dialogs
-
+import MySQLdb
 
 class PyTPV(gtk.Window):
     def __init__(self):
         """
         Main window of PyTPV application
         """
-        gtk.Window.__init__(self)
+        gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
+        
+        
+        self.connect("destroy", self.ss)
         self.maximize()
         #self.set_size_request(1024, 768)
+        
         self.set_border_width(3)
         self.set_title('PyTPV')
         icon = gtk.gdk.pixbuf_new_from_file("yinyang.png")
@@ -47,17 +50,106 @@ class PyTPV(gtk.Window):
         
         vbox = gtk.VBox()   
         self.add(vbox)
-        
+        self._quit = False
         self.notebook = notebook()
         
         vbox.pack_start(self.notebook)
         
-
+        self.validated = False
+      
+        self.in_menu_main_validation()
+    
+    def ss(self, widget):
+        self._quit = True 
+    
+    def do_expose_event(self,event):
+        gtk.Window.do_expose_event(self, event)
+        if self._quit:
+            gtk.main_quit()
+    
+    def in_menu_main_validation(self):
+        """
+        Inicializacion de la aplicacion
+        """
+        
+        self.validation = gtk.Dialog("PyTPV ( Autentificar Usuario )", None, 0,
+                            (gtk.STOCK_OK, gtk.RESPONSE_OK,
+                            gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
+ 
+        self.validation.set_default_response(gtk.RESPONSE_OK)
+        hbox = gtk.HBox(False, 8)
+        hbox.set_border_width(8)
+        self.validation.vbox.pack_start(hbox, False, False, 0)
+        image = gtk.Image()
+        image.set_from_file ( '/home/asadero/Documents/pruebas_python/pytpv_pruebas/autentificacion.png' )
+        hbox.pack_start(image, False, False, 0)
+ 
+        table = gtk.Table(2, 2)
+        table.set_row_spacings(4)
+        table.set_col_spacings(4)
+        hbox.pack_start(table, True, True, 0)
+ 
+        label = gtk.Label("Usuario")
+        label.set_use_underline(True)
+        table.attach(label, 0, 1, 0, 1)
+        self.local_entry1 = gtk.Entry()
+        self.local_entry1.set_text(self.local_entry1.get_text())
+        table.attach(self.local_entry1, 1, 2, 0, 1)
+        label.set_mnemonic_widget(self.local_entry1)
+ 
+        label = gtk.Label("Password")
+        label.set_use_underline(True)
+        table.attach(label, 0, 1, 1, 2)
+        self.local_entry2 = gtk.Entry()
+        self.local_entry2.set_text(self.local_entry2.get_text())
+        table.attach(self.local_entry2, 1, 2, 1, 2)
+        label.set_mnemonic_widget(self.local_entry2)
+ 
+        self.validation.show_all()
+ 
+        response = self.validation.run()
+ 
+        if response == gtk.RESPONSE_OK:
+            self.local_entry1.set_text(self.local_entry1.get_text())
+            usuario = self.local_entry1.get_text()
+            #if usuario != 'pepe':
+            print self.local_entry1.get_text()
+            self.local_entry2.set_text(self.local_entry2.get_text())
+            password = self.local_entry2.get_text()
+            print self.local_entry2.get_text()
+            
+            try:
+                self.conn = MySQLdb.connect (host = 'localhost', \
+                                             user = usuario,\
+                                             passwd = password,\
+                                             db = 'pytpvdb')
+                print 'conexion realizada con exito'
+                self.validated=True
+                
+            except Exception,msg:
+                
+                self.destroy()
+                
+            if self.validated:
+                self.validation.destroy()
+                #self.maintree.get_widget('main').show() # mostramos pantalla principal
+                  
+            
+            self.validation.destroy()
+            return False
+            
+        if response == gtk.RESPONSE_CANCEL:
+            self.destroy()
+            self.validation.destroy()
+            return True
+    
+    
     def delete(window, widget, event=None):
         dialog = gtk.Dialog("Salir", window, 0,
                         (gtk.STOCK_YES, gtk.RESPONSE_YES,
                         gtk.STOCK_NO, gtk.RESPONSE_NO))
         
+    
         hbox = gtk.HBox(False, 8)
         hbox.set_border_width(8)
         dialog.vbox.pack_start(hbox, False, False, 0)
@@ -97,10 +189,10 @@ class PyTPV(gtk.Window):
 #            return True
        
            
-def main():
-    gtk.main()
+import gobject
+gobject.type_register(PyTPV)
 
 if __name__ == "__main__":
     pp = PyTPV()
     pp.show_all()
-    main()
+    gtk.main()
