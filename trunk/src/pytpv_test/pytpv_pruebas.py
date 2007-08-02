@@ -33,7 +33,7 @@ import MySQLdb
 class PyTPV(gtk.Window):
     def __init__(self):
         """
-        Main window of PyTPV application
+        Main Window of PyTPV application
         """
         gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
         
