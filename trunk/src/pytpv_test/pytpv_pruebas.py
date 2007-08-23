@@ -33,7 +33,7 @@ import MySQLdb
 class PyTPV(gtk.Window):
     def __init__(self):
         """
-        Main Window of PyTPV application
+        Main Window start of PyTPV application
         """
         gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
         
@@ -56,9 +56,9 @@ class PyTPV(gtk.Window):
         vbox.pack_start(self.notebook)
         
         self.validated = False
-      
+        
         self.in_menu_main_validation()
-    
+        
     def ss(self, widget):
         self._quit = True 
     
@@ -66,8 +66,8 @@ class PyTPV(gtk.Window):
         gtk.Window.do_expose_event(self, event)
         if self._quit:
             gtk.main_quit()
-    
-    def in_menu_main_validation(self):
+            
+    def in_menu_main_validation(self, button):
         """
         Inicializacion de la aplicacion
         """
@@ -75,7 +75,7 @@ class PyTPV(gtk.Window):
         self.validation = gtk.Dialog("PyTPV ( Autentificar Usuario )", None, 0,
                             (gtk.STOCK_OK, gtk.RESPONSE_OK,
                             gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
- 
+        
         self.validation.set_default_response(gtk.RESPONSE_OK)
         hbox = gtk.HBox(False, 8)
         hbox.set_border_width(8)
