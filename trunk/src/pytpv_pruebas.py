@@ -68,7 +68,7 @@ class PyTPV(gtk.Window):
             
     def in_menu_main_validation(self, button):
         """
-        Inicializacion de la aplicacion
+        Starting application
         """
         
         self.validation = gtk.Dialog("PyTPV ( Autentificar Usuario )", None, 0,
