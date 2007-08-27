@@ -39,7 +39,7 @@ class PyTPV(gtk.Window):
         
         self.connect("destroy", self.ss)
         self.maximize()
-        #self.set_size_request(1024, 768)
+        
         
         self.set_border_width(3)
         self.set_title('PyTPV')
