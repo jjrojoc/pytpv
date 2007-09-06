@@ -112,7 +112,7 @@ class PyTPV(gtk.Window):
         if response == gtk.RESPONSE_OK:
             self.local_entry1.set_text(self.local_entry1.get_text())
             usuario = self.local_entry1.get_text()
-            #if usuario != 'pepe':
+            
             print self.local_entry1.get_text()
             self.local_entry2.set_text(self.local_entry2.get_text())
             password = self.local_entry2.get_text()
