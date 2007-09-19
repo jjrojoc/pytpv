@@ -39,7 +39,7 @@ class PyTPV(gtk.Window):
         gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
         
         self.connect("destroy", self.ss)
-        self.maximize()
+         #self.maximize()
         
         
         self.set_border_width(3)
