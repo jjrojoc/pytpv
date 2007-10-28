@@ -41,7 +41,6 @@ class PyTPV(gtk.Window):
         self.connect("destroy", self.ss)
         self.maximize()
         
-        
         self.set_border_width(3)
         self.set_title('PyTPV')
         icon = gtk.gdk.pixbuf_new_from_file("yinyang.png")
@@ -144,8 +143,8 @@ class PyTPV(gtk.Window):
             return True
     
     
-    def delete(window, widget, event=None):
-        dialog = gtk.Dialog("Salir", window, 0,
+    def delete(self, widget, event=None):
+        dialog = gtk.Dialog("Salir", self, 0,
                         (gtk.STOCK_YES, gtk.RESPONSE_YES,
                         gtk.STOCK_NO, gtk.RESPONSE_NO))
         
