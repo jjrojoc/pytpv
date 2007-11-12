@@ -49,16 +49,16 @@ class botonera(gtk.Notebook):
                          
                                 
         for x in range (42):
-            stock = 'gtk-apply'
-             #for stock in ("gtk-go-up"):
-    #            button = gtk.Button(self.descripcion)
+            #stock = 'gtk-apply'
+            #for stock in ("gtk-go-up"):
+    #           button = gtk.Button(self.descripcion)
             button = MakeButton('POLLO ASADO', 'food065.gif')
             button.set_size_request(100, 100)
             self.get_nth_page(0).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
                         
             #button.connect("clicked", self.callback, self.linea)
                       
-             #self.linea = [self.idarticulo] + [self.precio_venta]
+            #self.linea = [self.idarticulo] + [self.precio_venta]
             c += 1
             if c == 6:
                 c = 0

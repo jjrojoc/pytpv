@@ -100,6 +100,7 @@ class PyTPV(gtk.Window):
         label.set_use_underline(True)
         table.attach(label, 0, 1, 1, 2)
         self.local_entry2 = gtk.Entry()
+        self.local_entry2.set_visibility(False)
         self.local_entry2.set_text(self.local_entry2.get_text())
         table.attach(self.local_entry2, 1, 2, 1, 2)
         label.set_mnemonic_widget(self.local_entry2)

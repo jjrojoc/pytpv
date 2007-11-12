@@ -32,10 +32,10 @@ import pango
 class TreeView(gtk.TreeView):
     def __init__(self):
         """
-         This class is an intermediate class for construct
-         the store and views of the treeviews, also contain
-         the methods for add, addlist, del, getCount of all 
-         treeviews
+        This class is an intermediate class for construct
+        the store and views of the treeviews, also contain
+        the methods for add, addlist, del, getCount of all 
+        treeviews
         """
         gtk.TreeView.__init__(self)  
         
@@ -97,16 +97,16 @@ class TreeView(gtk.TreeView):
         selection = self.get_selection() 
         model, iter = selection.get_selected()
         if iter:
-          path = model.get_path(iter)
-          model.remove(iter)
+            path = model.get_path(iter)
+            model.remove(iter)
           
-          selection.select_path(path)
+            selection.select_path(path)
 
-          if not selection.path_is_selected(path):
-             row = path[0]-1
+            if not selection.path_is_selected(path):
+                row = path[0]-1
              
-             if row >= 0:
-                selection.select_path((row,))
+                if row >= 0:
+                    selection.select_path((row,))
 
     
     def getSelectedRow(self):

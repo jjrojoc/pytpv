@@ -30,23 +30,23 @@ def executeSQLCommand(cursor, command):
     command = string.strip(command)
     if len(command):
         try:
-             cursor.execute(command) # Ejecuta el comando
-             if string.lower(command).startswith('select'):
-                 # si es una select ...
-                 lines = cursor.fetchall() # recuperar todos losresultados
-                 for line in lines:
-                     print line
+            cursor.execute(command) # Ejecuta el comando
+            if string.lower(command).startswith('select'):
+                # si es una select ...
+                lines = cursor.fetchall() # recuperar todos losresultados
+                for line in lines:
+                    print line
                      
-                     for column in line:
-                         print column
-                         if column == None:
-                             result = result + 'null '
-                         else:
-                             result = result + str(column) + ' '
-                     result = result + '\n'
+                    for column in line:
+                        print column
+                        if column == None:
+                            result = result + 'null '
+                        else:
+                            result = result + str(column) + ' '
+                    result = result + '\n'
         except _mysql_exceptions.ProgrammingError, e:
-             print e
-             sys.exit()
+            print e
+            sys.exit()
 
 if __name__ == '__main__':
     db=MySQLdb.connect(host='localhost',user='deusto', passwd='deusto',db='deusto')

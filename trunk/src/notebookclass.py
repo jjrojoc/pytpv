@@ -84,7 +84,7 @@ class notebook(gtk.Notebook):
         self.scrolledwindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.hbox.pack_start(self.scrolledwindow, expand=True, fill=True, padding=0)
         self.scrolledwindow.add_with_viewport(self.ticketview)
-        self.scrolledwindow.set_size_request(360, 300)
+        self.scrolledwindow.set_size_request(300, 300)
         self.ticketview.add([1, gtk.STOCK_ABOUT, gtk.STOCK_APPLY, gtk.STOCK_CANCEL, 'JUAN JOSE ROJO', 'DESENGAÑO, 21', '13.50', '13.45'])
         
         self.hbox.add(self.vbox1)
