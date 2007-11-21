@@ -221,11 +221,11 @@ class notebook(gtk.Notebook):
     def borrarlinea_ticketlineaview(self, iter):
         self.ticketlineaview.remove()
         
-    def enviarcomanda(self):
+    def enviarcomanda(self, event):
         pass
     
-    def totalizar(self):
+    def totalizar(self, event):
         pass
     
-    def abrircajon(self):
+    def abrircajon(self, event):
         pass

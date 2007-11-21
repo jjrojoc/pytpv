@@ -30,6 +30,17 @@ pygtk.require('2.0')
 import gtk
 from notebookclass import notebook
 import MySQLdb
+basic_rc =  """
+style "basic_style" {
+    GtkPaned::handle_size = 4
+    GtkRange::slider_width = 30
+    GtkTreeView::horizontal-separator = 0
+    GtkTreeView::vertical-separator = 0
+}
+               
+class "GtkWidget" style "basic_style"
+"""
+gtk.rc_parse_string(basic_rc) 
 
 class PyTPV(gtk.Window):
     def __init__(self):
@@ -37,7 +48,7 @@ class PyTPV(gtk.Window):
         Start Main Window of PyTPV application
         """
         gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
-        
+         
         self.connect("destroy", self.ss)
         self.maximize()
         
