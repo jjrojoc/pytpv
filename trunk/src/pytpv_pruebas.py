@@ -36,18 +36,19 @@ style "basic_style" {
     GtkRange::slider_width = 30
     GtkTreeView::horizontal-separator = 0
     GtkTreeView::vertical-separator = 0
-}
-               
+    }               
 class "GtkWidget" style "basic_style"
 """
 gtk.rc_parse_string(basic_rc) 
 
 class PyTPV(gtk.Window):
+    """
+    Start Main Window of PyTPV application
+    """
+        
     def __init__(self):
-        """
-        Start Main Window of PyTPV application
-        """
-        gtk.Window.__init__(self,type=gtk.WINDOW_TOPLEVEL)
+        
+        gtk.Window.__init__(self, type=gtk.WINDOW_TOPLEVEL)
          
         self.connect("destroy", self.ss)
         self.maximize()
@@ -58,21 +59,21 @@ class PyTPV(gtk.Window):
         self.set_icon(icon)
         self.connect("delete_event", self.delete)
         
-        vbox = gtk.VBox()   
+        vbox = gtk.VBox()
         self.add(vbox)
         self._quit = False
         self.notebook = notebook()
-        
+
         vbox.pack_start(self.notebook)
         
         self.validated = False
         
         self.in_menu_main_validation(self)
-        
+                
     def ss(self, widget):
         self._quit = True 
     
-    def do_expose_event(self,event):
+    def do_expose_event(self, event):
         gtk.Window.do_expose_event(self, event)
         if self._quit:
             gtk.main_quit()
@@ -91,7 +92,8 @@ class PyTPV(gtk.Window):
         hbox.set_border_width(8)
         self.validation.vbox.pack_start(hbox, False, False, 0)
         image = gtk.Image()
-        image.set_from_file ( '/home/asadero/Documents/pruebas_python/pytpv_pruebas/autentificacion.png' )
+        image.set_from_file ( '/home/asadero/Documents/pruebas_python/ \
+                                pytpv_pruebas/autentificacion.png' )
         hbox.pack_start(image, False, False, 0)
  
         table = gtk.Table(2, 2)
@@ -127,7 +129,7 @@ class PyTPV(gtk.Window):
             print self.local_entry1.get_text()
             self.local_entry2.set_text(self.local_entry2.get_text())
             password = self.local_entry2.get_text()
-            print self.local_entry2.get_text()
+            #print self.local_entry2.get_text()
             
             try:
                 self.conn = MySQLdb.connect (host = 'localhost', \
@@ -135,9 +137,9 @@ class PyTPV(gtk.Window):
                                              passwd = password,\
                                              db = 'pytpvdb')
                 print 'conexion realizada con exito'
-                self.validated=True
+                self.validated = True
                 
-            except Exception,msg:
+            except Exception, msg:
                 
                 self.destroy()
                 
@@ -153,7 +155,6 @@ class PyTPV(gtk.Window):
             self.destroy()
             self.validation.destroy()
             return True
-    
     
     def delete(self, widget, event=None):
         dialog = gtk.Dialog("Salir", self, 0,
@@ -184,26 +185,23 @@ class PyTPV(gtk.Window):
         if response == gtk.RESPONSE_NO:
             dialog.hide()
             return True
-    
-    
+                
 #    def delete(self, widget, event=None):
 #        # Show the dialog for close application
 #        from kiwi.ui.dialogs import yesno
 #        from gtk import RESPONSE_YES
 #        from gtk import RESPONSE_NO
-#        
 #        resp = yesno('Desea cerrar PyTPV?')
 #        if resp == RESPONSE_YES:
 #            gtk.main_quit()
 #            return False
 #        if resp == RESPONSE_NO:
 #            return True
-       
-           
+
 import gobject
 gobject.type_register(PyTPV)
 
 if __name__ == "__main__":
-    pp = PyTPV()
-    pp.show_all()
+    mainwindow = PyTPV()
+    mainwindow.show_all()
     gtk.main()
