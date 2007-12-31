@@ -55,7 +55,7 @@ class PyTPV(gtk.Window):
         
         self.set_border_width(3)
         self.set_title('PyTPV')
-        icon = gtk.gdk.pixbuf_new_from_file("yinyang.png")
+        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/yinyang.png")
         self.set_icon(icon)
         self.connect("delete_event", self.delete)
         
@@ -92,8 +92,7 @@ class PyTPV(gtk.Window):
         hbox.set_border_width(8)
         self.validation.vbox.pack_start(hbox, False, False, 0)
         image = gtk.Image()
-        image.set_from_file ( '/home/asadero/Documents/pruebas_python/ \
-                                pytpv_pruebas/autentificacion.png' )
+        image.set_from_file ( 'pixmaps/autentificacion.png' )
         hbox.pack_start(image, False, False, 0)
  
         table = gtk.Table(2, 2)
