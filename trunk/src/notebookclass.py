@@ -85,7 +85,8 @@ class notebook(gtk.Notebook):
         self.hbox.pack_start(self.scrolledwindow, expand=True, fill=True, padding=0)
         self.scrolledwindow.add_with_viewport(self.ticketview)
         self.scrolledwindow.set_size_request(300, 300)
-        self.ticketview.add([1, gtk.STOCK_ABOUT, gtk.STOCK_APPLY, gtk.STOCK_CANCEL, 'JUAN JOSE ROJO', 'DESENGAÑO, 21', '13.50', '13.45'])
+        self.ticketview.add([1, gtk.STOCK_ABOUT, gtk.STOCK_APPLY,\
+            gtk.STOCK_CANCEL, 'JUAN JOSE ROJO', 'DESENGAÑO, 21', '13.50', '13.45'])
         
         self.hbox.add(self.vbox1)
         
@@ -107,7 +108,7 @@ class notebook(gtk.Notebook):
                          
         for x in 'ENVIAR COMANDA', 'TOTALIZAR', 'BORRAR LINEA', 'ABRIR CAJON':
             
-            button = MakeButton(x, '/home/asadero/Documents/pruebas_python/food065.gif')
+            button = MakeButton(x, 'pixmaps/food065.gif')
             if x == 'ENVIAR COMANDA':
                 button.connect('clicked', self.enviarcomanda)
             elif x == 'TOTALIZAR':
