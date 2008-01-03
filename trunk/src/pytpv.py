@@ -55,7 +55,7 @@ class PyTPV(gtk.Window):
         
         self.set_border_width(3)
         self.set_title('PyTPV')
-        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/yinyang.png")
+        icon = gtk.gdk.pixbuf_new_from_file("pixmaps/yingyang.png")
         self.set_icon(icon)
         self.connect("delete_event", self.delete)
         
