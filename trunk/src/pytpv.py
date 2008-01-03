@@ -146,7 +146,6 @@ class PyTPV(gtk.Window):
                 self.validation.destroy()
                 #self.maintree.get_widget('main').show()
                   
-            
             self.validation.destroy()
             return False
             
@@ -160,7 +159,6 @@ class PyTPV(gtk.Window):
                         (gtk.STOCK_YES, gtk.RESPONSE_YES,
                         gtk.STOCK_NO, gtk.RESPONSE_NO))
         
-    
         hbox = gtk.HBox(False, 8)
         hbox.set_border_width(8)
         dialog.vbox.pack_start(hbox, False, False, 0)
@@ -184,18 +182,6 @@ class PyTPV(gtk.Window):
         if response == gtk.RESPONSE_NO:
             dialog.hide()
             return True
-                
-#    def delete(self, widget, event=None):
-#        # Show the dialog for close application
-#        from kiwi.ui.dialogs import yesno
-#        from gtk import RESPONSE_YES
-#        from gtk import RESPONSE_NO
-#        resp = yesno('Desea cerrar PyTPV?')
-#        if resp == RESPONSE_YES:
-#            gtk.main_quit()
-#            return False
-#        if resp == RESPONSE_NO:
-#            return True
 
 import gobject
 gobject.type_register(PyTPV)
