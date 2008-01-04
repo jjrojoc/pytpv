@@ -63,7 +63,7 @@ class PyTPV(gtk.Window):
         self.add(vbox)
         self._quit = False
         self.notebook = notebook()
-
+        
         vbox.pack_start(self.notebook)
         
         self.validated = False
@@ -144,7 +144,6 @@ class PyTPV(gtk.Window):
                 
             if self.validated:
                 self.validation.destroy()
-                #self.maintree.get_widget('main').show()
                   
             self.validation.destroy()
             return False
