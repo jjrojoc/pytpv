@@ -122,7 +122,7 @@ class notebook(gtk.Notebook):
                         
             #button.connect("clicked", self.callback, self.linea)
                       
-             #self.linea = [self.idarticulo] + [self.precio_venta]
+            #self.linea = [self.idarticulo] + [self.precio_venta]
             c += 1
             if c == 2:
                 c = 0
