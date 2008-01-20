@@ -94,16 +94,16 @@ class table:
 
 	def __delitem__(self, item):
 		# the method described in the article:
-		#q = "select %s from %s %s %s limit %s, 1" % ("_rowid", self.name, self._search, self._sort, item)
-		#self._query(q)
-		#rid = self.dbc.fetchone()[0]
-		#q = "delete from %s where %s=%s" % (self.name, "_rowid", rid)
-		#self._query(q)
+		q = "select %s from %s %s %s limit %s, 1" % ("_rowid", self.name, self._search, self._sort, item)
+		self._query(q)
+		rid = self.dbc.fetchone()[0]
+		q = "delete from %s where %s=%s" % (self.name, "_rowid", rid)
+		self._query(q)
 		
 		# a simpler method:
-		rid = self[item][-1]
-		q = "delete from %s where %s=%s" % (self.name, row_id, rid)
-		self._query(q)
+		#rid = self[item][-1]
+		#q = "delete from %s where %s=%s" % (self.name, row_id, rid)
+		#self._query(q)
 
 	def insert(self, *row):
 		fmt = ("%s," * len(row))[:-1]
@@ -127,6 +127,7 @@ class table:
 		self._query("select count(*) from %s %s" % (self.name, self._search))
 		r = int(self.dbc.fetchone()[0])
 		return r
+	
 
 class db:
 	"""

@@ -63,7 +63,6 @@ class PyTPV(gtk.Window):
         self.add(vbox)
         self._quit = False
         self.notebook = notebook()
-        
         vbox.pack_start(self.notebook)
         
         self.validated = False

@@ -48,7 +48,6 @@ class notebook(gtk.Notebook):
             
             self.set_homogeneous_tabs(True)
             self.append_page(vbox, label)
-            
         
         # All widget for st up in notebook
         self.toolbar = Toolbar()

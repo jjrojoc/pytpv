@@ -171,7 +171,7 @@ class Sql:
 				break
 		return retorno
 
-	def update (self,table,cells,values,condition):
+	def update (self, table, cells, values, condition):
 		cells = cells.split(",")
 		count = 0
 		string = ""
@@ -182,5 +182,5 @@ class Sql:
 			count = count+1
 
 		string +=" where %s" %condition
-        sql = "update %s set %s" %(table,string)
-		self.db.query(sql)
+        sql = "update %s set %s" %(table, string)
+        self.db.query(sql)
