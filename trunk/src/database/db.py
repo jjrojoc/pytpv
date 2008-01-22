@@ -2,20 +2,22 @@
 import gtk, gtk.glade
 from gazpacho.loader.loader import ObjectBuilder
 from sqlobject import db, table
+#from gui.quitdialog import QuitDialog
 password = 'x4jh2O'
 
 class pp:
     def __init__(self):
-        d = db(user="root", passwd=password, db="pytpvdb")
+        self.d = db(user="root", passwd=password, db="pytpvdb")
+        
         #table_name = d.tables()[0]
         #t = d.table(table_name)
-        #self.widget = gtk.glade.XML('/home/asadero/Documentos/prueba.glade')
+        #self.widget = gtk.glade.XML('/home/asadero/Documentos/pruebaglade.glade')
         self.widget = ObjectBuilder('/home/asadero/Documentos/prueba.glade')
         entry = self.widget.get_widget('entry1')
         entry.connect('changed', self.on_entry1_changed)
         
-        clientes = table(d, "clientes")
-        window = self.widget.get_widget('window1')
+        self.clientes = table(self.d, "clientes")
+        window = self.widget.get_widget('mainwindow')
         
         
         self.listclientstore = gtk.ListStore(str, str, str, str, str)  # Id, Nombre, Direccion, Fecha_alta
@@ -45,11 +47,11 @@ class pp:
         
         
     
-        for row in clientes:
+        for row in self.clientes:
             
             print row
-            ID, NOMBRE, DIRECCION, FECHA_ALTA, PRUEBA = row
-            row = [ID] + [NOMBRE] + [DIRECCION] +[FECHA_ALTA] + [PRUEBA]
+            #ID, NOMBRE, DIRECCION, FECHA_ALTA, PRUEBA = row
+            #row = [ID] + [NOMBRE] + [DIRECCION] +[FECHA_ALTA] + [PRUEBA]
             #id, nombre, direccion, fecha = row
             #row = [id] + [nombre] + [direccion] + [fecha]
             self.listclientstore.append(row)
@@ -64,20 +66,34 @@ class pp:
          a = self.widget.get_widget('entry1')
          a.delete_text(0, -1)
     
-    def on_window1_delete(self, widget, event=None):
-        dialog = self.widget.get_widget('dialog1')
-        resultado = dialog.run()
-        if resultado == 1:
-            gtk.main_quit()
-            return False
-            
-        if resultado == 2:
-            dialog.hide()
-            return True        
-        
-    def on_button14_clicked(self, widget):
-        self.on_window1_delete(self)
+    def on_mainwindow_destroy(self, widget, event=None):
+        gtk.main_quit()
+        print 'aplicacion destruida'
     
+    def on_button14_clicked(self, widget):
+        gtk.main_quit()
+        print 'aplicacion destruida'
+        
+    def on_buttonnuevocliente_clicked(self, boton, datos=None):
+        self.dialogclient = self.widget.get_widget('dialogclientes')
+        resultado = self.dialogclient.run()
+        self.dialogclient.hide()
+        if resultado == 1:
+            datos = []
+            for entry in ['entry13', 'entry12', 'entry11']:
+                datos.append(self.widget.get_widget(entry).get_text())
+            print datos
+            
+            # lo meto en la base de datos
+            self.clientes.insert(None, datos[0], datos[1], datos[2])
+            #datos = [id] + datos
+            # lo meto en la interfaz
+            row = self.clientes[-1]
+            id = row[0]
+            dato = [id] + datos +[id]
+            print dato
+            self.listclientstore.prepend(dato)
+            
         
 if __name__=='__main__':
     a = pp()
