@@ -76,8 +76,11 @@ class pp:
         
     def on_buttonnuevocliente_clicked(self, boton, datos=None):
         self.dialogclient = self.widget.get_widget('dialogclientes')
+        for entry in ['entry4', 'entry13', 'entry12', 'entry11']:
+            self.widget.get_widget(entry).set_text('')
         resultado = self.dialogclient.run()
         self.dialogclient.hide()
+        
         if resultado == 1:
             datos = []
             for entry in ['entry13', 'entry12', 'entry11']:
@@ -108,16 +111,25 @@ class pp:
         self.dialogclient = self.widget.get_widget('dialogclientes')
         selected,iter = self.listclientsview.get_selection().get_selected()
         if iter:
-            item = selected.get_value(iter,0)
+            id = selected.get_value(iter, 0)
+            nombre = selected.get_value(iter, 1)
+            direccion = selected.get_value(iter, 2)
+            fechaalta = selected.get_value(iter, 3)
+            item = [nombre]
+            self.widget.get_widget('entry4').set_text(id)
+            self.widget.get_widget('entry13').set_text(nombre)
+            self.widget.get_widget('entry12').set_text(direccion)
+            self.widget.get_widget('entry11').set_text(fechaalta)
+            cells = 'nombre'
+            self.clientes.update("clientes", cells, item, id)
+            
         resultado = self.dialogclient.run()
         self.dialogclient.hide()
         
         
-        a = self.widget.get_widget('entry4').set_text(self.listclientstore.get_value(iter, item[0]))
-        b = self.widget.get_widget('entry13').set_text(self.listclientstore.get_value(iter, item[1]))
-        c = self.widget.get_widget('entry12').set_text(self.listclientstore.get_value(iter, item[2]))
+        
         #d = self.widget.get_widget('entry11').set_text(self.listclientstore.get_value(iter, 3))
-        print a, b, c
+        
 #        if resultado == 1:
 #            datos = []
 #            for entry in ['entry13', 'entry12', 'entry11']:

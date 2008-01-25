@@ -112,7 +112,17 @@ class table:
 		fmt = ("%s," * len(row))[:-1]
 		q = "insert into %s values (%s)" % (self.name, fmt)
 		self._query(q, row)
-
+	
+#	def update (self, *row):
+#		fmt = ("%s," * len(row))[:-1]
+#		q = "update %s set (%s) where id=%s" % (fmt, self._search)
+#		self._query(q, row)
+		
+		
+	def update(self, key, value, id):
+		q = "update %s set %s = %s where id=%s" % (self.name,key, value, id )
+		self._query(q)
+	
 	def __iter__(self):
 		self._new_cursor()
 		q = "select *%s from %s %s %s" % (self._row_id, self.name, self._search, self._sort)
