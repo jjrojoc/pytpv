@@ -113,16 +113,25 @@ class table:
 		q = "insert into %s values (%s)" % (self.name, fmt)
 		self._query(q, row)
 	
-#	def update (self, *row):
-#		fmt = ("%s," * len(row))[:-1]
-#		q = "update %s set (%s) where id=%s" % (fmt, self._search)
-#		self._query(q, row)
-		
-		
-	def update(self, name, key, value, id):
-		#q = "update %s set %s = %s where id=%s" % (self.name, key, value, id )
-		q = "update %s set %s = '%s' where id=%s" % (self.name, key, value, id )
+	def update(self, name, cells, values, condition):
+		cells = cells.split(",")
+		count = 0
+		string = ""
+		for val in values:
+			if count>0:
+				string+=","
+			string += """%s="%s" """ %(cells[count],values[count])
+			count = count+1
+			
+		string +=" where %s" %condition
+		q = "update %s set %s" %(self.name, string)
 		self._query(q)
+		
+		
+#	def update(self, name, key, value, id):
+#		#q = "update %s set %s = %s where id=%s" % (self.name, key, value, id )
+#		q = "update %s set %s = '%s' where id=%s" % (self.name, key, value, id )
+#		self._query(q)
 	
 	def __iter__(self):
 		self._new_cursor()
