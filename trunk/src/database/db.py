@@ -110,48 +110,36 @@ class pp:
     def on_buttoneditacliente_clicked(self,widget):
         self.dialogclient = self.widget.get_widget('dialogclientes')
         selected,iter = self.listclientsview.get_selection().get_selected()
+        
         if iter:
             id = selected.get_value(iter, 0)
             nombre = selected.get_value(iter, 1)
             direccion = selected.get_value(iter, 2)
             fechaalta = selected.get_value(iter, 3)
-            values = nombre, direccion, fechaalta
             
             self.widget.get_widget('entry4').set_text(id)
             self.widget.get_widget('entry13').set_text(nombre)
             self.widget.get_widget('entry12').set_text(direccion)
             self.widget.get_widget('entry11').set_text(fechaalta)
-            cells = "nombre, direccion, fecha_alta"
-            self.clientes.update('clientes', cells, values, id)
             
         resultado = self.dialogclient.run()
         self.dialogclient.hide()
         
-        
-        
-        #d = self.widget.get_widget('entry11').set_text(self.listclientstore.get_value(iter, 3))
-        
-#        if resultado == 1:
-#            datos = []
-#            for entry in ['entry13', 'entry12', 'entry11']:
-#                datos.append(self.widget.get_widget(entry).get_text())
-#            print datos
-#            
-#            # lo meto en la base de datos
-#            self.clientes.insert(None, datos[0], datos[1], datos[2])
-#            #datos = [id] + datos
-#            # lo meto en la interfaz
-#            row = self.clientes[-1]
-#            id = row[0]
-#            dato = [id] + datos +[id]
-#            print dato
-#            self.listclientstore.prepend(dato)
-#        
-#        selected,iter = self.listclientsview.get_selection().get_selected()
-#        id_record = selected.get_value(iter,0)
-#        self.parent.editRecord(id_record)
+        if resultado == 1:
+            datos = []
+            for entry in ['entry13', 'entry12', 'entry11']:
+                datos.append(self.widget.get_widget(entry).get_text())
+            print datos
             
-        
+            cells = "nombre, direccion, fecha_alta"
+            
+            self.clientes.update('clientes', cells, datos, "id=\"%s\"" %id)
+            
+            self.listclientstore.set_value(iter, 1, self.widget.get_widget('entry13').get_text())
+            self.listclientstore.set_value(iter, 2, self.widget.get_widget('entry12').get_text())
+            self.listclientstore.set_value(iter, 3, self.widget.get_widget('entry11').get_text())
+            
+            
 if __name__=='__main__':
     a = pp()
     gtk.main()
