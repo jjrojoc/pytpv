@@ -119,8 +119,9 @@ class table:
 #		self._query(q, row)
 		
 		
-	def update(self, name, key, value=None, id):
-		q = "update %s set %s = %s where id=%s" % (self.name,key, value, id )
+	def update(self, name, key, value, id):
+		#q = "update %s set %s = %s where id=%s" % (self.name, key, value, id )
+		q = "update %s set %s = '%s' where id=%s" % (self.name, key, value, id )
 		self._query(q)
 	
 	def __iter__(self):

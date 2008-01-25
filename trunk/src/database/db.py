@@ -115,14 +115,14 @@ class pp:
             nombre = selected.get_value(iter, 1)
             direccion = selected.get_value(iter, 2)
             fechaalta = selected.get_value(iter, 3)
-            value = nombre
+            values = nombre
             
             self.widget.get_widget('entry4').set_text(id)
             self.widget.get_widget('entry13').set_text(nombre)
             self.widget.get_widget('entry12').set_text(direccion)
             self.widget.get_widget('entry11').set_text(fechaalta)
             cells = 'nombre'
-            self.clientes.update("clientes", cells, value, id)
+            self.clientes.update('clientes', cells, values, id)
             
         resultado = self.dialogclient.run()
         self.dialogclient.hide()
