@@ -11,8 +11,8 @@ class pp:
         
         #table_name = d.tables()[0]
         #t = d.table(table_name)
-        #self.widget = gtk.glade.XML('/home/asadero/Documentos/pruebaglade.glade')
-        self.widget = ObjectBuilder('/home/asadero/Documentos/prueba.glade')
+        self.widget = gtk.glade.XML('/home/asadero/Documentos/pruebaglade.glade')
+        #self.widget = ObjectBuilder('/home/asadero/Documentos/prueba.glade')
         entry = self.widget.get_widget('entry1')
         entry.connect('changed', self.on_entry1_changed)
         
@@ -25,7 +25,7 @@ class pp:
         
         self.listclientsview = self.widget.get_widget('treeview4')
         self.listclientsview.set_model(self.listclientstore)
-        self.listclientsview.get_selection().set_mode(gtk.SELECTION_MULTIPLE)
+        self.listclientsview.get_selection().set_mode(gtk.SELECTION_SINGLE)
         
     
         columns1 = ['ID', 'NOMBRE', 'DIRECCION', 'FECHA_ALTA', 'PRUEBA']
@@ -93,6 +93,50 @@ class pp:
             dato = [id] + datos +[id]
             print dato
             self.listclientstore.prepend(dato)
+        
+    def on_buttonborracliente_clicked(self, tabla):
+        selected,iter = self.listclientsview.get_selection().get_selected()
+        if iter:
+            item = selected.get_value(iter,0)
+            print item
+            a = self.clientes.__delitem__(item)
+            print a
+            self.listclientstore.remove(iter)
+        
+        
+    def on_buttoneditacliente_clicked(self,widget):
+        self.dialogclient = self.widget.get_widget('dialogclientes')
+        selected,iter = self.listclientsview.get_selection().get_selected()
+        if iter:
+            item = selected.get_value(iter,0)
+        resultado = self.dialogclient.run()
+        self.dialogclient.hide()
+        
+        
+        a = self.widget.get_widget('entry4').set_text(self.listclientstore.get_value(iter, item[0]))
+        b = self.widget.get_widget('entry13').set_text(self.listclientstore.get_value(iter, item[1]))
+        c = self.widget.get_widget('entry12').set_text(self.listclientstore.get_value(iter, item[2]))
+        #d = self.widget.get_widget('entry11').set_text(self.listclientstore.get_value(iter, 3))
+        print a, b, c
+#        if resultado == 1:
+#            datos = []
+#            for entry in ['entry13', 'entry12', 'entry11']:
+#                datos.append(self.widget.get_widget(entry).get_text())
+#            print datos
+#            
+#            # lo meto en la base de datos
+#            self.clientes.insert(None, datos[0], datos[1], datos[2])
+#            #datos = [id] + datos
+#            # lo meto en la interfaz
+#            row = self.clientes[-1]
+#            id = row[0]
+#            dato = [id] + datos +[id]
+#            print dato
+#            self.listclientstore.prepend(dato)
+#        
+#        selected,iter = self.listclientsview.get_selection().get_selected()
+#        id_record = selected.get_value(iter,0)
+#        self.parent.editRecord(id_record)
             
         
 if __name__=='__main__':
