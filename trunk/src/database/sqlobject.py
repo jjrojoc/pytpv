@@ -37,6 +37,7 @@ class table:
 		self._sort = ""
 		self._search = ""
 		self._row_id = ", %s" % (row_id)
+		
 		# detect whether we are accessing more than one table
 		if "," in self.name: self._row_id = ""
 
@@ -46,7 +47,7 @@ class table:
 
 	def search(self, method):
 		self._search = ""
-		if method: self._search = "where %s" % (method)
+		if method: self._search = "where id=%s" % (method)
 
 	def _new_cursor(self):
 		"ensure we have a fresh, working cursor.  (improves support for SSCursors)"
@@ -94,10 +95,10 @@ class table:
 
 	def __delitem__(self, item):
 		# the method described in the article:
-		q = "select %s from %s %s %s limit %s, 1" % ("_rowid", self.name, self._search, self._sort, item)
-		self._query(q)
-		rid = self.dbc.fetchone()[0]
-		q = "delete from %s where %s=%s" % (self.name, "_rowid", rid)
+		#q = "select %s from %s %s" % ("_rowid", self.name, self._search)
+		#self._query(q)
+		#rid = self.dbc.fetchone()[0]
+		q = "delete from %s where id=%s" % (self.name, item)
 		self._query(q)
 		
 		# a simpler method:
@@ -105,6 +106,8 @@ class table:
 		#q = "delete from %s where %s=%s" % (self.name, row_id, rid)
 		#self._query(q)
 
+	
+	
 	def insert(self, *row):
 		fmt = ("%s," * len(row))[:-1]
 		q = "insert into %s values (%s)" % (self.name, fmt)
