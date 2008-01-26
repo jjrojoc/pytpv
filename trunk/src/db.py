@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import gtk, gtk.glade
-from gazpacho.loader.loader import ObjectBuilder
+#from gazpacho.loader.loader import ObjectBuilder
 from sqlobject import db, table
 #from gui.quitdialog import QuitDialog
-password = 'x4jh2O'
+password = ''
 
 class pp:
     def __init__(self):
