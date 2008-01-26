@@ -2,8 +2,9 @@
 import gtk, gtk.glade
 #from gazpacho.loader.loader import ObjectBuilder
 from sqlobject import db, table
+from aboutdialog import aboutdialog
 #from gui.quitdialog import QuitDialog
-password = ''
+password = 'x4jh2O'
 
 class pp:
     def __init__(self):
@@ -62,10 +63,14 @@ class pp:
     def on_entry1_changed(self, text):
         print 'hola pepe'
         
-    def on_button12_clicked(self, deltext):
-         a = self.widget.get_widget('entry1')
-         a.delete_text(0, -1)
+    def on_button12_clicked(self, widget):
+        about = aboutdialog(self)
+        
     
+    def on_button8_clicked(self, deltext):
+        a = self.widget.get_widget('entry1')
+        a.delete_text(0, -1)
+         
     def on_mainwindow_destroy(self, widget, event=None):
         gtk.main_quit()
         print 'aplicacion destruida'

@@ -694,8 +694,9 @@
                     <property name="width_request">100</property>
                     <property name="height_request">62</property>
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes" context="yes">button8</property>
+                    <property name="label" translatable="yes" context="yes">Borrar Texto</property>
                     <property name="response_id">0</property>
+                    <signal name="clicked" handler="on_button8_clicked"/>
                   </widget>
                   <packing>
                     <property name="position">7</property>
@@ -704,7 +705,7 @@
                 <child>
                   <widget class="GtkButton" id="button12">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes" context="yes">Borrar texto</property>
+                    <property name="label" translatable="yes" context="yes">gtk_about</property>
                     <property name="response_id">0</property>
                     <signal name="clicked" handler="on_button12_clicked"/>
                   </widget>
@@ -1992,6 +1993,58 @@
           </widget>
           <packing>
             <property name="position">4</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkAboutDialog" id="aboutdialog1">
+    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes" context="yes">Acerca de PyTPV</property>
+    <property name="resizable">False</property>
+    <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="transient_for">mainwindow</property>
+    <property name="has_separator">False</property>
+    <property name="program_name">PyTPV</property>
+    <property name="version">0.1</property>
+    <property name="copyright" translatable="yes" context="yes">Copyright (c) 2007
+Juan José Rojo &lt;jjrojoc@gmail.com&gt;</property>
+    <property name="comments" translatable="yes" context="yes">PyTPV is a software for Restaurant, bar and pizzeria.</property>
+    <property name="website">http://pytpv.sf.net</property>
+    <property name="website_label" translatable="yes" context="yes">pytpv.sf.net</property>
+    <property name="license" translatable="yes">This application is distributed under the GPLv3 
+Licensing scheme.  An online version of the 
+license can be obtained from 
+http://www.fsf.org/licensing/licenses/gpl.html.
+
+Copyright (c) 2007, Juan José Rojo
+All rights reserved.</property>
+    <property name="authors">Juan José Rojo</property>
+    <property name="documenters">Juan José Rojo</property>
+    <property name="translator_credits" translatable="yes" context="yes">Juan José Rojo</property>
+    <property name="artists">Juan José Rojo</property>
+    <signal name="close" handler="gtk_widget_destroy"/>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox3">
+        <property name="visible">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="spacing">2</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area3">
+            <property name="visible">True</property>
+            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">GTK_PACK_END</property>
           </packing>
         </child>
       </widget>

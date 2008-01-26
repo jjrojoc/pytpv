@@ -25,7 +25,9 @@ class table:
 			### add data
 			t.insert('', 'Bob', 'Barker', 'bbarker')
 			### remove data
-			del t[58]
+			t.__delitem__(58)
+			### update data
+			t.update('clientes', cells, dates, "id=20") # where cells and dates are tuples
 	"""
 	def __init__(self, db, name):
 		self.db = db
