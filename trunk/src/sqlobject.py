@@ -49,7 +49,7 @@ class table:
 
 	def search(self, method):
 		self._search = ""
-		if method: self._search = "where id=%s" % (method)
+		if method: self._search = "where %s" % (method)
 
 	def _new_cursor(self):
 		"ensure we have a fresh, working cursor.  (improves support for SSCursors)"
