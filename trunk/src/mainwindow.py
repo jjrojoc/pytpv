@@ -49,14 +49,19 @@ class Main:
         self.clientesview.remove()
         
     def on_button_edit_client_clicked(self,widget):
-        item = self.clientesview.getSelectedItem(0)
-        item1 = self.clientesview.getSelectedItem(1)
-        item2 = self.clientesview.getSelectedItem(2)
-        item3 = self.clientesview.getSelectedItem(3)
-        ite = ""
-        ite = item, item1, item2, item3
-        print ite
-        clientes = DialogClients().EditClient(ite)
+        datos = []
+        for item in range(4):
+            it = self.clientesview.getSelectedItem(item)
+            datos.append(it)
+        editclients = DialogClients().EditClient(datos)
+        selected, iter = self.clientesview.get_selection().get_selected()
+        a = 1
+        b = 1
+        for x in range(3):
+            self.clientesview.update(iter, a, editclients[b])
+            a += 1
+            b += 1
+        print editclients
 
 if __name__=='__main__':
     a=Main()

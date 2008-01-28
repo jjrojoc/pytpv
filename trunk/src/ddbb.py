@@ -26,6 +26,6 @@ class DBAccess:
         clientes = table(self.d, "clientes")
         clientes.__delitem__(item)
     
-    def update_clients(self, *row):
+    def update_clients(self, name, cells, values, condition):
         clientes = table(self.d, "clientes")
         clientes.update(name, cells, values, condition)

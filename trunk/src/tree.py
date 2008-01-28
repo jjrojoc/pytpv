@@ -60,10 +60,8 @@ class TreeView(gtk.TreeView):
         #col.set_cell_data_func(cell, None)
         return col
     
-    def editedCallback(self, renderer, path, newText, column):
-        iter = self.liststore.get_iter(path)
-        self.liststore.set_value(iter, column, newText)
-        #self.actualizaBD(iter)
+    def update(self, iter, column, newtext):
+        self.liststore.set_value(iter, column, newtext)
         
     def add(self, value):
         return self.liststore.append(value)
@@ -96,8 +94,8 @@ class TreeView(gtk.TreeView):
                 row = path[0]-1
              
                 if row >= 0:
-                    selection.select_path((row,))  
-    
+                    selection.select_path((row,))
+                    
     def getSelectedRow(self):
         selection = self.get_selection()
         model, paths = selection.get_selected_rows()
