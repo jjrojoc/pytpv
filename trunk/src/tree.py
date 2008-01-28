@@ -61,6 +61,8 @@ class TreeView(gtk.TreeView):
         return col
     
     def update(self, iter, column, newtext):
+        selection = self.get_selection() 
+        model, iter = selection.get_selected()
         self.liststore.set_value(iter, column, newtext)
         
     def add(self, value):
