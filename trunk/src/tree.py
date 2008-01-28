@@ -68,6 +68,9 @@ class TreeView(gtk.TreeView):
     def add(self, value):
         return self.liststore.append(value)
     
+    def prepend(self, value):
+        return self.liststore.prepend(value)
+    
     def addList(self, values):
         # Removes the model so the addition is quicker
         self.set_model(None)
