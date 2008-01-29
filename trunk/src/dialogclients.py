@@ -26,12 +26,11 @@ class DialogClients:
                           'entryPhoneClient']:
                 datos.append(self.widget.get_widget(entry).get_text())
             print datos
-            
             # lo meto en la base de datos
+#            self.db.insert_clients(None, datos[0], datos[1], datos[2])
             self.db.insert_clients(None, datos[0], datos[1], datos[2])
-            #datos = [id] + datos
-            # lo meto en la interfaz
             row = self.db.get_last_clients_insert()
+            print row
             id = row[0]
             dato = [id] + datos +[id]
             print dato
@@ -66,9 +65,8 @@ class DialogClients:
             self.db.update_clients('clientes', cells, datos, "id=\"%s\"" \
                                    %item[0])
             datos = []
-            for entry in ['entryIdClient', 'entryNameClient', 'entryAddressClient', \
-                          'entryPhoneClient']:
+            for entry in ['entryIdClient', 'entryNameClient', \
+                          'entryAddressClient', 'entryPhoneClient']:
                 text = self.widget.get_widget(entry).get_text()
-                #self.listclientstore.set_value(iter, a, text)
                 datos.append(text)
             return datos

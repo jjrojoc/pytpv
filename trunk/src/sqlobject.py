@@ -19,7 +19,8 @@ class table:
 			### retrieve data
 			rows = t[3:12]   # get 9 records, from the 4th to the 12th
 			record = t[-5]   # get the 5th record from the endd
-			names = t["firstname, lastname"]  # return a list of all firstname-lastname tuples
+			names = t["firstname, lastname"]  # return a list of all firstname-
+			lastname tuples
 			### iterate over data
 			for row in t:  print row
 			### add data
@@ -27,7 +28,8 @@ class table:
 			### remove data
 			t.__delitem__(58)
 			### update data
-			t.update('clientes', cells, dates, "id=20") # where cells and dates are tuples
+			t.update('clientes', cells, dates, "id=20") # where cells and dates 
+			are tuples
 	"""
 	def __init__(self, db, name):
 		self.db = db
@@ -52,7 +54,7 @@ class table:
 		if method: self._search = "where %s" % (method)
 
 	def _new_cursor(self):
-		"ensure we have a fresh, working cursor.  (improves support for SSCursors)"
+		"ensure we have a fresh working cursor.(improves support for SSCursors)"
 		if self.dbc:
 			self.dbc.close()
 		for style in self._styles:
@@ -68,13 +70,15 @@ class table:
 		self.dbc.execute(q, data)
 
 	def __getitem__(self, item):
-		q = "select *%s from %s %s %s" % (self._row_id, self.name, self._search, self._sort)
+		q = "select *%s from %s %s %s" % (self._row_id, self.name, \
+										  self._search, self._sort)
 		if isinstance(item, types.SliceType):
 			q = q + " limit %s, %s" % (item.start, item.stop - item.start)
 			self._query(q)
 			return self.dbc.fetchall()
 		elif isinstance(item, types.StringType):
-			q = "select %s%s from %s %s %s" % (item, self._row_id, self.name, self._search, self._sort)
+			q = "select %s%s from %s %s %s" % (item, self._row_id, self.name, \
+											   self._search, self._sort)
 			self._query(q)
 			return self.dbc.fetchall()
 		elif isinstance(item, types.IntType):
@@ -128,16 +132,11 @@ class table:
 		string +=" where %s" %condition
 		q = "update %s set %s" %(self.name, string)
 		self._query(q)
-		
-		
-#	def update(self, name, key, value, id):
-#		#q = "update %s set %s = %s where id=%s" % (self.name, key, value, id )
-#		q = "update %s set %s = '%s' where id=%s" % (self.name, key, value, id )
-#		self._query(q)
 	
 	def __iter__(self):
 		self._new_cursor()
-		q = "select *%s from %s %s %s" % (self._row_id, self.name, self._search, self._sort)
+		q = "select *%s from %s %s %s" % (self._row_id, self.name, \
+										  self._search, self._sort)
 		self._query(q)
 		return self
 

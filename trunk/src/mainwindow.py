@@ -12,7 +12,7 @@ class Main:
         
         self.clientesview = ClientesView(self)
         self.scrolledwindow = self.widget.get_widget('scrolledwindow4')
-        self.scrolledwindow.add_with_viewport(self.clientesview)
+        self.scrolledwindow.add(self.clientesview)
         self.scrolledwindow.show_all()
         
         self.db = DBAccess().selectclients()
@@ -41,11 +41,11 @@ class Main:
         
     def on_button_new_client_clicked(self, widget):
         clientes = DialogClients().NewClient(self, widget)
-        self.clientesview.add(clientes)
+        self.clientesview.prepend(clientes)
         
     def on_button_del_client_clicked(self,widget):
         item = self.clientesview.getSelectedItem(0)
-        clientes = DBAccess().remove_clients(item)
+        DBAccess().remove_clients(item)
         self.clientesview.remove()
         
     def on_button_edit_client_clicked(self,widget):
