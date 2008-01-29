@@ -15,7 +15,8 @@ class Main:
         self.scrolledwindow.add(self.clientesview)
         self.scrolledwindow.show_all()
         
-        self.db = DBAccess().selectclients()
+        self.clients = DBAccess().table_clients()
+        self.db = DBAccess().select(self.clients)
         for row in self.db:
             
             self.clientesview.add(row)
@@ -45,7 +46,7 @@ class Main:
         
     def on_button_del_client_clicked(self,widget):
         item = self.clientesview.getSelectedItem(0)
-        DBAccess().remove_clients(item)
+        DBAccess().remove(self.clients, item)
         self.clientesview.remove()
         
     def on_button_edit_client_clicked(self,widget):

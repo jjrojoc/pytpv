@@ -2,30 +2,30 @@
 
 from sqlobject import db, table
 
-password = ''
+password = 'x4jh2O'
 
 class DBAccess:
     def __init__(self):
         self.d = db(user="root", passwd=password, db="pytpvdb")
         
-    def selectclients(self):
+    def table_clients(self):
         clientes = table(self.d, "clientes")
+        return clientes
+    
+    def select(self, table):
         datos = []
-        for row in clientes:
+        for row in table:
             datos.append(row)
         return datos
-    def insert_clients(self, *row):
-        clientes = table(self.d, "clientes")
-        clientes.insert(*row)
+    
+    def insert(self, table, *row):
+        table.insert(*row)
         
-    def get_last_clients_insert(self):
-        clientes = table(self.d, "clientes")
-        return clientes[-1]
+    def get_last_insert(self, table):
+        return table[-1]
     
-    def remove_clients(self, item):
-        clientes = table(self.d, "clientes")
-        clientes.__delitem__(item)
+    def remove(self, table, item):
+        table.__delitem__(item)
     
-    def update_clients(self, name, cells, values, condition):
-        clientes = table(self.d, "clientes")
-        clientes.update(name, cells, values, condition)
+    def update(self, table, name, cells, values, condition):
+        table.update(name, cells, values, condition)

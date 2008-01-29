@@ -6,6 +6,7 @@ from ddbb import DBAccess
 class DialogClients:
     def __init__(self):
         self.db = DBAccess()
+        self.clients = self.db.table_clients()
         
         self.widget = gtk.glade.XML('pytpv.glade', 'dialogclients')
         self.dialogclient = self.widget.get_widget('dialogclients')
@@ -28,8 +29,8 @@ class DialogClients:
             print datos
             # lo meto en la base de datos
 #            self.db.insert_clients(None, datos[0], datos[1], datos[2])
-            self.db.insert_clients(None, datos[0], datos[1], datos[2])
-            row = self.db.get_last_clients_insert()
+            self.db.insert(DBAccess().table_clients(), None, datos[0], datos[1], datos[2])
+            row = self.db.get_last_insert(self.clients)
             print row
             id = row[0]
             dato = [id] + datos +[id]
@@ -62,7 +63,7 @@ class DialogClients:
             #print datos
             cells = "nombre, direccion, fecha_alta"
             
-            self.db.update_clients('clientes', cells, datos, "id=\"%s\"" \
+            self.db.update(self.clients, 'clientes', cells, datos, "id=\"%s\"" \
                                    %item[0])
             datos = []
             for entry in ['entryIdClient', 'entryNameClient', \
