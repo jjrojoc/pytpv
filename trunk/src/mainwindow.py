@@ -18,7 +18,6 @@ class Main:
         self.clients = DBAccess().table_clients()
         self.db = DBAccess().select(self.clients)
         for row in self.db:
-            
             self.clientesview.add(row)
         self.widget.signal_autoconnect(self)
         
