@@ -54,7 +54,7 @@ class Main:
             it = self.clientesview.getSelectedItem(item)
             datos.append(it)
         editclients = DialogClients().EditClient(datos)
-#        selected, iter = self.clientesview.get_selection().get_selected()
+
         a = 1
         b = 1
         for x in range(3):

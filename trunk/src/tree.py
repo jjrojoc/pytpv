@@ -175,11 +175,11 @@ class ClientesView(TreeView):
         #self.cargaDatos(CONSULTA_BASE)
         
         cols = (\
-                (("ID"),50, True, -1, -1, 25, 'cell', 0),\
-                (("NOMBRE"),300, True, -1, -1, 25, 'cell', 1),\
-                (("DIRECCION"),300, True, -1, -1, 25, 'cell', 2),\
-                (("FECHA_ALTA"),200, True, -1, -1, 25, 'cell', 3),\
-                (("ID"),50, True, -1, -1, 25, 'cell', 4))
+                (("ID"),50, True, -1, -1, 35, 'cell', 0),\
+                (("NOMBRE"),300, True, -1, -1, 35, 'cell', 1),\
+                (("DIRECCION"),300, True, -1, -1, 35, 'cell', 2),\
+                (("FECHA_ALTA"),200, True, -1, -1, 35, 'cell', 3),\
+                (("ID"),50, True, -1, -1, 35, 'cell', 4))
                         
         for col in cols:
             self.append_column(
