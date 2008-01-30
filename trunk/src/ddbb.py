@@ -2,7 +2,7 @@
 
 from sqlobject import db, table
 
-password = ''
+password = 'x4jh2O'
 
 class DBAccess:
     def __init__(self):

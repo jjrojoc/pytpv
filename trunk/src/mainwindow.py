@@ -2,21 +2,42 @@
 import gtk
 import gtk.glade
 from ddbb import DBAccess
-from tree import ClientesView
+from tree import (ClientesView, TicketView, TicketLineaView, ArticulosView, \
+                  CreditoView, HistoricoView)
 from dialogclients import DialogClients
-from gazpacho.loader.loader import ObjectBuilder
 
 class Main:
     def __init__(self):
         self.widget = gtk.glade.XML('pytpv.glade')
-        #self.widget = ObjectBuilder('pytpv.glade')
-        
         window = self.widget.get_widget('mainwindow')
         
         self.clientesview = ClientesView(self)
-        self.scrolledwindow = self.widget.get_widget('scrolledwindow4')
-        self.scrolledwindow.add(self.clientesview)
-        self.scrolledwindow.show_all()
+        self.ticketview = TicketView(self)
+        self.ticketview.set_size_request(500, 309)
+        self.ticketlineaview = TicketLineaView(self)
+        self.ticketlineaview.set_size_request(300, -1)
+        self.articulosview = ArticulosView(self)
+        self.creditoview = CreditoView(self)
+        self.historicoview = HistoricoView(self)
+        
+        self.scrolledwindow1 = self.widget.get_widget('scrolledwindow1')
+        self.scrolledwindow2 = self.widget.get_widget('scrolledwindow2')
+        self.scrolledwindow3 = self.widget.get_widget('scrolledwindow3')
+        self.scrolledwindow4 = self.widget.get_widget('scrolledwindow4')
+        self.scrolledwindow5 = self.widget.get_widget('scrolledwindow5')
+        self.scrolledwindow6 = self.widget.get_widget('scrolledwindow6')
+        
+        self.scrolledwindow1.add(self.ticketview)
+        self.scrolledwindow2.add(self.ticketlineaview)
+        self.scrolledwindow3.add(self.articulosview)
+        self.scrolledwindow4.add(self.clientesview)
+        self.scrolledwindow5.add(self.historicoview)
+        self.scrolledwindow6.add(self.creditoview)
+        linea = (1, 1, 1, 'POLLO ASADO', 9.00)
+        self.ticketlineaview.add(linea)
+        linea = (1, 1, 1, 1, 'JUAN JOSE ROJO', ' SAUCE, 7', '13:30', 45)
+        self.ticketview.add(linea)
+        window.show_all()
         
         self.clients = DBAccess().table_clients()
         self.db = DBAccess().select(self.clients)
