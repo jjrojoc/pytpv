@@ -4,10 +4,13 @@ import gtk.glade
 from ddbb import DBAccess
 from tree import ClientesView
 from dialogclients import DialogClients
+from gazpacho.loader.loader import ObjectBuilder
 
 class Main:
     def __init__(self):
         self.widget = gtk.glade.XML('pytpv.glade')
+        #self.widget = ObjectBuilder('pytpv.glade')
+        
         window = self.widget.get_widget('mainwindow')
         
         self.clientesview = ClientesView(self)
