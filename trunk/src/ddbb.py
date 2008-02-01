@@ -12,6 +12,13 @@ class DBAccess:
         clientes = table(self.d, "clientes")
         return clientes
     
+    def table_articles(self):
+        articles = table(self.d, "articulos")
+        return articles
+    def table_family(self):
+        family = table(self.d, "familia")
+        return family
+    
     def select(self, table):
         datos = []
         for row in table:

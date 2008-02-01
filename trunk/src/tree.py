@@ -205,8 +205,8 @@ class ArticulosView(TreeView):
                 (("STOCK_MINIMO"),120, True, 4, -1, 25, 'cell', 4),\
                 (("PRECIO_VENTA"),120, True, 5, -1, 25, 'cell', 5),\
                 (("IMAGEN"),300, True, -1, -1, 25, 'cell', 6),\
-                (("BOTONERA_FK_ID"),80, True, 6, -1, 25,'cell', 7))
-                
+                (("ID"),50, True, -1, -1, 25, 'cell', 0))
+                #("BOTONERA_FK_ID"),80, True, 6, -1, 25,'cell', 7)
         for col in cols:
             self.append_column(
                 self._new_column(

@@ -5,6 +5,7 @@ from ddbb import DBAccess
 from tree import (ClientesView, TicketView, TicketLineaView, ArticulosView, \
                   CreditoView, HistoricoView)
 from dialogclients import DialogClients
+from dialogarticles import DialogArticles
 
 class Main:
     def __init__(self):
@@ -16,7 +17,7 @@ class Main:
         self.ticketview.set_size_request(500, 309)
         self.ticketlineaview = TicketLineaView(self)
         self.ticketlineaview.set_size_request(300, -1)
-        self.articulosview = ArticulosView(self)
+        self.articlesview = ArticulosView(self)
         self.creditoview = CreditoView(self)
         self.historicoview = HistoricoView(self)
         
@@ -29,7 +30,7 @@ class Main:
         
         self.scrolledwindow1.add(self.ticketview)
         self.scrolledwindow2.add(self.ticketlineaview)
-        self.scrolledwindow3.add(self.articulosview)
+        self.scrolledwindow3.add(self.articlesview)
         self.scrolledwindow4.add(self.clientesview)
         self.scrolledwindow5.add(self.historicoview)
         self.scrolledwindow6.add(self.creditoview)
@@ -41,8 +42,15 @@ class Main:
         
         self.clients = DBAccess().table_clients()
         self.db = DBAccess().select(self.clients)
-        for row in self.db:
-            self.clientesview.add(row)
+        if self.db <> 0:
+            for row in self.db:
+                self.clientesview.add(row)
+            
+        self.articles = DBAccess().table_articles()
+        self.db = DBAccess().select(self.articles)
+        if self.db <> 0:
+            for row in self.db:
+                self.articlesview.add(row)
         self.widget.signal_autoconnect(self)
         
     def on_entrysearchclient_changed(self, text):
@@ -86,7 +94,31 @@ class Main:
             a += 1
             b += 1
         print editclients
+    
+    
+    def on_button_NewArticle_clicked(self, widget):
+        articulos = DialogArticles().NewArticle(self, widget)
+        self.articlesview.prepend(articulos)
+    
+    def on_button_EditArticle_clicked(self, widget):
+        datos = []
+        for item in range(4):
+            it = self.articlesview.getSelectedItem(item)
+            datos.append(it)
+        editarticles = DialogArticles().EditArticle(datos)
 
+        a = 1
+        b = 1
+        for x in range(7):
+            self.articlesview.update(iter, a, editarticles[b])
+            a += 1
+            b += 1
+        print editarticles
+    
+    def on_button_DelArticle_clicked(self, widget):
+        item = self.articlesview.getSelectedItem(0)
+        DBAccess().remove(self.articles, item)
+        self.articlesview.remove()
 if __name__=='__main__':
     a=Main()
     gtk.main()

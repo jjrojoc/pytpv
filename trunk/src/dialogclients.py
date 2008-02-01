@@ -29,7 +29,7 @@ class DialogClients:
             print datos
             # lo meto en la base de datos
 #            self.db.insert_clients(None, datos[0], datos[1], datos[2])
-            self.db.insert(DBAccess().table_clients(), None, datos[0], datos[1], datos[2])
+            self.db.insert(self.clients, None, datos[0], datos[1], datos[2])
             row = self.db.get_last_insert(self.clients)
             print row
             id = row[0]
