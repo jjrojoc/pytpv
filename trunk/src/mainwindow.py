@@ -102,14 +102,14 @@ class Main:
     
     def on_button_EditArticle_clicked(self, widget):
         datos = []
-        for item in range(4):
+        for item in range(7):
             it = self.articlesview.getSelectedItem(item)
             datos.append(it)
         editarticles = DialogArticles().EditArticle(datos)
 
         a = 1
         b = 1
-        for x in range(7):
+        for x in range(6):
             self.articlesview.update(iter, a, editarticles[b])
             a += 1
             b += 1
