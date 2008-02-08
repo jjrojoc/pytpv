@@ -7,19 +7,27 @@ class DialogArticles:
     def __init__(self):
         self.db = DBAccess()
         self.articles = self.db.table_articles()
-        datos = []
-        self.family = self.db.table_family()
-        for dato in self.family:
-            datos.append(dato)            
-        print datos
+        
         self.widget = gtk.glade.XML('pytpv.glade', 'dialogArticles')
         self.dialogarticles = self.widget.get_widget('dialogArticles')
-        self.comboclients = self.widget.get_widget('comboboxFamilyArticle')
-        self.comboclients.show()
-        self.set_model_from_list(self.comboclients, datos)
+        self.combo = self.widget.get_widget('comboboxFamilyArticle')
+        
+        self.model = gtk.ListStore(str)
+        cell = gtk.CellRendererText()
+        self.combo.pack_start(cell, True)
+        self.combo.add_attribute(cell, 'text', 0)
+        self.model.clear()
+        for entry in ['PEPE', 'JUAN']:
+            self.model.append([entry])
+        self.combo.set_model(self.model)
+        
+        self.combo.show()
+
+        
     def NewArticle(self, boton, datos=None):
         self.widget = gtk.glade.XML('pytpv.glade', 'dialogArticles')
         self.dialogarticle = self.widget.get_widget('dialogArticles')
+        
         
         for entry in ['entryIdArticle', \
                       'entryDescriptionArticle', 'entryStockArticle', \
@@ -91,16 +99,3 @@ class DialogArticles:
                 text = self.widget.get_widget(entry).get_text()
                 datos.append(text)
             return datos
-        
-    def set_model_from_list(self, cb, items):
-        """Setup a ComboBox or ComboBoxEntry based on a list of strings."""           
-        model = gtk.ListStore(str)
-        for i in items:
-            model.append([i])
-        cb.set_model(model)
-        if type(cb) == gtk.ComboBoxEntry:
-            cb.set_text_column(0)
-        elif type(cb) == gtk.ComboBox:
-            cell = gtk.CellRendererText()
-            cb.pack_start(cell, True)
-            cb.add_attribute(cell, 'text', 0)

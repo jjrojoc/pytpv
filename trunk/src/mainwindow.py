@@ -1,4 +1,6 @@
 #!/usr/bin/python
+import pygtk
+
 import gtk
 import gtk.glade
 from ddbb import DBAccess
@@ -73,7 +75,8 @@ class Main:
         
     def on_button_new_client_clicked(self, widget):
         clientes = DialogClients().NewClient(self, widget)
-        self.clientesview.prepend(clientes)
+        if clientes != None:
+            self.clientesview.prepend(clientes)
         
     def on_button_del_client_clicked(self,widget):
         item = self.clientesview.getSelectedItem(0)
@@ -98,7 +101,8 @@ class Main:
     
     def on_button_NewArticle_clicked(self, widget):
         articulos = DialogArticles().NewArticle(self, widget)
-        self.articlesview.prepend(articulos)
+        if articulos != None:
+            self.articlesview.prepend(articulos)
     
     def on_button_EditArticle_clicked(self, widget):
         datos = []
@@ -106,7 +110,7 @@ class Main:
             it = self.articlesview.getSelectedItem(item)
             datos.append(it)
         editarticles = DialogArticles().EditArticle(datos)
-
+        
         a = 1
         b = 1
         for x in range(6):
@@ -119,6 +123,8 @@ class Main:
         item = self.articlesview.getSelectedItem(0)
         DBAccess().remove(self.articles, item)
         self.articlesview.remove()
+
+
 if __name__=='__main__':
     a=Main()
     gtk.main()
