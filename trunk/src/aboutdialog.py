@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+#coding=utf-8
+
 import gtk
 
-class aboutdialog:
+class dlgAbout:
     def __init__(self, aboutdialog):
         
         self.aboutwindow = gtk.glade.XML('pytpv.glade', 'aboutdialog')

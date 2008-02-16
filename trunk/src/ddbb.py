@@ -15,6 +15,7 @@ class DBAccess:
     def table_articles(self):
         articles = table(self.d, "articulos")
         return articles
+    
     def table_family(self):
         family = table(self.d, "familia")
         return family
@@ -36,3 +37,15 @@ class DBAccess:
     
     def update(self, table, name, cells, values, condition):
         table.update(name, cells, values, condition)
+        
+    def filter(self, table, name, values, condition):
+        filter = table.filter(name, values, condition)
+        return filter
+    
+    def date(self, table):
+        date = table.date()
+        return date
+    
+    def busqueda(self, name, condition):
+        search = table.find(name, condition)
+        return search

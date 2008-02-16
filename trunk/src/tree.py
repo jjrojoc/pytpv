@@ -26,8 +26,8 @@
 # under certain conditions; type `show c' for details.
 
 import gtk
-import gobject
-import pango
+#import gobject
+#import pango
 
 class TreeView(gtk.TreeView):
     def __init__(self):
@@ -113,7 +113,11 @@ class TreeView(gtk.TreeView):
         return  self.liststore.get_value(iter, index)
 
     def getCount(self):
-        return len(self.liststore)   
+        return len(self.liststore)
+    
+    def clear(self):
+        self.liststore.clear()
+        
          
 class TicketView(TreeView):
     def __init__(self, liststore):
@@ -169,7 +173,7 @@ class ClientesView(TreeView):
         This class represent ticketview of ticketstore
         """
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(int, str, str, str, str, str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)
@@ -178,8 +182,9 @@ class ClientesView(TreeView):
                 (("ID"),50, True, 0, -1, 35, 'cell', 0),\
                 (("NOMBRE"),300, True, 1, -1, 35, 'cell', 1),\
                 (("DIRECCION"),300, True, 2, -1, 35, 'cell', 2),\
-                (("FECHA_ALTA"),200, True, 3, -1, 35, 'cell', 3),\
-                (("ID"),50, True, 4, -1, 35, 'cell', 4))
+                (("TELEFONO"),200, True, 3, -1, 35, 'cell', 3),\
+                (("FECHA_ALTA"),200, True, 4, -1, 35, 'cell', 4),\
+                (("ULTIMA_COMPRA"),200, True, 5, -1, 35, 'cell', 5))
                         
         for col in cols:
             self.append_column(
@@ -192,7 +197,7 @@ class ArticulosView(TreeView):
         This class represent ticketview of ticketstore
         """
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str, str, str, str)
+        self.liststore = gtk.ListStore(int, str, str, str, str, str, str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)
@@ -204,19 +209,36 @@ class ArticulosView(TreeView):
                 (("STOCK"),80, True, -1, -1, 25, 'cell', 3),\
                 (("STOCK_MINIMO"),120, True, 4, -1, 25, 'cell', 4),\
                 (("PRECIO_VENTA"),120, True, 5, -1, 25, 'cell', 5),\
-                (("IMAGEN"),300, True, -1, -1, 25, 'cell', 6),\
-                (("ID"),50, True, -1, -1, 25, 'cell', 0))
+                (("IMAGEN"),300, True, -1, -1, 25, 'cell', 6))
                 #("BOTONERA_FK_ID"),80, True, 6, -1, 25,'cell', 7)
         for col in cols:
             self.append_column(
                 self._new_column(
                     col[0],col[1],col[2],col[3],col[4],col[5],col[6],col[7]))
                     
+
+class FamiliaView(TreeView):
+    def __init__(self, liststore):
+        TreeView.__init__(self)
+        self.liststore = gtk.ListStore(int, str, str)
+        
+        self.set_model(self.liststore)
+        
+        cols = (\
+                (("ID"),50, True, -1, -1, 25, 'cell', 0),\
+                (("NOMBRE"),100, True, -1, -1, 25, 'cell', 1),\
+                (("DESCRIPCION"),100, True, -1, -1, 25, 'cell', 2))     
+        
+        for col in cols:
+            self.append_column(
+                self._new_column(
+                    col[0],col[1],col[2],col[3],col[4],col[5],col[6],col[7]))        
+
 class CreditoView(TreeView):
     def __init__(self, liststore):
         # This class represent ticketview of ticketstore
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(str, str, str, str, str, str,str,str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)
@@ -240,7 +262,7 @@ class HistoricoView(TreeView):
     def __init__(self, liststore):
         # This class represent ticketview of ticketstore
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(str, str, str, str, str, str, str, str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)

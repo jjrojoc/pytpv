@@ -40,19 +40,27 @@ class table:
 		self._new_cursor()
 		self._sort = ""
 		self._search = ""
-		self._row_id = ", %s" % (row_id)
+		
 		
 		# detect whether we are accessing more than one table
-		if "," in self.name: self._row_id = ""
+		
 
 	def sort(self, method):
 		self._sort = ""
 		if method: self._sort = "order by %s" % (method)
-
+	
 	def search(self, method):
 		self._search = ""
 		if method: self._search = "where %s" % (method)
 
+	
+	def busqueda(self, name, condition):
+		q = "select * from %s where %s" % (self.name, condition)
+		self._query(q)
+		return self.dbc.fetchone()		
+		
+	
+	
 	def _new_cursor(self):
 		"ensure we have a fresh working cursor.(improves support for SSCursors)"
 		if self.dbc:
@@ -70,15 +78,15 @@ class table:
 		self.dbc.execute(q, data)
 
 	def __getitem__(self, item):
-		q = "select *%s from %s %s %s" % (self._row_id, self.name, \
-										  self._search, self._sort)
+		q = "select * from %s %s %s" % (self.name, \
+										self._search, self._sort)
 		if isinstance(item, types.SliceType):
 			q = q + " limit %s, %s" % (item.start, item.stop - item.start)
 			self._query(q)
 			return self.dbc.fetchall()
 		elif isinstance(item, types.StringType):
-			q = "select %s%s from %s %s %s" % (item, self._row_id, self.name, \
-											   self._search, self._sort)
+			q = "select %s from %s %s %s" % (item, self.name, \
+											self._search, self._sort)
 			self._query(q)
 			return self.dbc.fetchall()
 		elif isinstance(item, types.IntType):
@@ -111,8 +119,17 @@ class table:
 		#rid = self[item][-1]
 		#q = "delete from %s where %s=%s" % (self.name, row_id, rid)
 		#self._query(q)
-
 	
+	def date(self):
+		q = "select curdate()"
+		#q = "select date_format(curdate(), '%d-%m-%Y')"
+		self._query(q)
+		return self.dbc.fetchone()[0]
+	
+	def filter(self, name, values, condition):
+		q = "select * from %s where %s like '%s'" % (self.name, values, condition)
+		self._query(q)
+		return self.dbc.fetchall()
 	
 	def insert(self, *row):
 		fmt = ("%s," * len(row))[:-1]
@@ -135,7 +152,7 @@ class table:
 	
 	def __iter__(self):
 		self._new_cursor()
-		q = "select *%s from %s %s %s" % (self._row_id, self.name, \
+		q = "select * from %s %s %s" % (self.name, \
 										  self._search, self._sort)
 		self._query(q)
 		return self
