@@ -20,11 +20,23 @@ class DBAccess:
         family = table(self.d, "familia")
         return family
     
+    def table_pages_botonera(self):
+        pages = table(self.d, "pages_botonera")
+        return pages
+    
+    def table_botonera(self):
+        botonera = table(self.d, "botonera")
+        return botonera
+    
     def select(self, table):
         datos = []
         for row in table:
             datos.append(row)
         return datos
+    
+    def count(self, name):
+        count = table(self.d, name)
+        return count 
     
     def insert(self, table, *row):
         table.insert(*row)

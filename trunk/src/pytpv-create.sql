@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: pytpvdb
 -- ------------------------------------------------------
--- Server version	5.0.51a
+-- Server version    5.0.51a
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;

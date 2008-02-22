@@ -45,12 +45,12 @@ class "GtkWidget" style "basic_style"
 gtk.rc_parse_string(basic_rc) 
         
     
-from main import PyTPV
+from mainwindow import MainWindow
 
 def main():
-    #Lanzamos el pytrainer
-    pytpv = PyTPV(None, data_path)
-    #pytrainer.run()
+    #Run pytpv
+    pytpv = MainWindow()
 
-if __name__ == "__main__":
-        main()
+if __name__=="__main__":
+    main()
+    gtk.main()    

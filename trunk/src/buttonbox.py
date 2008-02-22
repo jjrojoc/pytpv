@@ -25,7 +25,7 @@
 # under certain conditions; type `show c' for details.
 
 import gtk
-from buttons import MakeButton
+from buttons import MakeButton, MakeTable
 from ddbb import DBAccess
 
 class buttonsBox(gtk.Notebook):
@@ -34,48 +34,92 @@ class buttonsBox(gtk.Notebook):
         gtk.Notebook.__init__(self)
         
         self.db = DBAccess()
-        self.familys = self.db.table_family()
-        self.dbfamilys = DBAccess().select(self.familys)        
-        self.articles = self.db.table_articles()
-        self.dbarticles = DBAccess().select(self.articles)
+        self.botonera = self.db.table_botonera()
+        self.pages_botonera = self.db.table_pages_botonera()
+        #window = gtk.Window()
+        #self.notebook = gtk.Notebook()
+        #table = gtk.Table()
         
-        for i in self.dbfamilys:
-            self.tbl = gtk.Table(6, 6)
-            self.tbl.set_homogeneous(True)
-            self.tbl.check_resize()
+        #window.connect('destroy', gtk.main_quit)
+        table = MakeTable(6, 6)
+        #window.add(self.notebook)
+        for name in self.pages_botonera:
+#            table = gtk.Table(6, 6)
+#            table.set_homogeneous(True)
+#            table.check_resize()
             
-            label = gtk.Label(i[1])
+            label = gtk.Label(name[1])
             label.set_padding(0, 15)
             
             self.set_homogeneous_tabs(True)
-            self.append_page(self.tbl, label)        
-                    
+            self.append_page(table, label)
+            
         aopt = gtk.FILL|gtk.SHRINK
-        c = 0
-        r = 0
         
-        for article in self.articles:
-            button = MakeButton(article[2], None)
-            button.set_size_request(120, 100)
-            self.get_nth_page(int(article[1])-2).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
-        #button.connect("clicked", self.callback, self.linea)
-                  
-         #self.linea = [self.idarticulo] + [self.precio_venta]
-            c += 1
-            if c == 6:
-                c = 0
-                r += 1
-            if r == 6:
-               pass 
-        #print self.get_nth_page(0).get_children()
+        for row in range(6):
+            for col in range(6):
+                label2 = "r=%s,c=%d" % (row, col)
+                button = MakeButton(label2)
+                button.set_size_request(100, 100)
+                button.connect("clicked", self.clicked)
+                button.set_data("pos", (row, col))
+               
+                self.get_nth_page(0).attach(button, col, col+1, row, \
+                                                    row+1, aopt, aopt, 0, 0)
+                
+        #window.show_all()
+
+    def clicked(self, button):
+        pos = button.get_data("pos")
+        page = self.get_current_page()
+        print 'page=%d' % page
+        print "row=%d , col=%d" % pos
         
-    def callback(self, widget, data=None):
-        print "Hello again - %s was pressed" % data
-        self.idarticulo, self.familia, self.descripcion, self.stock, self.stock_minimo, self.precio_venta, self.imagen = data 
-        data = [self.idarticulo]+[self.precio_venta]
-##        self.cursor.execute('select * from articulos')
-##                         
-##        for linea in self.cursor.fetchall():
-##            idarticulo, familia, descripcion, stock, stock_minimo, precio_venta, imagen = linea
-##        linea = [self.idarticulo] + [self.precio_venta]
-        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', data)        
+        
+        
+#        self.db = DBAccess()
+#        self.familys = self.db.table_family()
+#        self.dbfamilys = DBAccess().select(self.familys)        
+#        self.articles = self.db.table_articles()
+#        self.dbarticles = DBAccess().select(self.articles)
+#        
+#        for i in self.dbfamilys:
+#            self.tbl = gtk.Table(6, 6)
+#            self.tbl.set_homogeneous(True)
+#            self.tbl.check_resize()
+#            
+#            label = gtk.Label(i[1])
+#            label.set_padding(0, 15)
+#            
+#            self.set_homogeneous_tabs(True)
+#            self.append_page(self.tbl, label)        
+#                    
+#        aopt = gtk.FILL|gtk.SHRINK
+#        c = 0
+#        r = 0
+#        
+#        for article in self.articles:
+#            button = MakeButton(article[2], None)
+#            button.set_size_request(120, 100)
+#            self.get_nth_page(int(article[1])-2).attach(button,c,c+1,r,r+1, aopt, aopt, 0, 0)
+#        #button.connect("clicked", self.callback, self.linea)
+#                  
+#         #self.linea = [self.idarticulo] + [self.precio_venta]
+#            c += 1
+#            if c == 6:
+#                c = 0
+#                r += 1
+#            if r == 6:
+#               pass 
+#        #print self.get_nth_page(0).get_children()
+#        
+#    def callback(self, widget, data=None):
+#        print "Hello again - %s was pressed" % data
+#        self.idarticulo, self.familia, self.descripcion, self.stock, self.stock_minimo, self.precio_venta, self.imagen = data 
+#        data = [self.idarticulo]+[self.precio_venta]
+###        self.cursor.execute('select * from articulos')
+###                         
+###        for linea in self.cursor.fetchall():
+###            idarticulo, familia, descripcion, stock, stock_minimo, precio_venta, imagen = linea
+###        linea = [self.idarticulo] + [self.precio_venta]
+#        self.cursor.execute('insert into ticket_linea (ticket_FK_id, cantidad, articulo_FK_id, precio_venta) values (1, 1, %s, %s)', data)        

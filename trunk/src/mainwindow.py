@@ -13,18 +13,19 @@ from aboutdialog import dlgAbout
 from winnewticket import winNewTicket
 from winfamilys import winFamilys
 from buttonbox import buttonsBox
-from prueba_botonera import Buttons
+from botonera import Botonera
+#from prueba_botonera import Buttons
 
-basic_rc =  """
-style "basic_style" {
-    GtkPaned::handle_size = 4
-    GtkRange::slider_width = 30
-    GtkTreeView::horizontal-separator = 0
-    GtkTreeView::vertical-separator = 0
-    }               
-class "GtkWidget" style "basic_style"
-"""
-gtk.rc_parse_string(basic_rc) 
+#basic_rc =  """
+#style "basic_style" {
+#    GtkPaned::handle_size = 4
+#    GtkRange::slider_width = 30
+#    GtkTreeView::horizontal-separator = 0
+#    GtkTreeView::vertical-separator = 0
+#    }               
+#class "GtkWidget" style "basic_style"
+#"""
+#gtk.rc_parse_string(basic_rc) 
 
 
 class MainWindow:
@@ -60,8 +61,8 @@ class MainWindow:
         self.ticketview.add(linea)
         
         hbox = self.widget.get_widget('hbox1')
-        #self.buttonbox = buttonsBox()
-        self.buttonbox = Buttons()
+        self.buttonbox = buttonsBox()
+        #self.buttonbox = Buttons()
         hbox.pack_start(self.buttonbox, False, False)
         
         window.show_all()
@@ -69,7 +70,7 @@ class MainWindow:
         self.db = DBAccess()
         self.clients = DBAccess().table_clients()
         self.dbclients = DBAccess().select(self.clients)
-        print self.dbclients
+        #print self.dbclients
         if self.dbclients <> 0:
             for row in self.dbclients:
                 self.clientesview.add(row)
@@ -81,10 +82,10 @@ class MainWindow:
         if self.dbarticles <> 0:
             
             for row in self.dbarticles:
-                print row
+                print "%-5s %-5s %-5s" % (row[:-4])
                 
                 familyname = self.family.busqueda('familia', 'id=%s' % (row[1]))
-                print familyname[1]
+                #print familyname[1]
                 datos = row[0], familyname[1], row[2], row[3], row[4], row[5], row[6]
                 
                 self.articlesview.add(datos)
@@ -360,7 +361,9 @@ class MainWindow:
     def on_btnFamilias_clicked(self, widget, args=[]):
         winfamily = winFamilys()
         
-    
-if __name__=='__main__':
-    win = MainWindow()
-    gtk.main()
+        
+    def on_btnEditBotonera_clicked(self, widget, args=[]):
+        botonera = Botonera()
+#if __name__=='__main__':
+#    win = MainWindow()
+#    gtk.main()

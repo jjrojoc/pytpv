@@ -169,6 +169,12 @@ class table:
 		r = int(self.dbc.fetchone()[0])
 		return r
 	
+	def count(self):
+		self._query("selct count(*) from %s" % (self.name))
+		r = int(self.dbc.fetchone()[0])
+		return r
+	
+	
 
 class db:
 	"""

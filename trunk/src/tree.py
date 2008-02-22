@@ -203,13 +203,13 @@ class ArticulosView(TreeView):
         #self.cargaDatos(CONSULTA_BASE)
 
         cols = (\
-                (("ID"),50, True, -1, -1, 25, 'cell', 0),\
-                (("FAMILIA_FK_ID"),100, True, -1, -1, 25, 'cell', 1),\
-                (("DESCRIPCION"),300, True, -1, -1, 25, 'cell', 2),\
-                (("STOCK"),80, True, -1, -1, 25, 'cell', 3),\
-                (("STOCK_MINIMO"),120, True, 4, -1, 25, 'cell', 4),\
-                (("PRECIO_VENTA"),120, True, 5, -1, 25, 'cell', 5),\
-                (("IMAGEN"),300, True, -1, -1, 25, 'cell', 6))
+                (("ID"),50, True, 0, -1, 35, 'cell', 0),\
+                (("FAMILIA_FK_ID"),100, True, 1, -1, 35, 'cell', 1),\
+                (("DESCRIPCION"),300, True, 2, -1, 35, 'cell', 2),\
+                (("STOCK"),80, True, 3, -1, 35, 'cell', 3),\
+                (("STOCK_MINIMO"),120, True, 4, -1, 35, 'cell', 4),\
+                (("PRECIO_VENTA"),120, True, 5, -1, 35, 'cell', 5),\
+                (("IMAGEN"),300, True, -1, -1, 35, 'cell', 6))
                 #("BOTONERA_FK_ID"),80, True, 6, -1, 25,'cell', 7)
         for col in cols:
             self.append_column(

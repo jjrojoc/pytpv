@@ -34,13 +34,12 @@ class ImageLabelButton (gtk.VBox):
         gtk.VBox.__init__(self, False, 4)
         self.img = gtk.Image()
         self.img.set_from_file(image)
-        
         self.lbl = gtk.Label(title)
-		
+        
         self.vbox1 = gtk.VBox(False, 2)
         self.vbox1.pack_start(self.img, False, False, 0)
         self.vbox1.pack_start(self.lbl, False, False, 0)
-		
+        
         self.align = gtk.Alignment(0.5, 0.5, 0, 0)
         self.pack_start(self.align)
         self.pack_start(self.vbox1)
@@ -60,3 +59,9 @@ class MakeButton (gtk.Button):
         else:
             gtk.Button.__init__(self)
 
+
+class MakeTable(gtk.Table):
+    def __init__(self, col=None, row=None):
+        gtk.Table.__init__(self, col, row)
+        self.set_homogeneous(True)
+        self.check_resize()        
