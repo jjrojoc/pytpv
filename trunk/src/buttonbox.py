@@ -36,45 +36,54 @@ class buttonsBox(gtk.Notebook):
         self.db = DBAccess()
         self.botonera = self.db.table_botonera()
         self.pages_botonera = self.db.table_pages_botonera()
-        #window = gtk.Window()
-        #self.notebook = gtk.Notebook()
-        #table = gtk.Table()
-        
-        #window.connect('destroy', gtk.main_quit)
-        table = MakeTable(6, 6)
-        #window.add(self.notebook)
-        for name in self.pages_botonera:
-#            table = gtk.Table(6, 6)
-#            table.set_homogeneous(True)
-#            table.check_resize()
+        self.articulos = self.db.table_articles()
+        data_botonera = []
+        for item in self.botonera:
+            data_botonera.append(item)
             
-            label = gtk.Label(name[1])
-            label.set_padding(0, 15)
+        data_articulos = []
+        for item in self.articulos:
+            data_articulos.append(item)
             
-            self.set_homogeneous_tabs(True)
-            self.append_page(table, label)
-            
+        a = 0
+        c = 0
+        r = 0
         aopt = gtk.FILL|gtk.SHRINK
         
-        for row in range(6):
-            for col in range(6):
-                label2 = "r=%s,c=%d" % (row, col)
-                button = MakeButton(label2)
+        for page in self.pages_botonera:
+            label = gtk.Label(page[1])
+            label.set_padding(15, 15)
+            self.table = gtk.Table(6, 6)
+            self.append_page(self.table, label)
+            
+            for x in range(36):
+                button = MakeButton(data_botonera[a][5])
+                print "button %s" % a
+                button.set_data("id", (a+1))
+                button.connect("clicked", self.clicked, button.get_data("id"))
                 button.set_size_request(100, 100)
-                button.connect("clicked", self.clicked)
-                button.set_data("pos", (row, col))
-               
-                self.get_nth_page(0).attach(button, col, col+1, row, \
-                                                    row+1, aopt, aopt, 0, 0)
-                
-        #window.show_all()
-
-    def clicked(self, button):
-        pos = button.get_data("pos")
-        page = self.get_current_page()
-        print 'page=%d' % page
-        print "row=%d , col=%d" % pos
+                if button.get_label() is None:
+                    button.set_sensitive(False)
+                self.get_nth_page((page[0])-1).attach(button, c, \
+                                                     c+1, r, \
+                                                     r+1, aopt, aopt, 0, 0)
+                a += 1
+                c += 1
+                if c == 6:
+                    c = 0
+                    r += 1
+                if r == 6:
+                    r = 0
         
+        
+    def clicked(self, button, data):
+        if data :
+            a = self.botonera.busqueda('botonera', 'id=%s' % (data))
+        
+            articuloboton = self.botonera.inner(a[4])
+            print articuloboton
+            suma = float(2.4)*float(3.5)
+            print ("%0.2f" %suma)
         
         
 #        self.db = DBAccess()

@@ -14,6 +14,7 @@ from winnewticket import winNewTicket
 from winfamilys import winFamilys
 from buttonbox import buttonsBox
 from botonera import Botonera
+from utils import *
 #from prueba_botonera import Buttons
 
 #basic_rc =  """
@@ -86,7 +87,8 @@ class MainWindow:
                 
                 familyname = self.family.busqueda('familia', 'id=%s' % (row[1]))
                 #print familyname[1]
-                datos = row[0], familyname[1], row[2], row[3], row[4], row[5], row[6]
+                datos = row[0], familyname[1], row[2], ("%0.2f" %row[3]), \
+                ("%0.2f" %row[4]), ("%0.2f" %row[5]), row[6]
                 
                 self.articlesview.add(datos)
                 

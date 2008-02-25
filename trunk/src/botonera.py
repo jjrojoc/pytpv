@@ -2,11 +2,10 @@
 #coding=utf-8
 
 import os
-import gtk
+import gtk, gtk.glade
 from buttons import MakeButton, MakeTable
 from ddbb import DBAccess
 from tree import ArticulosView
-
 
 class Botonera:
     
@@ -15,54 +14,63 @@ class Botonera:
         self.db = DBAccess()
         self.botonera = self.db.table_botonera()
         self.pages_botonera = self.db.table_pages_botonera()
+        self.articulos = self.db.table_articles()
         self.widget = gtk.glade.XML('pytpv.glade', 'winBotonera')
         self.winbotonera = self.widget.get_widget('winBotonera')
         vbox = self.widget.get_widget('vbox13')
         self.winbotonera.show()
         self.widget.signal_autoconnect(self)
         self.notebook = gtk.Notebook()
-        self.button = MakeButton('', None)
+        
+        data_botonera = []
+        for item in self.botonera:
+            data_botonera.append(item)
+            
+        data_articulos = []
+        for item in self.articulos:
+            data_articulos.append(item)
+        
         vbox.pack_start(self.notebook)
-        
-        datos = []
-        for name in self.pages_botonera:
-            datos.append(name[1])
-            label = gtk.Label(name[1])
-            label.set_padding(0, 15)
-            table = gtk.Table()
-            self.notebook.append_page(table, label)
-        
+        a = 0
+        c = 0
+        r = 0
         aopt = gtk.FILL|gtk.SHRINK
         
-        for item in self.botonera:
-            datos.append(item)
-        
-            button = MakeButton(item[5])
-            button.connect("clicked", self.clicked)
-            button.set_data("row", item[3])
-            button.set_data("col",  item[2])
-            button.set_data("id", item[0])
-            button.set_size_request(100, 100)
+        for page in self.pages_botonera:
+            label = gtk.Label(page[1])
+            label.set_padding(15, 15)
+            self.table = gtk.Table(6, 6)
+            self.notebook.append_page(self.table, label)
             
-            self.notebook.get_nth_page(0).attach(button, item[3], \
-                                        item[3]+1, item[2], \
-                                        item[2]+1, aopt, aopt, 0, 0)
-                                        
-        self.notebook.foreach(self.prueba, 'hola')
-        self.notebook.show_all()
-    
-    def prueba(self, widget, text):
-        print text
+            for x in range(36):
+                button = MakeButton(data_botonera[a][5])
+                print "button %s" % a
+                button.set_data("id", (a+1))
+                button.connect("clicked", self.clicked, button.get_data("id"))
+                button.set_size_request(100, 100)
+#                if button.get_label() is None:
+#                    button.set_sensitive(False)
+                self.notebook.get_nth_page((page[0])-1).attach(button, c, \
+                                                     c+1, r, \
+                                                     r+1, aopt, aopt, 0, 0)
+                a += 1
+                c += 1
+                if c == 6:
+                    c = 0
+                    r += 1
+                if r == 6:
+                    r = 0
         
-    def clicked(self, button):
-        row = button.get_data("row")
-        col = button.get_data("col")
+        self.winbotonera.show_all()
+        
+        
+    def clicked(self, button, data):
+#        if data :
+#            a = self.botonera.busqueda('botonera', 'id=%s' % (data))
+#        
+#            articuloboton = self.botonera.inner(a[4])
+#            print articuloboton
         page = self.notebook.get_current_page()
-        id = button.get_data("id")
-        
-        print 'page=%d' % page
-        print "row=%d , col=%d" % (row, col)
-        print "id=%s" % id
       
         self.articles = self.db.table_articles()
         self.widget = gtk.glade.XML('pytpv.glade', 'dlgEditButton')
@@ -91,7 +99,7 @@ class Botonera:
             cells = "article_FK_Id, label_button"
             
             self.db.update(self.botonera, 'botonera', cells, datos, "id=\"%s\"" \
-                                   %id)            
+                                   %int(button.get_data("id")))            
     
     
     def on_btnAddPageNotebook_clicked(self, widget, args=[]):
@@ -104,6 +112,8 @@ class Botonera:
         self.dlgaddpage.hide()
         if resultado == -3:
             table = MakeTable(6, 6)
+            c = 0
+            r = 0
             for entry in self.entrys:
                 label = gtk.Label(self.widget.get_widget(entry).get_text())
                 label.set_padding(0, 15)
@@ -111,21 +121,27 @@ class Botonera:
             
             aopt = gtk.FILL|gtk.SHRINK
             
-            for row in range(6):
-                for col in range(6):
-                    label2 = "r=%s,c=%d" % (row, col)
-                    button = MakeButton(label2)
-                    button.connect("clicked", self.clicked)
-                    button.set_data("row", (row))
-                    button.set_data("col", (col))
-                    button.set_size_request(100, 100)
-                   
-                    self.notebook.get_nth_page(0).attach(button, col, col+1, row, \
-                                                        row+1, aopt, aopt, 0, 0)
+            for x in range(36):
+                label2 = "r=%s,c=%d" % (r, c)
+                button = MakeButton(label2)
+                button.connect("clicked", self.clicked)
+                button.set_data("row", (r))
+                button.set_data("col", (c))
+                button.set_size_request(100, 100)
+               
+                self.notebook.get_nth_page(0).attach(button, c, c+1, r, \
+                                                    r+1, aopt, aopt, 0, 0)
                     
-                    linea = self.db.get_last_insert(self.pages_botonera)
+                c += 1
+                if c == 6:
+                    c = 0
+                    r += 1
+                if r == 6:
+                    r = 0
                 
-                    self.db.insert(self.botonera, None, (linea[0]), row, col, None, None)
+                linea = self.db.get_last_insert(self.pages_botonera)
+                
+                self.db.insert(self.botonera, None, (linea[0]), r, c, None, None)
             
             pages = self.notebook.get_n_pages() - 1
             print pages

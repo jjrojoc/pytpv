@@ -2,6 +2,7 @@
 
 import gtk
 import gtk.glade
+import utils
 from ddbb import DBAccess
 
 class dlgArticles:
@@ -28,8 +29,7 @@ class dlgArticles:
                         'entImageArticle']
         
         self.widget.signal_autoconnect(self)
-        #TODO: Combo take the values from table and when select the values take 
-        # first item like value by insert into database
+        
         
     def MakeCombo(self, items):
         """Setup a ComboBox or ComboBoxEntry based on a list of strings."""           
@@ -60,7 +60,7 @@ class dlgArticles:
     
     
     def NewArticle(self, boton, datos=None):
-
+        
         for entry in self.entrys:
             print entry
             if not entry == 'cmbFamilyArticle':
@@ -81,13 +81,16 @@ class dlgArticles:
             print datos
             # lo meto en la base de datos
 
-            self.db.insert(self.articles, None, datos[0], datos[1], datos[2], \
-                           datos[3], datos[4], datos[5])
+            self.db.insert(self.articles, None, datos[0], datos[1], \
+                           float(datos[2]), float(datos[3]), \
+                           float(datos[4]), datos[5])
+            
             row = self.db.get_last_insert(self.articles)
             familyname = self.family.busqueda('familia', 'id=%s' % (datos[0]))
             print familyname
             
-            row = row[0],  familyname[1],  row[2],  row[3],  row[4],  row[5],  row[6]
+            row = row[0],  familyname[1],  row[2],  ("%0.2f" %row[3]),  \
+                ("%0.2f" %row[4]),  ("%0.2f" %row[5]),  row[6]
             print row
             
             return row
@@ -129,12 +132,28 @@ class dlgArticles:
                            "id=\"%s\"" % item[0])
             datos = []
             for entry in self.entrys:
-                if not entry == 'cmbFamilyArticle':
+                if entry == 'entIdArticle':
                     datos.append(self.widget.get_widget(entry).get_text())
-                else:
+#                if not entry == 'cmbFamilyArticle':
+#                    datos.append(self.widget.get_widget(entry).get_text())
+                if entry == 'cmbFamilyArticle':
                     searchfamily = self.family.busqueda('familia', 'id=%s' % \
                     (self.on_cmbFamilyArticle_changed(self)))
                     datos.append(searchfamily[1])
+                if entry == 'entDescriptionArticle':
+                    datos.append(self.widget.get_widget(entry).get_text())
+                if entry == 'entStockArticle':
+                    a = float(self.widget.get_widget(entry).get_text())
+                    datos.append("%0.2f" %a)
+                if entry == 'entMinStockArticle':
+                    a = float(self.widget.get_widget(entry).get_text())
+                    datos.append("%0.2f" %a)
+                if entry == 'entSalePriceArticle':
+                    a = float(self.widget.get_widget(entry).get_text())
+                    datos.append("%0.2f" %a)
+                if entry == 'entImageArticle':
+                    datos.append(self.widget.get_widget(entry).get_text())
+                
             print datos
             return datos
         

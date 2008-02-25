@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from sqlobject import db, table
-
+import MySQLdb
 password = 'x4jh2O'
 
 class DBAccess:
@@ -59,5 +59,11 @@ class DBAccess:
         return date
     
     def busqueda(self, name, condition):
-        search = table.find(name, condition)
+        search = table.busqueda(name, condition)
         return search
+    
+    def inner(self, id):
+        
+        query = table.inner(id)
+        return query
+        

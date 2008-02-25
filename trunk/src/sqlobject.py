@@ -170,10 +170,17 @@ class table:
 		return r
 	
 	def count(self):
-		self._query("selct count(*) from %s" % (self.name))
+		self._query("select count(*) from %s" % (self.name))
 		r = int(self.dbc.fetchone()[0])
 		return r
 	
+	def inner(self, id):
+		q = """select articulos.id, articulos.familia_FK_Id, 
+			articulos.descripcion, articulos.stock, articulos.stock_minimo, 
+			articulos.precio_venta, articulos.imagen from articulos, botonera 
+            where articulos.id = %s""" % (id)
+		self._query(q)
+		return self.dbc.fetchone()
 	
 
 class db:

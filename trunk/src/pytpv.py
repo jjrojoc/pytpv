@@ -26,10 +26,12 @@
 
 import locale
 import gettext
+
 import sys
 import pygtk
 pygtk.require('2.0')
 import gtk
+
 import gtk.glade
 import os
 
