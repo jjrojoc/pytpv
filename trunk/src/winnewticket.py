@@ -3,17 +3,29 @@
 
 import gtk, gtk.glade
 from wincalendar import dlgCalendar
-
+from tree import ClientesView
+from ddbb import DBAccess
 
 class winNewTicket:
 
     def __init__(self):
+        
+        self.db = DBAccess()
+        self.clients = self.db.table_clients()
         
         self.widget = gtk.glade.XML('pytpv.glade', 'winNewTicket')
         self.winnewticket= self.widget.get_widget('winNewTicket')
         self.winnewticket.show()
         self.widget.signal_autoconnect(self)
         
+        self.clientesview = ClientesView(self)
+        self.scrollednewticket = self.widget.get_widget('scrolledNewTicket')
+        self.scrollednewticket.add(self.clientesview)
+        self.clientesview.set_size_request(400, 250)
+        
+        for client in self.clients:
+            self.clientesview.add(client)
+        self.clientesview.show()
             
     def new(self):
         print 'A new %s has been created' % self.__class__.__name__
