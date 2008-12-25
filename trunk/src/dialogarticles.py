@@ -1,5 +1,6 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
+#coding=utf-8
+import os
 import gtk
 import gtk.glade
 import utils
@@ -17,6 +18,7 @@ class dlgArticles:
         
         self.widget = gtk.glade.XML('pytpv.glade', 'dlgArticles')
         self.dialogarticles = self.widget.get_widget('dlgArticles')
+        self.dialogarticles.set_icon_from_file('images'+ os.sep +'yinyang.png')
         self.combo = self.widget.get_widget('cmbFamilyArticle')
         self.MakeCombo(items)
         
@@ -60,7 +62,7 @@ class dlgArticles:
     
     
     def NewArticle(self, boton, datos=None):
-        
+        self.dialogarticles.set_title('Nuevo Articulo')
         for entry in self.entrys:
             print entry
             if not entry == 'cmbFamilyArticle':
@@ -68,7 +70,7 @@ class dlgArticles:
         resultado = self.dialogarticles.run()
         self.dialogarticles.hide()
         
-        if resultado == 1:
+        if resultado == -3:
             datos = []
             for entry in self.entrys[1:]:
                 if entry != 'cmbFamilyArticle':
@@ -97,6 +99,7 @@ class dlgArticles:
         
     
     def EditArticle(self, item):
+        self.dialogarticles.set_title('Editar Articulo')
         searcharticles = self.articles.busqueda('articulos', 'id=%s' % (item[0]))
         searchfamily = self.family.busqueda('familia', 'id=%s' % (searcharticles[1]))
         a = 0
@@ -104,7 +107,7 @@ class dlgArticles:
             if not entry == 'cmbFamilyArticle':
                 it = item[a]
                 print it
-                if it <> None:
+                if it != None:
                     self.widget.get_widget(entry).set_text(str(it))
                 elif it == None:
                     self.widget.get_widget(entry).set_text("")
@@ -115,7 +118,7 @@ class dlgArticles:
         resultado = self.dialogarticles.run()
         self.dialogarticles.hide()
         
-        if resultado == 1:
+        if resultado == -3:
             datos = []
             for entry in self.entrys[1:]:
                 if entry == 'cmbFamilyArticle':

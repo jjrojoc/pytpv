@@ -35,6 +35,12 @@ class ImageLabelButton (gtk.VBox):
         self.img = gtk.Image()
         self.img.set_from_file(image)
         self.lbl = gtk.Label(title)
+        self.lbl.set_size_request(10, 10)
+        self.lbl.set_justify(gtk.JUSTIFY_CENTER)
+        if self.lbl.get_text() > 2:
+            self.lbl.set_line_wrap(3)
+        
+            
         
         self.vbox1 = gtk.VBox(False, 2)
         self.vbox1.pack_start(self.img, False, False, 0)

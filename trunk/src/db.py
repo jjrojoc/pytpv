@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+#coding=utf-8
 import gtk, gtk.glade
 #from gazpacho.loader.loader import ObjectBuilder
 
