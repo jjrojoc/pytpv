@@ -23,31 +23,31 @@
 # This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
 # This is free software, and you are welcome to redistribute it
 # under certain conditions; type `show c' for details.
-
+#Testing
 import locale
+
 import gettext
 
 import sys
-import pygtk
-pygtk.require('2.0')
-import gtk
 
-import gtk.glade
+import gtk
+#import gtk.glade
+
 import os
 
-basic_rc =  """
+basic_rc = """
 style "basic_style" {
     GtkPaned::handle_size = 4
     GtkRange::slider_width = 30
     GtkTreeView::horizontal-separator = 0
     GtkTreeView::vertical-separator = 0
-    }               
+    }
 class "GtkWidget" style "basic_style"
 """
-gtk.rc_parse_string(basic_rc) 
-        
-    
+gtk.rc_parse_string(basic_rc)
+
 from mainwindow import MainWindow
+
 
 def main():
     #Run pytpv
@@ -55,4 +55,4 @@ def main():
 
 if __name__=="__main__":
     main()
-    gtk.main()    
+    gtk.main()

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+#coding=utf-8
 
 # Modify the following to support other databases:
 import MySQLdb
@@ -43,15 +44,18 @@ class table:
 		
 		
 		# detect whether we are accessing more than one table
-		
+	def ordenar(self, name, condition):
+		q = "select * from %s order by %s" % (self.name, condition)
+		self._query(q)
+		return self.dbc.fetchall()	
 
 	def sort(self, method):
 		self._sort = ""
 		if method: self._sort = "order by %s" % (method)
 	
-	def search(self, method):
-		self._search = ""
-		if method: self._search = "where %s" % (method)
+#	def search(self, method):
+#		self._search = ""
+#		if method: self._search = "where %s" % (method)
 
 	
 	def busqueda(self, name, condition):
@@ -60,6 +64,10 @@ class table:
 		return self.dbc.fetchone()		
 		
 	
+	def search(self, name, condition):
+		q = "select * from %s where %s" % (self.name, condition)
+		self._query(q)
+		return self.dbc.fetchall()
 	
 	def _new_cursor(self):
 		"ensure we have a fresh working cursor.(improves support for SSCursors)"
@@ -112,13 +120,18 @@ class table:
 		#q = "select %s from %s %s" % ("_rowid", self.name, self._search)
 		#self._query(q)
 		#rid = self.dbc.fetchone()[0]
-		q = "delete from %s where id=%s" % (self.name, item)
+		q = "delete from %s where %s" % (self.name, item)
 		self._query(q)
 		
 		# a simpler method:
 		#rid = self[item][-1]
 		#q = "delete from %s where %s=%s" % (self.name, row_id, rid)
 		#self._query(q)
+	
+	def time(self):
+		q = "select curtime()"
+		self._query(q)
+		return self.dbc.fetchone()[0]
 	
 	def date(self):
 		q = "select curdate()"
@@ -149,7 +162,8 @@ class table:
 		string +=" where %s" %condition
 		q = "update %s set %s" %(self.name, string)
 		self._query(q)
-	
+		
+		
 	def __iter__(self):
 		self._new_cursor()
 		q = "select * from %s %s %s" % (self.name, \
@@ -169,8 +183,8 @@ class table:
 		r = int(self.dbc.fetchone()[0])
 		return r
 	
-	def count(self):
-		self._query("select count(*) from %s" % (self.name))
+	def count(self, name):
+		self._query("select count(*) from %s" % (name))
 		r = int(self.dbc.fetchone()[0])
 		return r
 	
@@ -182,7 +196,19 @@ class table:
 		self._query(q)
 		return self.dbc.fetchone()
 	
-
+	def max_value(self, cell, name):
+		q = "SELECT MAX(%s) FROM %s" % (cell, name)
+		self._query(q)
+		r = int(self.dbc.fetchone()[0])
+		return r
+	def multiplicar(self, name):
+		q = "select cantidad * precio_venta as importe from ticket_linea" + \
+		      "where id = %s" % (name)
+		self._query(q)
+		r = float(self.dbc.fetchone()[0])
+		return r
+	
+	
 class db:
 	"""
 	A basic wrapper for databases.  Usage is as follows:

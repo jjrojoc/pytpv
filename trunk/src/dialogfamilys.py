@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
+import os
 import gtk, gtk.glade
 from ddbb import DBAccess
 
@@ -13,6 +14,7 @@ class dlgFamilys:
         
         self.widget = gtk.glade.XML('pytpv.glade', 'dlgFamilys')
         self.dlgfamily = self.widget.get_widget('dlgFamilys')
+        self.dlgfamily.set_icon_from_file('images'+ os.sep +'yinyang.png')
         
         self.entrys = ['entIdFamily', \
                         'entNameFamily', \
@@ -22,7 +24,7 @@ class dlgFamilys:
         
     
     def NewFamily(self, widget, datos=None):
-        
+        self.dlgfamily.set_title('Nueva Familia')
         for entry in self.entrys:
             self.widget.get_widget(entry).set_text('')
         resultado = self.dlgfamily.run()
@@ -45,13 +47,13 @@ class dlgFamilys:
         
         
     def EditFamily(self, item):
-        
+        self.dlgfamily.set_title('Editar Familia')
         
         a = 0
         for entry in self.entrys:
             it = item[a]
             #print it
-            if it <> None:
+            if it != None:
                 if entry == 'entIdFamily':
                     self.widget.get_widget(entry).set_text(str(it))
                 else:
@@ -63,14 +65,14 @@ class dlgFamilys:
         resultado = self.dlgfamily.run()
         self.dlgfamily.hide()
         
-        if resultado == 1:
+        if resultado == -3:
             datos = []
             for entry in self.entrys[1:]:
                 datos.append(self.widget.get_widget(entry).get_text())
             #print datos
             cells = "nombre, descripcion"
             
-            self.db.update(self.family, 'familias', cells, datos, "id=\"%s\"" \
+            self.db.update(self.family, 'familia', cells, datos, "id=\"%s\"" \
                                    %item[0])
             datos = []
             for entry in self.entrys:

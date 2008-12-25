@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding=utf-8
-
+import os
 import gtk, gtk.glade
 from tree import FamiliaView
 from ddbb import DBAccess
@@ -13,6 +13,8 @@ class winFamilys:
         
         self.widget = gtk.glade.XML('pytpv.glade', 'winFamily')
         self.winfamily = self.widget.get_widget('winFamily')
+        self.winfamily.set_icon_from_file('images'+ os.sep +'yinyang.png')
+        self.winfamily.set_title('Familias')
         
         vbox = self.widget.get_widget('vbox10')
         
@@ -56,7 +58,7 @@ class winFamilys:
     
     def on_btnDelFamily_clicked(self, item):
         item = self.familiasview.getSelectedItem(0)
-        DBAccess().remove(self.family, item)
+        DBAccess().remove(self.family, 'id=%s' % item)
         self.familiasview.remove()        
         
         

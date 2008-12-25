@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: pytpvdb
 -- ------------------------------------------------------
--- Server version    5.0.51a
+-- Server version	5.0.51a-3ubuntu1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -15,54 +15,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Table structure for table `articulo`
---
-
-DROP TABLE IF EXISTS `articulo`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `articulo` (
-  `id` varchar(13) NOT NULL,
-  `seccion_FK_id` tinyint(3) unsigned NOT NULL default '1',
-  `subfamilia_FK_id` tinyint(3) unsigned NOT NULL default '1',
-  `nombre` varchar(30) NOT NULL,
-  `descripcion` varchar(120) default NULL,
-  `stock` float NOT NULL default '0',
-  `stock_minimo` float NOT NULL default '0',
-  `ultimo_precio_comprado` float NOT NULL default '0',
-  `precio_venta` float NOT NULL default '0',
-  `fecha_primera_caducidad` date default NULL,
-  `descuento` float NOT NULL default '0',
-  `porcentaje` float NOT NULL default '30',
-  `tecla` varchar(3) default NULL,
-  `activo` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `articulo_unique` (`nombre`),
-  KEY `ARTICULO_FK_Index` (`subfamilia_FK_id`),
-  KEY `articulo_FKIndex2` (`seccion_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `articulo_X_proveedor`
---
-
-DROP TABLE IF EXISTS `articulo_X_proveedor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `articulo_X_proveedor` (
-  `proveedor_FK_id` tinyint(3) unsigned NOT NULL,
-  `articulo_FK_id` varchar(13) NOT NULL,
-  `fecha` date NOT NULL,
-  `referencia` varchar(10) default NULL,
-  `pvd` float NOT NULL,
-  `cant_por_caja` tinyint(3) unsigned default '1',
-  PRIMARY KEY  (`proveedor_FK_id`,`articulo_FK_id`),
-  KEY `articulo_has_proveedor_FKIndex2` (`proveedor_FK_id`),
-  KEY `articulo_X_proveedor_FKIndex2` (`articulo_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+-- 
+-- Current Database: `pytpvdb`
+-- 		
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `pytpvdb` /*!40100 DEFAULT CHARACTER SET latin1 */;		
+USE `pytpvdb`;
 
 --
 -- Table structure for table `articulos`
@@ -75,15 +32,24 @@ CREATE TABLE `articulos` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `familia_FK_id` varchar(50) NOT NULL default '1',
   `descripcion` varchar(60) NOT NULL default '',
-  `stock` float default '0',
-  `stock_minimo` float default '0',
-  `precio_venta` float NOT NULL default '0',
+  `stock` float(5,2) default '0.00',
+  `stock_minimo` float(5,2) default '0.00',
+  `precio_venta` float(5,2) NOT NULL default '0.00',
   `imagen` varchar(256) default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `articulo_unique` (`id`),
   KEY `articulo_FK_Index` (`familia_FK_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `articulos`
+--
+
+LOCK TABLES `articulos` WRITE;
+/*!40000 ALTER TABLE `articulos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `articulos` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `botonera`
@@ -94,12 +60,24 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `botonera` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `articulo_FK_id` varchar(13) NOT NULL,
-  `etiqueta_boton` varchar(30) default NULL,
-  PRIMARY KEY  (`id`,`articulo_FK_id`),
-  KEY `botonera_FK_Index` (`articulo_FK_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `botonera_FK_Id` int(11) NOT NULL default '0',
+  `row` int(11) NOT NULL default '0',
+  `col` int(11) NOT NULL default '0',
+  `article_FK_Id` varchar(13) default NULL,
+  `label_button` varchar(30) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `botonera`
+--
+
+LOCK TABLES `botonera` WRITE;
+/*!40000 ALTER TABLE `botonera` DISABLE KEYS */;
+INSERT INTO `botonera` VALUES (1,0,0,1,NULL,NULL),(2,0,0,2,NULL,NULL),(3,0,0,3,NULL,NULL),(4,0,0,4,NULL,NULL),(5,0,0,5,NULL,NULL),(6,0,1,0,NULL,NULL),(7,0,1,1,NULL,NULL),(8,0,1,2,NULL,NULL),(9,0,1,3,NULL,NULL),(10,0,1,4,NULL,NULL),(11,0,1,5,NULL,NULL),(12,0,2,0,NULL,NULL),(13,0,2,1,NULL,NULL),(14,0,2,2,NULL,NULL),(15,0,2,3,NULL,NULL),(16,0,2,4,NULL,NULL),(17,0,2,5,NULL,NULL),(18,0,3,0,NULL,NULL),(19,0,3,1,NULL,NULL),(20,0,3,2,NULL,NULL),(21,0,3,3,NULL,NULL),(22,0,3,4,NULL,NULL),(23,0,3,5,NULL,NULL),(24,0,4,0,NULL,NULL),(25,0,4,1,NULL,NULL),(26,0,4,2,NULL,NULL),(27,0,4,3,NULL,NULL),(28,0,4,4,NULL,NULL),(29,0,4,5,NULL,NULL),(30,0,5,0,NULL,NULL),(31,0,5,1,NULL,NULL),(32,0,5,2,NULL,NULL),(33,0,5,3,NULL,NULL),(34,0,5,4,NULL,NULL),(35,0,5,5,NULL,NULL),(36,0,0,0,NULL,NULL);
+/*!40000 ALTER TABLE `botonera` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `caja`
@@ -120,6 +98,15 @@ CREATE TABLE `caja` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping data for table `caja`
+--
+
+LOCK TABLES `caja` WRITE;
+/*!40000 ALTER TABLE `caja` DISABLE KEYS */;
+/*!40000 ALTER TABLE `caja` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `clientes`
 --
 
@@ -131,13 +118,22 @@ CREATE TABLE `clientes` (
   `nombre` varchar(120) NOT NULL default '',
   `direccion` varchar(120) default '',
   `telefono` varchar(100) default '',
-  `fecha_alta` date default '2007-05-05',
-  `ultima_compra` date default '2007-05-08',
+  `fecha_alta` date default '0000-00-00',
+  `ultima_compra` date default '0000-00-00',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `cliente_unique` (`id`),
   KEY `nombre` (`nombre`)
-) ENGINE=MyISAM AUTO_INCREMENT=10133 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `clientes`
+--
+
+LOCK TABLES `clientes` WRITE;
+/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `cobros`
@@ -154,8 +150,17 @@ CREATE TABLE `cobros` (
   `importe_cobro` float NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `cobro_index` (`id`,`cliente_FK_id`,`fecha_cobro`,`hora_cobro`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `cobros`
+--
+
+LOCK TABLES `cobros` WRITE;
+/*!40000 ALTER TABLE `cobros` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cobros` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `detalledeudas`
@@ -178,6 +183,15 @@ CREATE TABLE `detalledeudas` (
   KEY `cobro_index` (`id`,`cliente_FK_id`,`articulo_FK_id`,`descripcion`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `detalledeudas`
+--
+
+LOCK TABLES `detalledeudas` WRITE;
+/*!40000 ALTER TABLE `detalledeudas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `detalledeudas` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `deudas`
@@ -203,6 +217,15 @@ CREATE TABLE `deudas` (
 SET character_set_client = @saved_cs_client;
 
 --
+-- Dumping data for table `deudas`
+--
+
+LOCK TABLES `deudas` WRITE;
+/*!40000 ALTER TABLE `deudas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `deudas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `familia`
 --
 
@@ -211,46 +234,21 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `familia` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `nombre` varchar(20) NOT NULL,
+  `nombre` varchar(20) NOT NULL default '',
   `descripcion` varchar(100) default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `familia_unique` (`nombre`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `formapago`
---
-
-DROP TABLE IF EXISTS `formapago`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `formapago` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `codformapago` int(11) NOT NULL default '1',
-  `nombre` varchar(100) NOT NULL,
-  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
--- Table structure for table `funcion_caja`
+-- Dumping data for table `familia`
 --
 
-DROP TABLE IF EXISTS `funcion_caja`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `funcion_caja` (
-  `id` int(11) NOT NULL auto_increment,
-  `nombre` varchar(20) default NULL,
-  `descripcion` varchar(200) default NULL,
-  `funcion` varchar(100) default NULL,
-  `programador` varchar(50) default NULL,
-  `fecha_alta` date default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `funcion_caja_unique` (`nombre`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+LOCK TABLES `familia` WRITE;
+/*!40000 ALTER TABLE `familia` DISABLE KEYS */;
+/*!40000 ALTER TABLE `familia` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `impresora`
@@ -291,227 +289,42 @@ CREATE TABLE `impresora` (
   `activo` tinyint(1) default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `impresora_nombre_index` (`marca_modelo`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 SET character_set_client = @saved_cs_client;
 
 --
--- Table structure for table `inventario`
+-- Dumping data for table `impresora`
 --
 
-DROP TABLE IF EXISTS `inventario`;
+LOCK TABLES `impresora` WRITE;
+/*!40000 ALTER TABLE `impresora` DISABLE KEYS */;
+/*!40000 ALTER TABLE `impresora` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pages_botonera`
+--
+
+DROP TABLE IF EXISTS `pages_botonera`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-CREATE TABLE `inventario` (
-  `id` varchar(13) NOT NULL,
-  `persona_FK_id` tinyint(3) unsigned NOT NULL,
-  `Razon` varchar(200) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `INVENTARIO_FK_Index1` (`persona_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `inventario_linea`
---
-
-DROP TABLE IF EXISTS `inventario_linea`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `inventario_linea` (
-  `id` tinyint(3) unsigned NOT NULL,
-  `inventario_FK_id` varchar(13) NOT NULL,
-  `articulo_FK_id` varchar(13) NOT NULL,
-  `cantidad_actual` float NOT NULL default '0',
-  `cantidad_anterior` float NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `INVENTARIO_LINEA_FK_Index2` (`articulo_FK_id`),
-  KEY `inventario_linea_FKIndex2` (`inventario_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `metodo_pedido`
---
-
-DROP TABLE IF EXISTS `metodo_pedido`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `metodo_pedido` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `nombre` varchar(15) NOT NULL,
-  `descripcion` varchar(50) default NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `metodo_pedido_unique` (`nombre`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `pedido`
---
-
-DROP TABLE IF EXISTS `pedido`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `pedido` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `persona_FK_id` tinyint(3) unsigned NOT NULL,
-  `proveedor_FK_id` tinyint(3) unsigned NOT NULL,
-  `caja_FK_id` tinyint(3) unsigned NOT NULL,
-  `fecha` datetime NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `PEDIDO_FK_Index1` (`caja_FK_id`),
-  KEY `PEDIDO_FK_Index2` (`persona_FK_id`),
-  KEY `PEDIDO_FK_Index3` (`proveedor_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `pedido_linea`
---
-
-DROP TABLE IF EXISTS `pedido_linea`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `pedido_linea` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `articulo_FK_id` varchar(13) NOT NULL,
-  `pedido_FK_id` tinyint(3) unsigned NOT NULL,
-  `cantidad` float NOT NULL default '0',
-  `precio_compra` float NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `pedido_linea_FKIndex1` (`pedido_FK_id`),
-  KEY `pedido_linea_FKIndex2` (`articulo_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `perfil`
---
-
-DROP TABLE IF EXISTS `perfil`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `perfil` (
-  `id` varchar(10) NOT NULL,
-  `nombre` varchar(20) NOT NULL,
-  `descripcion` varchar(200) default NULL,
-  `activo` tinyint(1) default '1',
+CREATE TABLE `pages_botonera` (
+  `id` int(11) NOT NULL auto_increment,
+  `label_page` varchar(100) NOT NULL default '',
+  `id_page` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
 
 --
--- Table structure for table `perfil_X_funcion_caja`
+-- Dumping data for table `pages_botonera`
 --
 
-DROP TABLE IF EXISTS `perfil_X_funcion_caja`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `perfil_X_funcion_caja` (
-  `funcion_caja_FK_id` int(11) NOT NULL,
-  `perfil_FK_id` varchar(10) NOT NULL,
-  PRIMARY KEY  (`funcion_caja_FK_id`,`perfil_FK_id`),
-  KEY `perfil_has_funcion_caja_FK_Index` (`perfil_FK_id`),
-  KEY `perfil_has_funcion_caja_FKIndex2` (`funcion_caja_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `persona`
---
-
-DROP TABLE IF EXISTS `persona`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `persona` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `NIF` varchar(9) NOT NULL,
-  `nombre` varchar(20) NOT NULL,
-  `apellidos` varchar(40) NOT NULL,
-  `perfil_FK_id` varchar(10) NOT NULL,
-  `direccion_calle` varchar(40) NOT NULL,
-  `direccion_numero_puerta` varchar(10) NOT NULL,
-  `direccion_codigo_postal` varchar(6) NOT NULL default '12006',
-  `direccion_ciudad` varchar(20) NOT NULL default 'Benicassim',
-  `vendedor` tinyint(1) NOT NULL default '0',
-  `fecha_alta` date default '2005-01-01',
-  `usuario` varchar(10) NOT NULL,
-  `passwd` varchar(10) NOT NULL default 'qwerty',
-  `activo` tinyint(1) default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `persona_unique` (`NIF`,`apellidos`,`usuario`),
-  KEY `PERSONA_usuario_index` (`usuario`),
-  KEY `persona_FK_id_index` (`perfil_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `proveedor`
---
-
-DROP TABLE IF EXISTS `proveedor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `proveedor` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `NIF` varchar(9) NOT NULL,
-  `nombre` varchar(20) NOT NULL,
-  `direccion` varchar(200) default NULL,
-  `telefono_1` varchar(11) NOT NULL,
-  `telefono_2` varchar(11) default NULL,
-  `fax` varchar(11) default NULL,
-  `correo_electronico` varchar(30) default NULL,
-  `persona_contacto` varchar(20) NOT NULL,
-  `vendedor_contacto` varchar(20) default NULL,
-  `vendedor_mobil` varchar(9) default NULL,
-  `calificacion` float NOT NULL default '4.9',
-  `metodo_pedido_FK_id` tinyint(3) unsigned NOT NULL default '1',
-  `notas` longtext,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `proveedor_unique` (`NIF`,`vendedor_mobil`),
-  KEY `proveedor_FKIndex1` (`metodo_pedido_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `seccion`
---
-
-DROP TABLE IF EXISTS `seccion`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `seccion` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `tienda_FK_id` varchar(9) NOT NULL default '1',
-  `nombre` varchar(30) NOT NULL,
-  `descripcion` varchar(120) default NULL,
-  `activo` tinyint(1) default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `seccion_nombre_index` (`nombre`),
-  KEY `seccion_FKIndex1` (`tienda_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `subfamilia`
---
-
-DROP TABLE IF EXISTS `subfamilia`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `subfamilia` (
-  `id` tinyint(3) unsigned NOT NULL auto_increment,
-  `familia_FK_id` tinyint(3) unsigned NOT NULL,
-  `nombre` varchar(20) NOT NULL,
-  `descripcion` varchar(100) default NULL,
-  `descuento` float NOT NULL default '0',
-  `porcentaje` float NOT NULL default '0',
-  `activo` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `subfamilia_unique` (`nombre`),
-  KEY `SUBFAMILIA_FK_Index1` (`familia_FK_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-SET character_set_client = @saved_cs_client;
+LOCK TABLES `pages_botonera` WRITE;
+/*!40000 ALTER TABLE `pages_botonera` DISABLE KEYS */;
+INSERT INTO `pages_botonera` VALUES (1,'UNO',0);
+/*!40000 ALTER TABLE `pages_botonera` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ticket`
@@ -522,20 +335,30 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `ticket` (
   `id` int(10) unsigned NOT NULL auto_increment,
+  `cliente_FK_id` int(10) unsigned default '0',
+  `caja_FK_id` tinyint(3) unsigned default '0',
+  `hora` time default '13:00:00',
+  `fecha` date default '0000-00-00',
+  `hora_llamada` time default '00:00:00',
   `credito` tinyint(1) default NULL,
-  `recogido` tinyint(1) default NULL,
   `servicioadomicilio` tinyint(1) default NULL,
-  `cliente_FK_id` int(10) unsigned NOT NULL,
-  `caja_FK_id` tinyint(3) unsigned NOT NULL,
-  `fecha` date NOT NULL,
-  `hora` time NOT NULL,
-  `estado` varchar(10) NOT NULL default '1',
-  `metalico` tinyint(1) NOT NULL default '1',
+  `comandaenviada` tinyint(1) default NULL,
+  `servido` tinyint(1) default NULL,
+  `oculto` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `TICKET_FK_Index1` (`caja_FK_id`),
   KEY `TICKET_FK_Index2` (`cliente_FK_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ticket`
+--
+
+LOCK TABLES `ticket` WRITE;
+/*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ticket_linea`
@@ -545,16 +368,25 @@ DROP TABLE IF EXISTS `ticket_linea`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 CREATE TABLE `ticket_linea` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `ticket_FK_id` varchar(13) NOT NULL default '1',
-  `cantidad` float NOT NULL default '1',
-  `articulo_FK_id` varchar(13) NOT NULL,
-  `precio_venta` float default '0',
-  PRIMARY KEY  (`id`,`ticket_FK_id`),
+  `id` int unsigned NOT NULL auto_increment,
+  `ticket_FK_id` int NOT NULL default '0',
+  `cantidad` float(5,2) NOT NULL default '1.00',
+  `articulo_FK_id` int NOT NULL default '0',
+  `precio_venta` float(5,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`id`),
   KEY `ticket_linea_FK_Index1` (`ticket_FK_id`),
   KEY `ticket_linea_FK_Index2` (`articulo_FK_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `ticket_linea`
+--
+
+LOCK TABLES `ticket_linea` WRITE;
+/*!40000 ALTER TABLE `ticket_linea` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ticket_linea` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tienda`
@@ -581,6 +413,15 @@ CREATE TABLE `tienda` (
   UNIQUE KEY `tienda_unique` (`NIF`,`nombre`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping data for table `tienda`
+--
+
+LOCK TABLES `tienda` WRITE;
+/*!40000 ALTER TABLE `tienda` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tienda` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -591,4 +432,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-02-15  2:37:25
+-- Dump completed on 2008-03-17  1:27:40

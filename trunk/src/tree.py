@@ -26,6 +26,7 @@
 # under certain conditions; type `show c' for details.
 
 import gtk
+import pango
 #import gobject
 #import pango
 
@@ -40,11 +41,14 @@ class TreeView(gtk.TreeView):
         gtk.TreeView.__init__(self)  
         self.get_selection().set_mode(gtk.SELECTION_SINGLE)
         self.set_rules_hint(True)
+#        self.set_grid_lines(gtk.TREE_VIEW_GRID_LINES_VERTICAL)
         
     def _new_column(self,name,size,visible,sort,width,height,renderer,columna):
         if renderer == 'cell':
             cell = gtk.CellRendererText()
             col = gtk.TreeViewColumn(name, cell, text=columna)
+#            font = pango.FontDescription('9')
+#            cell.set_property('font-desc', font)
         elif renderer == 'pixbuf':
             cell = gtk.CellRendererPixbuf()        
             col = gtk.TreeViewColumn(name, cell, stock_id=columna)
@@ -55,21 +59,38 @@ class TreeView(gtk.TreeView):
         col.set_sort_column_id(sort)
         col.set_alignment(0.5)
         
+        
         cell.set_fixed_size(width, height)
         #col.pack_start(cell,True)
         #col.set_cell_data_func(cell, None)
         return col
+    
     
     def update(self, iter, column, newtext):
         selection = self.get_selection() 
         model, iter = selection.get_selected()
         self.liststore.set_value(iter, column, newtext)
         
+        
     def add(self, value):
         return self.liststore.append(value)
+       
     
     def prepend(self, value):
         return self.liststore.prepend(value)
+#        iter = self.liststore.append(value)
+#
+#        # select new row and start editing it
+#        path = self.liststore.get_path(iter)
+#        self.get_selection().select_path(path)
+#        
+#        self.scroll_to_cell(path)
+#        self.get_selection().select_path(path)
+    
+    
+    def insert(self, count, value):
+        return self.liststore.insert(count, value)
+        
     
     def addList(self, values):
         # Removes the model so the addition is quicker
@@ -84,6 +105,7 @@ class TreeView(gtk.TreeView):
         self.set_model(self.liststore)
         # Unfreeze the list
         self.thaw_child_notify()
+        
     
     def remove(self):
         #http://eccentric.cx/misc/pygtk/pygtkfaq.html#13.8
@@ -101,22 +123,45 @@ class TreeView(gtk.TreeView):
                 if row >= 0:
                     selection.select_path((row,))
                     
+                    
     def getSelectedRow(self):
         selection = self.get_selection()
         model, paths = selection.get_selected_rows()
         # Returns first selected row
         return paths[0]
+    
 
     def getSelectedItem(self, index):
         selection = self.get_selection()
         model, iter, = selection.get_selected()
+        print model, iter
         return  self.liststore.get_value(iter, index)
+    
 
     def getCount(self):
         return len(self.liststore)
     
+    
     def clear(self):
         self.liststore.clear()
+        
+    
+    def model_foreach(self, value):
+        iter = self.liststore.foreach(self.change_tier, value)
+        
+        
+    def change_tier(self, model, path, iter, data):
+        t = self.liststore.get_value(iter, 0)
+
+        if t == data[0]:
+            a = 2
+            b = 0
+            datos = ("%0.2f" % data[1]) + ("%0.2f" % 1), ("%0.2f" % data[2])
+            for x in range(6):
+                self.liststore.set_value(iter, a, datos[b])
+                a += 2
+                b += 1
+                
         
          
 class TicketView(TreeView):
@@ -126,19 +171,23 @@ class TicketView(TreeView):
         """
         TreeView.__init__(self)
         # Defines the TreeStore
-        self.liststore = gtk.ListStore(str, str, str, str, str, str, str, str)
+        self.liststore = gtk.ListStore(int, str, str, str, str, str, str, str)
 #        # Associates the listStore to the ListView object
+        
+#       self.sorted = gtk.TreeModelSort(self.liststore)
+#        self.sorted.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
         self.set_model(self.liststore)
     
         cols = (\
-                (("ID"),30, False, -1, -1, 25, 'cell', 0),\
-                (("RC"),30, True, -1, -1, 25, 'pixbuf', 1),\
-                (("CR"),30, True, -1, -1, 25, 'pixbuf', 2),\
-                (("SD"),30, True, -1, -1, 25, 'pixbuf', 3),\
-                (("NOMBRE"),200, True, 4, -1, 25, 'cell', 4),\
-                (("DIRECCION"),200, True, 5, -1, 25, 'cell', 5),\
-                (("IMP"),40, True, -1, -1, 25, 'cell', 6),\
-                (("HORA"),60, True, 6, -1, 25,'cell', 7))
+                (("ID"),30, False, -1, -1, 35, 'cell', 0),\
+                (("CR"),30, True, -1, -1, 35, 'pixbuf', 1),\
+                (("SD"),30, True, -1, -1, 35, 'pixbuf', 2),\
+                (("CO"),30, True, -1, -1, 35, 'pixbuf', 3),\
+                (("NOMBRE"),220, True, -1, -1, 35, 'cell', 4),\
+                (("DIRECCION"),220, True, -1, -1, 35, 'cell', 5),\
+                (("IMP"),40, True, -1, -1, 35, 'cell', 6),\
+                (("HORA"),40, True, -1, -1, 35,'cell', 7))
         
         for col in cols:
             self.append_column(
@@ -151,16 +200,16 @@ class TicketLineaView(TreeView):
         This class represent ticketview of ticketstore
         """
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str)
+        self.liststore = gtk.ListStore(int, str, str, str, str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         
         cols = (\
-                (("ID"),30, False, -1, -1, 25, 'cell', 0),\
-                (("TICKET_FK_ID"),30, False, -1, -1, 25, 'cell', 1),\
-                (("UNI"),40, True, -1, -1, 25, 'cell', 2),\
-                (("DESCRIPCION"),200, True, -1, -1, 25, 'cell', 3),\
-                (("IMP"),50, True, 4, -1, 25, 'cell', 4))
+                (("ID"),30, False, -1, -1, 35, 'cell', 0),\
+                (("TICKET_FK_ID"),30, False, -1, -1, 35, 'cell', 1),\
+                (("UNI"),40, True, -1, -1, 35, 'cell', 2),\
+                (("DESCRIPCION"),200, True, -1, -1, 35, 'cell', 3),\
+                (("IMP"),50, True, 4, -1, 35, 'cell', 4))
                 
         for col in cols:
             self.append_column(
@@ -238,7 +287,7 @@ class CreditoView(TreeView):
     def __init__(self, liststore):
         # This class represent ticketview of ticketstore
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str, str,str,str)
+        self.liststore = gtk.ListStore(int, str, str, str, str, str,str,str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)
@@ -262,7 +311,7 @@ class HistoricoView(TreeView):
     def __init__(self, liststore):
         # This class represent ticketview of ticketstore
         TreeView.__init__(self)    
-        self.liststore = gtk.ListStore(str, str, str, str, str, str, str, str)
+        self.liststore = gtk.ListStore(int, str, str, str, str, str, str, str)
         # Associates the listStore to the ListView object
         self.set_model(self.liststore)
         #self.cargaDatos(CONSULTA_BASE)
