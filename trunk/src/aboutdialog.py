@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
 
-import gtk
+import gtk, gtk.glade
 
 class dlgAbout:
     def __init__(self, aboutdialog):
