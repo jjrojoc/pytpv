@@ -35,7 +35,6 @@ class dlgNewTicket:
         self.checkordered = self.widget.get_widget('checkOrdered')
         self.checkorderwithdrawn = self.widget.get_widget('checkOrderWithdrawn')
         
-        
 #        self.entrys = ['entIdNewTicket',\
 #                        'entIdClientNewTicket', \
 #                        'entNameNewTicket',\
