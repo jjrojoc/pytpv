@@ -73,7 +73,10 @@ class TreeView(gtk.TreeView):
         
         
     def add(self, value):
-        return self.liststore.append(value)
+        row_iter = self.liststore.append(value)
+        path = self.liststore.get_path(row_iter)
+        return row_iter, path
+        
        
     
     def prepend(self, value):

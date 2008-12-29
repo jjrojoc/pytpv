@@ -243,9 +243,10 @@ class MainWindow:
         if newticket != None:
             print 'va o no' % newticket
             
-            self.ticketview.prepend(newticket)
-            self.ticketview.scroll_to_cell(0)
-            self.ticketview.get_selection().select_path(0)
+            path = self.ticketview.add(newticket)
+                        
+            self.ticketview.scroll_to_cell(path[1])
+            self.ticketview.get_selection().select_path(path[1])
             ticket = self.ticket.busqueda('ticket', 'id=%s' % \
                                            (self.on_TicketView_Cursor_Changed \
                                             (self, args)))
