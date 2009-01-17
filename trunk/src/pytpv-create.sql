@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: pytpvdb
 -- ------------------------------------------------------
--- Server version	5.0.51a-3ubuntu1
+-- Server version	5.0.75-0ubuntu1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -388,6 +388,36 @@ LOCK TABLES `ticket_linea` WRITE;
 /*!40000 ALTER TABLE `ticket_linea` ENABLE KEYS */;
 UNLOCK TABLES;
 
+/*!50003 SET @SAVE_SQL_MODE=@@SQL_MODE*/;
+
+DELIMITER ;;
+/*!50003 SET SESSION SQL_MODE="" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `updatestock` AFTER INSERT ON `ticket_linea` FOR EACH ROW BEGIN
+
+UPDATE articulos
+SET stock = stock - NEW.cantidad
+WHERE id = NEW.articulo_FK_id;
+END */;;
+
+/*!50003 SET SESSION SQL_MODE="" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `updatestock2` AFTER UPDATE ON `ticket_linea` FOR EACH ROW BEGIN
+
+UPDATE articulos
+SET stock = stock - (NEW.cantidad - OLD.cantidad)
+WHERE id = NEW.articulo_FK_id;
+END */;;
+
+/*!50003 SET SESSION SQL_MODE="" */;;
+/*!50003 CREATE */ /*!50017 DEFINER=`root`@`localhost` */ /*!50003 TRIGGER `updatestock3` AFTER DELETE ON `ticket_linea` FOR EACH ROW BEGIN
+
+UPDATE articulos
+SET stock = stock + OLD.cantidad
+WHERE id = OLD.articulo_FK_id;
+END */;;
+
+DELIMITER ;
+/*!50003 SET SESSION SQL_MODE=@SAVE_SQL_MODE*/;
+
 --
 -- Table structure for table `tienda`
 --
@@ -432,4 +462,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2008-03-17  1:27:40
+-- Dump completed on 2009-01-17 17:27:45
